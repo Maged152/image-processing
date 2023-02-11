@@ -31,6 +31,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scale_function\Scale.md" />
+    <None Include="Scale_function\README.md" />
   </ItemGroup>
 </Project>
