@@ -4,7 +4,7 @@
 
 int main()
 {
-	Timer t{};
+	Timer<msec> t{};
 	std::string file_name = "testimg.jpg";
 	// load the image
 	sf::Image in;
