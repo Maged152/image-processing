@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include "color_operations.h"
+
 sf::Image& Scale(sf::Image& in, sf::Image& out, ScaleMethod method, float scale_x, float scale_y)
 {
 	unsigned int width = in.getSize().x;
@@ -32,29 +34,29 @@ sf::Image& Scale(sf::Image& in, sf::Image& out, ScaleMethod method, float scale_
 		{
 			for (int y = 0; y < new_height; y++)
 			{
-				// get the pixel with the nearest neighbor
-				float nearest_x = x / scale_x;
-				float nearest_y = y / scale_y;
-				// get the four points
-				unsigned int x1 = std::min((unsigned int)std::floor(nearest_x), width - 1);
-				unsigned int y1 = std::min((unsigned int)std::floor(nearest_y), height - 1);
-				unsigned int x2 = std::min((unsigned int)std::ceil(nearest_x), width - 1);
-				unsigned int y2 = std::min((unsigned int)std::ceil(nearest_y), height - 1);
-				// get the four neighbors
-				sf::Color Q11 = in.getPixel(x1, y1);
-				sf::Color Q12 = in.getPixel(x1, y2);
-				sf::Color Q21 = in.getPixel(x2, y1);
-				sf::Color Q22 = in.getPixel(x2, y2);
-				// get the weights
-				float normalize_factor = (x2 - x1) * (y2 - y1);
-				float W11 = ((x2 - nearest_x)*(y2 - nearest_y)) / normalize_factor;
-				float W12 = ((x2 - nearest_x) * (nearest_y - y1)) / normalize_factor;
-				float W21 = ((nearest_x - x1) * (y2 - nearest_y)) / normalize_factor;
-				float W22 = ((nearest_x - x1) * (nearest_y - y1)) / normalize_factor;
-				// weighted sum
-				sf::Color c = Q11 * W11 + Q12 * W12 + Q21 * W21 + Q22 * Q22;
-				out.setPixel(x, y, c);
-			}
+			// get the pixel with the nearest neighbor
+			float nearest_x = x / scale_x;
+			float nearest_y = y / scale_y;
+			// get the four points
+			unsigned int x1 = std::floor(nearest_x);
+			unsigned int y1 = std::floor(nearest_y);
+			unsigned int x2 = std::min(x1 + 1, width - 1);
+			unsigned int y2 = std::min(y1 + 1, height - 1);
+			// get the four neighbors
+			sf::Color top_left = in.getPixel(x1, y1);
+			sf::Color top_right = in.getPixel(x2, y1);
+			sf::Color bottom_left = in.getPixel(x1, y2);
+			sf::Color bottom_right = in.getPixel(x2, y2);
+			// offsets
+			float x_offset = nearest_x - x1;
+			float y_offset = nearest_y - y1;
+			// interporate along x-axis
+			sf::Color top = top_left * (1.0f - x_offset) + top_right * x_offset;
+			sf::Color bottom = bottom_left * (1.0f - x_offset) + bottom_right * x_offset;
+			// interporate along y-axis
+			sf::Color out_pixel = top * (1.0f - y_offset) + bottom * y_offset;
+			out.setPixel(x, y, out_pixel);
+			 }
 		}
 	}
 	else

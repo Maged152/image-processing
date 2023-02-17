@@ -17,7 +17,7 @@ int main()
 	sf::Image out;
 	// do the operation
 	t.start();
-	Scale(in, out, ScaleMethod::NEAREST_NEIGHBOR, 1.5, 1.5);
+	Scale(in, out, ScaleMethod::BILINEAR, 1.5, 1.5);
 	t.end();
 
 	t.show();

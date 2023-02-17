@@ -26,7 +26,10 @@
     <ClInclude Include="Scale_function\Scale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Timer\Timer.h">
+    <ClInclude Include="Common\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\color_operations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
