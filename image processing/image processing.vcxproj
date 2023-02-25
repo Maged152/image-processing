@@ -109,7 +109,7 @@
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)image processing\Common;$(SolutionDir)image processing\Timer;$(SolutionDir)image processing\dependencies\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,6 +127,7 @@
       <PreprocessorDefinitions>SFML_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)image processing\Common;$(SolutionDir)image processing\dependencies\SFML\include;$(SolutionDir)image processing\Timer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,18 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="HoughLine\HoughLine.cpp" />
+    <ClCompile Include="HoughLines\HoughLines.cpp" />
     <ClCompile Include="Scale\Scale.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\color_operations.h" />
-    <ClInclude Include="HoughLine\HoughLine.h" />
+    <ClInclude Include="HoughLines\HoughLines.h" />
     <ClInclude Include="Scale\Scale.h" />
     <ClInclude Include="Common\Timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="HoughLine\README.md" />
+    <None Include="HoughLines\README.md" />
     <None Include="Scale\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

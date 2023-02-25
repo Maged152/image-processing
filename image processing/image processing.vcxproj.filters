@@ -21,7 +21,7 @@
     <ClCompile Include="Scale\Scale.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HoughLine\HoughLine.cpp">
+    <ClCompile Include="HoughLines\HoughLines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,12 +35,12 @@
     <ClInclude Include="Common\color_operations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HoughLine\HoughLine.h">
+    <ClInclude Include="HoughLines\HoughLines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scale\README.md" />
-    <None Include="HoughLine\README.md" />
+    <None Include="HoughLines\README.md" />
   </ItemGroup>
 </Project>
