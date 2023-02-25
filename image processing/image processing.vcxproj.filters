@@ -18,12 +18,15 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scale_function\Scale.cpp">
+    <ClCompile Include="Scale\Scale.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HoughLine\HoughLine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Scale_function\Scale.h">
+    <ClInclude Include="Scale\Scale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common\Timer.h">
@@ -32,8 +35,12 @@
     <ClInclude Include="Common\color_operations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HoughLine\HoughLine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scale_function\README.md" />
+    <None Include="Scale\README.md" />
+    <None Include="HoughLine\README.md" />
   </ItemGroup>
 </Project>

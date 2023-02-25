@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "color_operations.h"
 
-void Scale(const sf::Image& in, sf::Image& out, ScaleMethod method, float scale_x, float scale_y)
+void qlm::Scale(const sf::Image& in, sf::Image& out, qlm::ScaleMethod method, float scale_x, float scale_y)
 {
 	unsigned int width = in.getSize().x;
 	unsigned int height = in.getSize().y;
@@ -14,7 +14,7 @@ void Scale(const sf::Image& in, sf::Image& out, ScaleMethod method, float scale_
 
 	out.create(new_width, new_height, sf::Color::Black);
 	// check the scaling method
-	if (method == ScaleMethod::NEAREST_NEIGHBOR)
+	if (method == qlm::ScaleMethod::NEAREST_NEIGHBOR)
 	{
 		for (int x = 0; x < new_width; x++)
 		{
@@ -28,7 +28,7 @@ void Scale(const sf::Image& in, sf::Image& out, ScaleMethod method, float scale_
 			}
 		}
 	}
-	else if (method == ScaleMethod::BILINEAR)
+	else if (method == qlm::ScaleMethod::BILINEAR)
 	{
 		for (int x = 0; x < new_width; x++)
 		{

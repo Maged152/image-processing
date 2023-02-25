@@ -1,11 +1,11 @@
 #include "Timer.h"
-#include "Scale_function/Scale.h"
+#include "Scale/Scale.h"
 
 
 int main()
 {
-	Timer<msec> t{};
-	std::string file_name = "download.jpg";
+	qlm::Timer<msec> t{};
+	std::string file_name = "testimg.jpg";
 	// load the image
 	sf::Image in;
 	if (!in.loadFromFile(file_name))
@@ -17,7 +17,7 @@ int main()
 	sf::Image out;
 	// do the operation
 	t.start();
-	Scale(in, out, ScaleMethod::NEAREST_NEIGHBOR, 2.7, 2.7);
+	qlm::Scale(in, out, qlm::ScaleMethod::NEAREST_NEIGHBOR, 2.7, 2.7);
 	t.end();
 
 	t.show();

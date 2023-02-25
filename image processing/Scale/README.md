@@ -5,19 +5,25 @@ The function scales an image up or dowm
 
 ## C++ API
 ```c++
-void Scale(
-		const sf::Image& in,
-		      sf::Image& out,
-		ScaleMethod method,
-		float scale_x,
-		float scale_y ) 
+namespace qlm
+{
+	void Scale(
+			const sf::Image& in,
+				  sf::Image& out,
+			ScaleMethod method,
+			float scale_x,
+			float scale_y )
+}
 ```
 ```c++
-enum class ScaleMethod
+namespace qlm
 {
-	NEAREST_NEIGHBOR,
-	BILINEAR,
-	BICUBIC
+	enum class ScaleMethod
+	{
+		NEAREST_NEIGHBOR,
+		BILINEAR,
+		BICUBIC
+	}
 }
 ```
 ## Parameters

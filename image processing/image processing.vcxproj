@@ -138,16 +138,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Scale_function\Scale.cpp" />
+    <ClCompile Include="HoughLine\HoughLine.cpp" />
+    <ClCompile Include="Scale\Scale.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\color_operations.h" />
-    <ClInclude Include="Scale_function\Scale.h" />
+    <ClInclude Include="HoughLine\HoughLine.h" />
+    <ClInclude Include="Scale\Scale.h" />
     <ClInclude Include="Common\Timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scale_function\README.md" />
+    <None Include="HoughLine\README.md" />
+    <None Include="Scale\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
