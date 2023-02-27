@@ -8,9 +8,9 @@ namespace qlm
 {
 	void HoughLines(
 		const sf::Image& in, 
-			  LinesPolar lines, 
+			  std::vector<LinesPolar>& lines, 
 			  float  rho, 
-			  float theta,
+			  float theta_step,
 			  int threshold, 
 			  double min_theta = 0, 
 			  double max_theta = std::numbers::pi
@@ -22,14 +22,8 @@ namespace qlm
 {
 	struct LinesPolar
 	{
-	public:
-		int num_lines;
-		std::vector<int> radius;
-		std::vector<int> angle;
-	public:
-		LinesPolar(): num_lines{0},radius{0},angle{0}
-		{}
-	
+		int radius;
+		int angle;
 	};
 }
 ```
