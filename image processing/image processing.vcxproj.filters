@@ -38,6 +38,15 @@
     <ClInclude Include="HoughLines\HoughLines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Common\Draw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shakhbat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scale\README.md" />

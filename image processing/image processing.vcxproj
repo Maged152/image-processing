@@ -145,6 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\color_operations.h" />
+    <ClInclude Include="Common\Draw.h" />
+    <ClInclude Include="shakhbat.h" />
+    <ClInclude Include="Common\types.h" />
     <ClInclude Include="HoughLines\HoughLines.h" />
     <ClInclude Include="Scale\Scale.h" />
     <ClInclude Include="Common\Timer.h" />
