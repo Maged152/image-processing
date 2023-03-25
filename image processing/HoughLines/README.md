@@ -39,3 +39,16 @@ namespace qlm
 | `min_theta` | `double`     | The minimum angle to check for lines. Must fall between 0 and max_theta.                     |
 | `max_theta` | `double`     | The upper bound for the angle. Must fall between min_theta and PI.                         |
 
+## Result  for these parameters 
+	rho = 1
+	theta = 3 * PI / 180
+	threshold = 110
+	min_theta = 0
+	double max_theta = PI
+### The input
+![Input Image](input.png)
+### The output
+![Input Image](result.jpg)
+
+Time = 32 ms
+

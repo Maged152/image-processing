@@ -33,17 +33,10 @@ namespace qlm
                 std::swap(y1, y2);
             }
 
-            // Cull out invisible line
-            if (x1 > width || x2 < 0) return;
-
-            // Clamp the line to the boundaries
-            if (x1 < 0) x1 = 0;
-            if (x2 >= width) x2 = width - 1;
-
             for (int x = x1; x <= x2; ++x)
             {
                 int y = dy * (x - x1) / dx + y1;
-                if (0 <= y && y < height)
+                if (0 <= y && y < height && 0 <= x && x < width)
                 {
                     in.setPixel(x, y, c);
                 }
@@ -55,17 +48,10 @@ namespace qlm
                 std::swap(y1, y2);
             }
 
-            // Cull out invisible line
-            if (y1 > height || y2 < 0) return;
-
-            // Clamp the line to the boundaries
-            if (y1 < 0) y1 = 0;
-            if (y2 >= height) y2 = height - 1;
-
             for (int y = y1; y <= y2; ++y)
             {
                 int x = dx * (y - y1) / dy + x1;
-                if (0 <= x && x < width)
+                if (0 <= y && y < height && 0 <= x && x < width)
                 {
                     in.setPixel(x, y, c);
                 }
@@ -77,13 +63,23 @@ namespace qlm
     {
         int width = in.getSize().x;
         int height = in.getSize().y;
+
         auto theta = line.angle;
         auto r = line.radius;
-        auto c = std::cos(theta), s = std::sin(theta);
-        int x0 = c * r, y0 = s * r;
-        int x1 = std::clamp(int(x0 + 1000 * (-s)), 0, width);
-        int y1 = std::clamp(int(y0 + 1000 * (-c)), 0, height);
-        Line l{ x0 ,y0 ,x1 ,y1 };
+
+        auto cos_angle = std::cos(theta); 
+        auto sin_angle = std::sin(theta);
+
+        int x0 = cos_angle * r; 
+        int y0 = sin_angle * r;
+
+        int x1 = int(x0 + 1000 * (-sin_angle));
+        int y1 = int(y0 + 1000 * (cos_angle));
+
+        int x2 = int(x0 - 1000 * (-sin_angle));
+        int y2 = int(y0 - 1000 * (cos_angle));
+
+        Line l{x1 ,y1 ,x2 ,y2};
         DrawLine(in, l, color);
     }
 
