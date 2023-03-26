@@ -8,10 +8,10 @@ namespace qlm
 {
 	void Filter2D(
 		const sf::Image& in,
-			  sf::Image& out,
+		      sf::Image& out,
 		const Kernel& kernel,
-			  BORDER border = BORDER::BORDER_CONSTANT,
-			  int border_const = 0
+		      BORDER border = BORDER::BORDER_CONSTANT,
+		      int border_const = 0
 		);
 }
 ```
