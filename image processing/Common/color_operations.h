@@ -13,3 +13,15 @@ sf::Color operator*(const sf::Color& c, T num)
 	res.a = c.a * num;
 	return res;
 }
+
+// sum[4] += sf::Color
+template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+T* operator+=(T sum[4], const sf::Color& c)
+{
+	sum[0] += c.r;
+	sum[1] += c.g;
+	sum[2] += c.b;
+	sum[3] += c.a;
+
+	return sum;
+}

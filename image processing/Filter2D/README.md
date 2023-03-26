@@ -7,9 +7,9 @@ Applys 2D filter of size MxN on the input image
 namespace qlm
 {
 	void Filter2D(
-		const sf::Image& in, 
-			  sf::Image& out, 
-		const Kernel& kernel, 
+		const sf::Image& in,
+			  sf::Image& out,
+		const Kernel& kernel,
 			  BORDER border = BORDER::BORDER_CONSTANT,
 			  int border_const = 0
 		);

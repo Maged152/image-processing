@@ -24,6 +24,9 @@
     <ClCompile Include="HoughLines\HoughLines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Filter2D\Filter2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scale\Scale.h">

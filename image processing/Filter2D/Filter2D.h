@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "types.h"
+#include "color_operations.h"
 
 namespace qlm
 {

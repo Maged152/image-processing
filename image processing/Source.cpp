@@ -3,8 +3,9 @@
 
 int main()
 {
+
 	qlm::Timer<msec> t{};
-	std::string file_name = "in.png";
+	std::string file_name = "testimg.jpg";
 	// load the image
 	sf::Image in;
 	if (!in.loadFromFile(file_name))
@@ -13,19 +14,20 @@ int main()
 		return -1;
 	}
 
-	std::vector<qlm::LinePolar> lines;
+	qlm::Kernel k{3, 3};
+	// sharpen filter
+	k.Set(0, 0, 0); k.Set(0, 1, -1); k.Set(0, 2, 0);
+	k.Set(1, 0, -1); k.Set(1, 1, 5); k.Set(1, 2, -1);
+	k.Set(2, 0, 0); k.Set(2, 1, -1); k.Set(2, 2, 0);
+	
+	sf::Image out{in};
 	// do the operation
 	t.start();
-	qlm::HoughLines(in, lines, 1, 3 * 3.14f / 180, 110);
+	qlm::Filter2D(in, out, k);
 	t.end();
 
 	t.show();
-	std::cout << lines.size() << "\n";
-	for (auto& line : lines)
-	{
-		std::cout << line.radius << "  " << line.angle << "\n";
-		qlm::DrawLine(in, line, sf::Color{ 0,255,0 });
-	}
 	// Save the image to a file
-	in.saveToFile("result.jpg");
+	out.saveToFile("result.jpg");
+
 }

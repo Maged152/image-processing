@@ -35,10 +35,10 @@ namespace qlm
 	private:
 		float* data;
 	public:
-		int width;
-		int height;
-	public:
-		Kernel(int M, int N) :width(M), height(N)
+		unsigned int width;
+		unsigned int height;
+	
+		Kernel(unsigned int M, unsigned int N) :width(M), height(N)
 		{
 			data = new float[height * width];
 		}
@@ -46,8 +46,8 @@ namespace qlm
 		{
 			delete data;
 		}
-	public:
-		float Get(int x, int y)
+	
+		float Get(int x, int y) const
 		{
 			return data[y * width + x];
 		}
@@ -56,6 +56,5 @@ namespace qlm
 		{
 			data[y * width + x] = value;
 		}
-			
 	};
 }

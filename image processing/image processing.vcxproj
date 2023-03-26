@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Filter2D\Filter2D.cpp" />
     <ClCompile Include="HoughLines\HoughLines.cpp" />
     <ClCompile Include="Scale\Scale.cpp" />
     <ClCompile Include="Source.cpp" />
