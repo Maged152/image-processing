@@ -20,6 +20,7 @@ int main()
 	k.Set(1, 0, -1); k.Set(1, 1, 5); k.Set(1, 2, -1);
 	k.Set(2, 0, 0); k.Set(2, 1, -1); k.Set(2, 2, 0);
 	
+
 	sf::Image out{in};
 	// do the operation
 	t.start();

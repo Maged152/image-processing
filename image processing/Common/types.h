@@ -44,7 +44,7 @@ namespace qlm
 		}
 		~Kernel()
 		{
-			delete data;
+			delete[] data;
 		}
 	
 		float Get(int x, int y) const

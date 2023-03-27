@@ -4,18 +4,18 @@
 
 static inline void MAC(float sum[4], sf::Color& c, float coeff)
 {
-	sum[0] += c.r * coeff;
-	sum[1] += c.g * coeff;
-	sum[2] += c.b * coeff;
-	sum[3] += c.a * coeff;
+	sum[0] += static_cast<float>(c.r) * coeff;
+	sum[1] += static_cast<float>(c.g) * coeff;
+	sum[2] += static_cast<float>(c.b) * coeff;
+	sum[3] += static_cast<float>(c.a) * coeff;
 }
 
 static inline void StorePix(float sum[4], sf::Color& c)
 {
-	c.r = static_cast<uint8_t>(sum[0]);
-	c.g = static_cast<uint8_t>(sum[1]);
-	c.b = static_cast<uint8_t>(sum[2]);
-	c.a = static_cast<uint8_t>(sum[3]);
+	c.r = std::clamp(static_cast<int>(sum[0]), 0, 255);
+	c.g = std::clamp(static_cast<int>(sum[1]), 0, 255);
+	c.b = std::clamp(static_cast<int>(sum[2]), 0, 255);
+	c.a = std::clamp(static_cast<int>(sum[3]), 0, 255);
 }
 
 void qlm::Filter2D(const sf::Image& in, sf::Image& out, const qlm::Kernel& kernel, qlm::BORDER border, int border_const)
@@ -49,5 +49,4 @@ void qlm::Filter2D(const sf::Image& in, sf::Image& out, const qlm::Kernel& kerne
 			out.setPixel(x, y, res);
 		}
 	}
-	// TODO : debug the results
 }
