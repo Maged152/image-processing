@@ -141,12 +141,14 @@
   <ItemGroup>
     <ClCompile Include="Filter2D\Filter2D.cpp" />
     <ClCompile Include="HoughLines\HoughLines.cpp" />
+    <ClCompile Include="Resize\Resize.cpp" />
     <ClCompile Include="Scale\Scale.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\color_operations.h" />
     <ClInclude Include="Common\Draw.h" />
+    <ClInclude Include="Resize\Resize.h" />
     <ClInclude Include="shakhbat.h" />
     <ClInclude Include="Common\types.h" />
     <ClInclude Include="HoughLines\HoughLines.h" />

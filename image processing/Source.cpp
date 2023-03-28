@@ -5,7 +5,7 @@ int main()
 {
 
 	qlm::Timer<msec> t{};
-	std::string file_name = "testimg.jpg";
+	std::string file_name = "input.jpg";
 	// load the image
 	sf::Image in;
 	if (!in.loadFromFile(file_name))
@@ -13,18 +13,14 @@ int main()
 		std::cout << "Failed to read the image\n";
 		return -1;
 	}
-
-	qlm::Kernel k{3, 3};
-	// sharpen filter
-	k.Set(0, 0, 0); k.Set(0, 1, -1); k.Set(0, 2, 0);
-	k.Set(1, 0, -1); k.Set(1, 1, 5); k.Set(1, 2, -1);
-	k.Set(2, 0, 0); k.Set(2, 1, -1); k.Set(2, 2, 0);
+	unsigned int width = 960u; 
+	unsigned int height = 540u;
 	
 
-	sf::Image out{in};
+	sf::Image out;
 	// do the operation
 	t.start();
-	qlm::Filter2D(in, out, k, qlm::BORDER::BORDER_REFLECT);
+	qlm::Resize(in, out, width, height);
 	t.end();
 
 	t.show();
