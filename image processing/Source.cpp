@@ -24,7 +24,7 @@ int main()
 	sf::Image out{in};
 	// do the operation
 	t.start();
-	qlm::Filter2D(in, out, k);
+	qlm::Filter2D(in, out, k, qlm::BORDER::BORDER_REFLECT);
 	t.end();
 
 	t.show();

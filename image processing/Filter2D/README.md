@@ -37,5 +37,17 @@ namespace qlm
 | `border_const` | `int`        | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
 
 
+## Result  for this  kernel 
+	|0  -1  0|  
+	|-1  8 -1|
+	|0  -1  0|
 
+	border = :BORDER::BORDER_REFLECT
+
+### The input
+![Input Image](input.jpg)
+### The output
+![Input Image](result.jpg)
+
+Time = 300 ms
 
