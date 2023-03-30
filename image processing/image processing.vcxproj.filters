@@ -30,6 +30,9 @@
     <ClCompile Include="Resize\Resize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SepFilter2D\SepFilter2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scale\Scale.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resize\Resize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SepFilter2D\SepFilter2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
