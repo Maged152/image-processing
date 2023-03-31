@@ -49,13 +49,16 @@ void qlm::SepFilter2D(const sf::Image& in, sf::Image& out,
 
 	sf::Color res;
 	float sum[4] = { 0 };
-	// TODO 
-	// array to hold res of y_ kernel to be used in x_kernel
-	auto GetPixel = [&](int x_idx, int y_idx)
+	// temp to hold y_kernel values
+	// TODO make temp array of float
+	sf::Image temp;
+	temp.create(img_width, 1, sf::Color{ 0,0,0,0 });
+
+	auto GetPixel = [&](int x_idx, int y_idx, const sf::Image& img)
 	{
 		if (x_idx >= 0 && x_idx < img_width && y_idx >= 0 && y_idx < img_height)
 		{
-			res = in.getPixel(x_idx, y_idx);
+			res = img.getPixel(x_idx, y_idx);
 		}
 		else
 		{
@@ -73,14 +76,14 @@ void qlm::SepFilter2D(const sf::Image& in, sf::Image& out,
 					{
 						x_idx = std::clamp(x_idx, 0, static_cast<int>(img_width) - 1);
 						y_idx = std::clamp(y_idx, 0, static_cast<int>(img_height) - 1);
-						res = in.getPixel(x_idx, y_idx);
+						res = img.getPixel(x_idx, y_idx);
 						break;
 					}
 				case qlm::BORDER::BORDER_REFLECT:
 					{
 						x_idx = ReflectBorderIndex(x_idx, img_width);
 						y_idx = ReflectBorderIndex(y_idx, img_height);
-						res = in.getPixel(x_idx, y_idx);
+						res = img.getPixel(x_idx, y_idx);
 						break;
 					}
 			}
@@ -99,13 +102,13 @@ void qlm::SepFilter2D(const sf::Image& in, sf::Image& out,
 			for (int i = -pad_len_y; i <= pad_len_y; i++)
 			{
 				// get the pixel
-				GetPixel(x, y + i); // Pixel in "res"
+				GetPixel(x, y + i, in); // Pixel in "res"
 
 				MAC(sum, res, kernel_y.Get(i + pad_len_y));
 			}
 			// store the output
-			//StorePix(sum, res);
-			//out.setPixel(x, y, res);
+			StorePix(sum, res);
+			temp.setPixel(x, 0u, res);
 		}
 		// x-kernel
 		for (int x = 0; x < img_width; x++)
@@ -116,7 +119,7 @@ void qlm::SepFilter2D(const sf::Image& in, sf::Image& out,
 			for (int i = -pad_len_x; i <= pad_len_x; i++)
 			{
 				// get the pixel
-				GetPixel(x + i, y); // Pixel in "res"
+				GetPixel(x + i, 0u, temp); // Pixel in "res"
 				// use temp array
 				MAC(sum, res, kernel_x.Get(i + pad_len_x));
 			}
