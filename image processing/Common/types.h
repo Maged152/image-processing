@@ -30,13 +30,13 @@ namespace qlm
 		float angle;
 	};
 
-	struct Kernel
+	class Kernel
 	{
 	private:
 		float* data;
 	public:
-		unsigned int width;
-		unsigned int height;
+		const unsigned int width;
+		const unsigned int height;
 	
 		Kernel(unsigned int M, unsigned int N) :width(M), height(N)
 		{
@@ -44,7 +44,8 @@ namespace qlm
 		}
 		~Kernel()
 		{
-			delete[] data;
+			if (data != nullptr)
+				delete[] data;
 		}
 	
 		float Get(int x, int y) const
@@ -55,6 +56,25 @@ namespace qlm
 		void Set(int x, int y, float value)
 		{
 			data[y * width + x] = value;
+		}
+	};
+
+	class Kernel1D : protected Kernel
+	{
+	public:
+		Kernel1D(unsigned int length): Kernel(1u, length), length(length)
+		{}
+	public:
+		const unsigned int length;
+
+		float Get(int idx)  const
+		{
+			return Kernel::Get(idx, 0);
+		}
+
+		void Set(int idx, float value) 
+		{
+			Kernel::Set(idx, 0, value);
 		}
 	};
 }

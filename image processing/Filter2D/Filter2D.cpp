@@ -1,5 +1,6 @@
 #include "Filter2D.h"
 #include <algorithm>
+#include <iostream>
 
 static inline int ReflectBorderIndex(int idx, int max_idx) 
 {
@@ -32,13 +33,17 @@ static inline void StorePix(float sum[4], sf::Color& c)
 
 void qlm::Filter2D(const sf::Image& in, sf::Image& out, const qlm::Kernel& kernel, qlm::BORDER border, int border_const)
 {
-	static_assert(sizeof(in) == sizeof(out), "Input and output images must have the same size!");
+	if (in.getSize().x != out.getSize().x || in.getSize().y != out.getSize().y)
+	{
+		std::cout << "Input and output images must have the same size!\n";
+		return;
+	}
 
 	unsigned int img_width = in.getSize().x;
 	unsigned int img_height = in.getSize().y;
 
-	int ker_width = kernel.width / 2;
-	int ker_height = kernel.height / 2;
+	int pad_width = kernel.width / 2;
+	int pad_height = kernel.height / 2;
 
 	sf::Color res;
 	float sum[4] = { 0 }; // r,g,b,a
@@ -51,16 +56,16 @@ void qlm::Filter2D(const sf::Image& in, sf::Image& out, const qlm::Kernel& kerne
 			// Reset the sum array for each pixel
 			sum[0] = sum[1] = sum[2] = sum[3] = 0;
 
-			for (int j = -ker_height; j <= ker_height; j++)
+			for (int j = -pad_height; j <= pad_height; j++)
 			{
-				for (int i = -ker_width; i <= ker_width; i++)
+				for (int i = -pad_width; i <= pad_width; i++)
 				{
 					// get the pixel
 					int x_idx = x + i;
 					int y_idx = y + j;
 					if (x_idx >= 0 && x_idx < img_width && y_idx >= 0 && y_idx < img_height)
 					{
-						res = in.getPixel(x + i, y + j);
+						res = in.getPixel(x_idx, y_idx);
 					}
 					else
 					{
@@ -91,7 +96,7 @@ void qlm::Filter2D(const sf::Image& in, sf::Image& out, const qlm::Kernel& kerne
 						}
 					}
 					
-					MAC(sum, res, kernel.Get(i + ker_width, j + ker_height));
+					MAC(sum, res, kernel.Get(i + pad_width, j + pad_height));
 				}
 			}
 			// store the output
