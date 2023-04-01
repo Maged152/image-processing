@@ -9,10 +9,10 @@ namespace qlm
 	void SepFilter2D(
 		const sf::Image& in,
 		      sf::Image& out,
-		const Kernel1D& kernel_x,
-		const Kernel1D& kernel_y,
-		      BORDER border = BORDER::BORDER_CONSTANT,
-		      int border_const = 0
+		const Kernel1D& x_kernel,
+		const Kernel1D& y_kernel,
+		      BORDER border_type = BORDER::BORDER_CONSTANT,
+		      int border_value = 0
 		);
 }
 ```
@@ -33,8 +33,24 @@ namespace qlm
 |----------------|--------------|-----------------------------------------------------------------------------------|
 | `in`           | `sf::Image`  | The input image.                                                                  |
 | `out`          | `sf::Image`  | The output image.                                                                 |
-| `kernel_x`     | `Kernel1D`   | The kernel for filtering each row.                                                |
-| `kernel_y`     | `Kernel1D`   | The kernel  for filtering each column.                                            |
-| `border`       | `BORDER`     | The pixel extrapolation method.                                                   |
-| `border_const` | `int`        | The value to be used if the border is BORDER::BORDER_CONSTANT.                    |
+| `x_kernel`     | `Kernel1D`   | The kernel for filtering each row.                                                |
+| `y_kernel`     | `Kernel1D`   | The kernel  for filtering each column.                                            |
+| `border_type`  | `BORDER`     | The pixel extrapolation method.                                                   |
+| `border_value` | `int`        | The value to be used if the border is BORDER::BORDER_CONSTANT.                    |
 
+## Result  for this  kernel 
+	x_kernel = |1/3  1/3  1/3|
+	
+	y_kernel = | 1/3 |
+	           | 1/3 |
+               | 1/3 |
+
+
+	border = BORDER::BORDER_REFLECT
+
+### The input
+![Input Image](input.jpg)
+### The output
+![Input Image](result.jpg)
+
+Time = 165 ms

@@ -9,7 +9,7 @@ namespace qlm
 		const sf::Image& in,
 		      sf::Image& out,
 		const Kernel& kernel,
-		      BORDER border = BORDER::BORDER_CONSTANT,
-		      int border_const = 0
+		      BORDER border_type = BORDER::BORDER_CONSTANT,
+		      int border_value = 0
 	);
 }
