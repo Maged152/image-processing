@@ -8,11 +8,11 @@ The function scales an image up or dowm
 namespace qlm
 {
 	void Scale(
-			const sf::Image& in,
-				  sf::Image& out,
-			ScaleMethod method,
-			float scale_x,
-			float scale_y )
+		    const sf::Image& in,
+			  sf::Image& out,
+			  ScaleMethod method,
+			  float scale_x,
+			  float scale_y )
 }
 ```
 ```c++
