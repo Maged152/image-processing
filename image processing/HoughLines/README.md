@@ -8,12 +8,12 @@ namespace qlm
 {
 	void HoughLines(
 		const sf::Image& in, 
-			  std::vector<LinesPolar>& lines, 
-			  float  rho, 
-			  float theta_step,
-			  int threshold, 
-			  double min_theta = 0, 
-			  double max_theta = std::numbers::pi
+		      std::vector<LinesPolar>& lines, 
+		      float  rho, 
+		      float theta_step,
+		      int threshold, 
+		      double min_theta = 0, 
+		      double max_theta = std::numbers::pi
 		);
 }
 ```
