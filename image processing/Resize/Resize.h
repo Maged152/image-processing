@@ -4,11 +4,10 @@
 
 namespace qlm
 {
-	void Resize(
+	sf::Image Resize(
 		const sf::Image& in,
-		      sf::Image& out,
 		const unsigned int width,
 		const unsigned int height,
-		ScaleMethod method = ScaleMethod::BILINEAR
+		      ScaleMethod method = ScaleMethod::BILINEAR
 	);
 }

@@ -16,18 +16,16 @@ static inline int ReflectBorderIndex(int idx, int max_idx)
 }
 
 
-void qlm::SepFilter2D(const sf::Image& in, sf::Image& out, 
-	                  const qlm::Kernel1D& x_kernel, const qlm::Kernel1D& y_kernel, 
-	                  const qlm::BORDER border_type, const int border_value)
+sf::Image qlm::SepFilter2D(const sf::Image& in,
+	                       const qlm::Kernel1D& x_kernel, const qlm::Kernel1D& y_kernel, 
+	                       const qlm::BORDER border_type, const int border_value)
 {
-	if (in.getSize().x != out.getSize().x || in.getSize().y != out.getSize().y)
-	{
-		std::cout << "Input and output images must have the same size!\n";
-		return;
-	}
-	
 	unsigned int img_width = in.getSize().x;
 	unsigned int img_height = in.getSize().y;
+
+	// create the output image
+	sf::Image out;
+	out.create(img_width, img_height);
 
 	int x_padding_length = x_kernel.length / 2;
 	int y_padding_length = y_kernel.length / 2;
@@ -149,4 +147,6 @@ void qlm::SepFilter2D(const sf::Image& in, sf::Image& out,
 			out.setPixel(x, y, pixel_result);
 		}
 	}
+
+	return std::move(out);
 }

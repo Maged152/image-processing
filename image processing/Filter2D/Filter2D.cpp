@@ -1,4 +1,5 @@
 #include "Filter2D.h"
+#include "color_operations.h"
 #include <algorithm>
 #include <iostream>
 
@@ -16,16 +17,14 @@ static inline int ReflectBorderIndex(int idx, int max_idx)
 	return reflect_idx;
 }
 
-void qlm::Filter2D(const sf::Image& in, sf::Image& out, const qlm::Kernel& kernel, qlm::BORDER border_type, int border_value)
+sf::Image qlm::Filter2D(const sf::Image& in, const qlm::Kernel& kernel, qlm::BORDER border_type, int border_value)
 {
-	if (in.getSize().x != out.getSize().x || in.getSize().y != out.getSize().y)
-	{
-		std::cout << "Input and output images must have the same size!\n";
-		return;
-	}
-
 	unsigned int img_width = in.getSize().x;
 	unsigned int img_height = in.getSize().y;
+
+	// create the output image
+	sf::Image out;
+	out.create(img_width, img_height);
 
 	int pad_width = kernel.width / 2;
 	int pad_height = kernel.height / 2;
@@ -89,4 +88,6 @@ void qlm::Filter2D(const sf::Image& in, sf::Image& out, const qlm::Kernel& kerne
 			out.setPixel(x, y, pixel_result);
 		}
 	}
+
+	return std::move(out);
 }

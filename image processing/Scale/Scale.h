@@ -4,5 +4,8 @@
 
 namespace qlm
 {
-	void Scale(const sf::Image& in, sf::Image& out, ScaleMethod method, float scale_x, float scale_y);
+	sf::Image Scale(const sf::Image& in, 
+		                  ScaleMethod method, 
+		                  float scale_x, 
+		                  float scale_y);
 } // namespace

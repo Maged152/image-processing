@@ -3,9 +3,8 @@
 
 int main()
 {
-	
 	qlm::Timer<msec> t{};
-	std::string file_name = "input.jpg";
+	std::string file_name = "input.png";
 	// load the image
 	sf::Image in;
 	if (!in.loadFromFile(file_name))
@@ -14,17 +13,19 @@ int main()
 		return -1;
 	}
 
-	qlm::Kernel1D ker{ 3 };
-	ker.Set(0, 1.0/3); ker.Set(1, 1.0 / 3); ker.Set(2, 1.0 / 3);
-
-	sf::Image out{ in };
 	// do the operation
 	t.start();
-	qlm::SepFilter2D(in, out, ker, ker, qlm::BORDER::BORDER_REFLECT);
+	std::vector<qlm::LinePolar> lines = qlm::HoughLines(in, 1, 3 * 3.14f / 180, 110);
 	t.end();
 
 	t.show();
+	std::cout <<"number of lines : " << lines.size() << "\n";
+	for (auto& line : lines)
+	{
+		std::cout << "r: " << line.radius << "  theta: " << line.angle << "\n";
+		qlm::DrawLine(in, line, sf::Color{ 0,255,0 });
+	}
 	// Save the image to a file
-	out.saveToFile("result.jpg");
+	in.saveToFile("result.jpg");
 	
 }

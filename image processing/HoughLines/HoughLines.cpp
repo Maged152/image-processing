@@ -2,18 +2,20 @@
 #include <iostream>
 
 
-void qlm::HoughLines(const sf::Image& in, std::vector<LinePolar>& lines, float rho, float theta_step, int threshold, double min_theta, double max_theta)
+std::vector<qlm::LinePolar> qlm::HoughLines(const sf::Image& in, float rho, float theta_step, int threshold, double min_theta, double max_theta)
 {
 	unsigned int width = in.getSize().x;
 	unsigned int height = in.getSize().y;
 
 	int max_rho = std::floor(std::sqrt(width * width + height * height));
 	int min_rho = 0; //-max_rho
+	// output lines
+	std::vector<qlm::LinePolar> lines;
 
 	if (min_theta > max_theta)
 	{
 		std::cout << " Error max_theta is less than min_theta\n";
-		return;
+		return std::move(lines);
 	}
 	int numangle = std::floor((max_theta - min_theta) / theta_step);
 	// If the distance between the first angle and the last angle is approximately equal to pi, then the last angle will be removed
@@ -84,4 +86,6 @@ void qlm::HoughLines(const sf::Image& in, std::vector<LinePolar>& lines, float r
 	}
 	// free accumulator
 	delete[] acc;
+
+	return std::move(lines);
 }
