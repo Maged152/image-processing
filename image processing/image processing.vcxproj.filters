@@ -33,6 +33,9 @@
     <ClCompile Include="SepFilter2D\SepFilter2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sobel\Sobel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scale\Scale.h">

@@ -144,6 +144,7 @@
     <ClCompile Include="Resize\Resize.cpp" />
     <ClCompile Include="Scale\Scale.cpp" />
     <ClCompile Include="SepFilter2D\SepFilter2D.cpp" />
+    <ClCompile Include="Sobel\Sobel.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>

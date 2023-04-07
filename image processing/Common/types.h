@@ -227,4 +227,13 @@ namespace qlm
 			Kernel::Set(idx, 0, value);
 		}
 	};
+
+	struct SobelDerivatives
+	{
+		sf::Image sobel_x;
+		sf::Image sobel_y;
+		sf::Image magnitude;
+		float* angle;
+		// TODO : constructor
+	};
 }
