@@ -1,5 +1,7 @@
 #pragma once
+#include "Image.h"
 
+/*************************************************************************/
 namespace qlm
 {
 	enum class ScaleMethod
@@ -9,13 +11,31 @@ namespace qlm
 		BICUBIC
 	};
 
-	enum class BORDER
+	enum class Border
 	{
 		BORDER_CONSTANT,
 		BORDER_REPLICATE,
 		BORDER_REFLECT,
 	};
+	
+	enum class ColorCvtCode
+	{
+		RGB2GRAY,
+		GRAY2RGB,
+		RGB2YCrCb,
+		YCrCb2RGB,
+		RGB2HSV,
+		HSV2RGB,
+		RGB2HLS,
+		HLS2RGB,
+	};
+}
 
+/***************************************************************************/
+
+namespace qlm
+{
+	
 	struct Line
 	{
 		int x0;
@@ -28,88 +48,6 @@ namespace qlm
 	{
 		float radius;
 		float angle;
-	};
-
-	class Pixel
-	{
-	public:
-		float r, g, b, a;
-	public:
-		Pixel(float value):r(value), g(value), b(value), a(value)
-		{}
-
-		Pixel():Pixel(0)
-		{}
-
-		Pixel(float r, float g, float b, float a = 255):r(r), g(g), b(b), a(a)
-		{}
-	public:
-		void Set(float value)
-		{
-			r = value;
-			g = value;
-			b = value;
-			a = value;
-		}
-
-		void Set(float red, float green, float blue,float alpha = 255)
-		{
-			r = red;
-			g = blue;
-			b = green;
-			a = alpha;
-		}
-
-		void ToColor(sf::Color& c) const
-		{
-			c.r = std::clamp(static_cast<int>(std::round(r)), 0, 255);
-			c.g = std::clamp(static_cast<int>(std::round(g)), 0, 255);
-			c.b = std::clamp(static_cast<int>(std::round(b)), 0, 255);
-			c.a = std::clamp(static_cast<int>(std::round(a)), 0, 255);
-
-		}
-
-		void MAC(const sf::Color& c, const float coeff)
-		{
-			r += static_cast<float>(c.r) * coeff;
-			g += static_cast<float>(c.g) * coeff;
-			b += static_cast<float>(c.b) * coeff;
-			a += static_cast<float>(c.a) * coeff;
-		}
-
-		void MAC(const Pixel& c, const float coeff)
-		{
-			r += c.r * coeff;
-			g += c.g * coeff;
-			b += c.b * coeff;
-			a += c.a * coeff;
-		}
-
-		Pixel& operator=(Pixel&& other) noexcept
-		{
-			if (this != &other)
-			{
-				r = std::exchange(other.r, 0);
-				g = std::exchange(other.g, 0);
-				b = std::exchange(other.b, 0);
-				a = std::exchange(other.a, 0);
-			}
-
-			return *this;
-		}
-
-		Pixel& operator=(Pixel& other) noexcept
-		{
-			if (this != &other)
-			{
-				r = other.r;
-				g = other.g;
-				b = other.b;
-				a = other.a;
-			}
-
-			return *this;
-		}
 	};
 
 	class Kernel
@@ -125,7 +63,7 @@ namespace qlm
 			data = new float[height * width];
 		}
 		// Move Constructor
-		Kernel(Kernel&& other) : width(other.width), height(other.height), data(other.data)
+		Kernel(Kernel&& other) noexcept : width(other.width), height(other.height), data(other.data)
 		{
 			other.data = nullptr;
 		}
@@ -136,7 +74,7 @@ namespace qlm
 			std::memcpy(data, other.data, height * width * sizeof(float));
 		}
 		// Move Assignment Operator
-		Kernel& operator=(Kernel&& other) 
+		Kernel& operator=(Kernel&& other) noexcept
 		{
 			if (this != &other)
 			{
