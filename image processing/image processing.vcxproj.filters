@@ -36,6 +36,9 @@
     <ClCompile Include="Sobel\Sobel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Common\stb_image_impl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scale\Scale.h">

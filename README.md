@@ -1,7 +1,8 @@
 # image processing
 Implementation of some image processing algorithms in c++
-Here I'm using [SFML](https://www.sfml-dev.org/index.php) as a tool to R/W images and other GUI operations.
-You can find the implementation of
+Here I'm using [stb](https://github.com/nothings/stb) to R/W images.
+
+Here you can find the implementation of
 * [Scale](/image%20processing/Scale)
 * [Resize](/image%20processing/Resize)
 * [Hough lines](/image%20processing/HoughLines)
