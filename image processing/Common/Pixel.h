@@ -149,7 +149,7 @@ public:
     template<arithmetic_t T2>
     void MAC(const Pixel& other, const T2 coeff)
     {
-        v = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(v + other.r * coeff, min_value, max_value));
+        v = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(v + other.v * coeff, min_value, max_value));
         a = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(a + other.a * coeff, min_value, max_value));
     }
 };

@@ -3,29 +3,33 @@
 
 int main()
 {
-	qlm::Timer<msec> t{};
-	std::string file_name = "input.png";
+	qlm::Timer<qlm::msec> t{};
+	std::string file_name = "input.jpg";
 	// load the image
-	sf::Image in;
-	if (!in.loadFromFile(file_name))
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	if (!in.LoadFromFile(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
 	}
+	// check alpha component
+	bool alpha{ true };
+	if (in.NumerOfChannels() == 3)
+		alpha = false;
+	
+	qlm::Kernel1D ker{ 3 };
+	ker.Set(0, 1.0 / 3); ker.Set(1, 1.0 / 3); ker.Set(2, 1.0 / 3);
+
 
 	// do the operation
 	t.start();
-	std::vector<qlm::LinePolar> lines = qlm::HoughLines(in, 1, 3 * 3.14f / 180, 110);
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::SepFilter2D(in, ker, ker, qlm::Border::BORDER_REFLECT);
 	t.end();
-
-	t.show();
-	std::cout <<"number of lines : " << lines.size() << "\n";
-	for (auto& line : lines)
-	{
-		std::cout << "r: " << line.radius << "  theta: " << line.angle << "\n";
-		qlm::DrawLine(in, line, sf::Color{ 0,255,0 });
-	}
-	// Save the image to a file
-	in.saveToFile("result.jpg");
 	
+	t.show();
+
+	if (!out.SaveToFile("result.jpg", alpha))
+	{
+		std::cout << "Falied to write \n";
+	}
 }

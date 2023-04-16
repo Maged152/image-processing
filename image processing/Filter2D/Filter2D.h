@@ -1,13 +1,14 @@
 #pragma once
-#include "SFML/Graphics.hpp"
+
 #include "types.h"
 
 namespace qlm
 {
-	sf::Image Filter2D(
-		const sf::Image& in,
+	template<ImageFormat frmt, pixel_t T>
+	Image<frmt, T> Filter2D(
+		const Image<frmt, T>& in,
 		const Kernel& kernel,
-		      BORDER border_type = BORDER::BORDER_CONSTANT,
+		      Border border_type = Border::BORDER_CONSTANT,
 		      int border_value = 0
 	);
 }

@@ -6,12 +6,13 @@ Applys 2D filter of size MxN on the input image
 ```c++
 namespace qlm
 {
-	sf::Image Filter2D(
-		const sf::Image& in,
+	template<ImageFormat frmt, pixel_t T>
+	Image<frmt, T> Filter2D(
+		const Image<frmt, T>& in,
 		const Kernel& kernel,
-		      BORDER border_type = BORDER::BORDER_CONSTANT,
+		      Border border_type = Border::BORDER_CONSTANT,
 		      int border_value = 0
-		);
+	);
 }
 ```
 ```c++
@@ -29,7 +30,7 @@ namespace qlm
 
 | Name           | Type         | Description                                                                                  |
 |----------------|--------------|----------------------------------------------------------------------------------------------|
-| `in`           | `sf::Image`  | The input image.                                                                             |
+| `in`           | `Image`      | The input image.                                                                             |
 | `kernel`       | `Kernel`     | The kernel to be applied on the input image.                                                 |
 | `border_type`  | `BORDER`     | The pixel extrapolation method.                                                              |
 | `border_value` | `int`        | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
@@ -46,16 +47,20 @@ namespace qlm
 ```c++
 namespace qlm
 {
-	qlm::Timer<msec> t{};
+	qlm::Timer<qlm::msec> t{};
 	std::string file_name = "input.jpg";
 	// load the image
-	sf::Image in;
-	if (!in.loadFromFile(file_name))
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	if (!in.LoadFromFile(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
 	}
-
+	// check alpha component
+	bool alpha{ true };
+	if (in.NumerOfChannels() == 3)
+		alpha = false;
+	
 	qlm::Kernel k{ 3, 3 };
 	// sharpen filter
 	k.Set(0, 0, 0); k.Set(0, 1, -1); k.Set(0, 2, 0);
@@ -64,12 +69,15 @@ namespace qlm
 
 	// do the operation
 	t.start();
-	sf::Image out = qlm::Filter2D(in, k, qlm::BORDER::BORDER_REFLECT);
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::Filter2D(in, k, qlm::Border::BORDER_REFLECT);
 	t.end();
-
+	
 	t.show();
-	// Save the image to a file
-	out.saveToFile("result.jpg");
+
+	if (!out.SaveToFile("result.jpg", alpha))
+	{
+		std::cout << "Falied to write \n";
+	}
 }
 ```
 
@@ -78,5 +86,5 @@ namespace qlm
 ### The output
 ![Input Image](result.jpg)
 
-Time = 37 ms
+Time = 22 ms
 
