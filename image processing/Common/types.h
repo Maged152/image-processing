@@ -166,12 +166,12 @@ namespace qlm
 		}
 	};
 
-	struct SobelDerivatives
-	{
-		sf::Image sobel_x;
-		sf::Image sobel_y;
-		sf::Image magnitude;
-		float* angle;
-		// TODO : constructor
-	};
+	//struct SobelDerivatives
+	//{
+	//	sf::Image sobel_x;
+	//	sf::Image sobel_y;
+	//	sf::Image magnitude;
+	//	float* angle;
+	//	// TODO : constructor
+	//};
 }

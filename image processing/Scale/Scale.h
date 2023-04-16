@@ -1,11 +1,12 @@
 #pragma once
-#include "SFML/Graphics.hpp"
+
 #include "types.h"
 
 namespace qlm
 {
-	sf::Image Scale(const sf::Image& in, 
-		                  ScaleMethod method, 
-		                  float scale_x, 
-		                  float scale_y);
+	template<ImageFormat frmt, pixel_t T>
+	Image<frmt, T> Scale(const Image<frmt, T>& in,
+		                       ScaleMethod method, 
+		                       float scale_x, 
+		                       float scale_y);
 } // namespace

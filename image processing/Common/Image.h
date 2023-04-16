@@ -9,7 +9,7 @@
 
 namespace qlm
 {
-	template<ImageFormat frmt, pixel_type T>
+	template<ImageFormat frmt, pixel_t T>
 	class Image
 	{
 	private:
@@ -127,12 +127,12 @@ namespace qlm
 			std::fill_n(data, width * height, pix);
 		}
 		
-		void SetPixel(int x, int y, Pixel<frmt, T> pix)
+		void SetPixel(int x, int y, const Pixel<frmt, T> &pix)
 		{
 			data[y * width + x] = pix;
 		}
 
-		Pixel<frmt, T> GetPixel(int x, int y)
+		Pixel<frmt, T> GetPixel(int x, int y) const
 		{
 			return data[y * width + x];
 		}
@@ -159,7 +159,7 @@ namespace qlm
 }
 
 
-template<qlm::ImageFormat frmt, qlm::pixel_type T>
+template<qlm::ImageFormat frmt, qlm::pixel_t T>
 bool qlm::Image<frmt, T>::LoadFromFile(const std::string& file_name)
 {
 	int w, h, n; // width, height, number of channels
@@ -269,7 +269,7 @@ bool qlm::Image<frmt, T>::LoadFromFile(const std::string& file_name)
 	return true;
 }
 
-template<qlm::ImageFormat frmt, qlm::pixel_type T>
+template<qlm::ImageFormat frmt, qlm::pixel_t T>
 bool qlm::Image<frmt, T>::SaveToFile(const std::string& file_name, bool alpha, int quality)
 {
 	// check if the data is valid
