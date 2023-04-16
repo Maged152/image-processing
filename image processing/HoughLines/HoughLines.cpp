@@ -1,11 +1,13 @@
 #include "HoughLines.h"
 #include <iostream>
 
-
-std::vector<qlm::LinePolar> qlm::HoughLines(const sf::Image& in, float rho, float theta_step, int threshold, double min_theta, double max_theta)
+template<qlm::ImageFormat frmt, qlm::pixel_t T>
+std::vector<qlm::LinePolar> qlm::HoughLines(const qlm::Image<frmt, T>& in, float rho, float theta_step, int threshold, double min_theta, double max_theta)
 {
-	unsigned int width = in.getSize().x;
-	unsigned int height = in.getSize().y;
+	// TODO: check if not gray convert to gray
+
+	unsigned int width = in.Width();
+	unsigned int height = in.Height();
 
 	int max_rho = std::floor(std::sqrt(width * width + height * height));
 	int min_rho = 0; //-max_rho
@@ -15,7 +17,7 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const sf::Image& in, float rho, floa
 	if (min_theta > max_theta)
 	{
 		std::cout << " Error max_theta is less than min_theta\n";
-		return std::move(lines);
+		return lines;
 	}
 	int numangle = std::floor((max_theta - min_theta) / theta_step);
 	// If the distance between the first angle and the last angle is approximately equal to pi, then the last angle will be removed
@@ -44,8 +46,8 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const sf::Image& in, float rho, floa
 		for (int x = 0; x < width; x++)
 		{
 			// check if exists
-			sf::Color c = in.getPixel(x, y);
-			if (c.r != 0)
+			qlm::Pixel c = in.GetPixel(x, y);
+			if (c.v != 0)
 			{
 				// loop over all angles
 				for (int n = 0; n < numangle; n++)
@@ -87,5 +89,14 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const sf::Image& in, float rho, floa
 	// free accumulator
 	delete[] acc;
 
-	return std::move(lines);
+	return lines;
 }
+
+// Explicit instantiation for GRAY , uint8_t
+template std::vector<qlm::LinePolar>
+qlm::HoughLines<qlm::ImageFormat::GRAY, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
+												 float, float, int, double, double);
+// Explicit instantiation for GRAY , int16_t
+template std::vector<qlm::LinePolar>
+qlm::HoughLines<qlm::ImageFormat::GRAY, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
+	                                             float, float, int, double, double);

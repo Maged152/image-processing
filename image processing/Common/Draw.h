@@ -4,11 +4,11 @@
 
 namespace qlm
 {
-
-    void DrawLine(sf::Image& in, const Line& line, const sf::Color& c)
+    template<ImageFormat frmt, pixel_t T>
+    void DrawLine(Image<frmt, T>& in, const Line& line, const Pixel<frmt, T>& c)
     {
-        int width = in.getSize().x;
-        int height = in.getSize().y;
+        int width = in.Width();
+        int height = in.Height();
 
         auto [x1, y1, x2, y2] = line;
         int dx = x2 - x1;
@@ -20,7 +20,7 @@ namespace qlm
             if (0 <= x1 && x1 < width && 0 <= y1 && y1 < height)
             {
                 // just a point
-                in.setPixel(x1, y1, c);
+                in.SetPixel(x1, y1, c);
             }
             return;
         }
@@ -38,7 +38,7 @@ namespace qlm
                 int y = dy * (x - x1) / dx + y1;
                 if (0 <= y && y < height && 0 <= x && x < width)
                 {
-                    in.setPixel(x, y, c);
+                    in.SetPixel(x, y, c);
                 }
             }
         }
@@ -53,16 +53,17 @@ namespace qlm
                 int x = dx * (y - y1) / dy + x1;
                 if (0 <= y && y < height && 0 <= x && x < width)
                 {
-                    in.setPixel(x, y, c);
+                    in.SetPixel(x, y, c);
                 }
             }
         }
     }
 
-    void DrawLine(sf::Image& in, const LinePolar& line, const sf::Color& color)
+    template<ImageFormat frmt, pixel_t T>
+    void DrawLine(Image<frmt, T>& in, const LinePolar& line, const  Pixel<frmt, T>& color)
     {
-        int width = in.getSize().x;
-        int height = in.getSize().y;
+        int width = in.Width();
+        int height = in.Height();
 
         auto theta = line.angle;
         auto r = line.radius;
