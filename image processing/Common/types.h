@@ -1,5 +1,5 @@
 #pragma once
-#include "Image.h"
+#include "image.h"
 
 /*************************************************************************/
 namespace qlm

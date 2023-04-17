@@ -109,7 +109,7 @@
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies;$(SolutionDir)image processing\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
@@ -129,7 +129,7 @@
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies;$(SolutionDir)image processing\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
@@ -154,16 +154,16 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common\Draw.h" />
-    <ClInclude Include="Common\Image.h" />
-    <ClInclude Include="Common\Pixel.h" />
+    <ClInclude Include="common\draw.h" />
+    <ClInclude Include="common\image.h" />
+    <ClInclude Include="common\pixel.h" />
     <ClInclude Include="Resize\Resize.h" />
     <ClInclude Include="SepFilter2D\SepFilter2D.h" />
     <ClInclude Include="shakhbat.h" />
-    <ClInclude Include="Common\types.h" />
+    <ClInclude Include="common\types.h" />
     <ClInclude Include="HoughLines\HoughLines.h" />
     <ClInclude Include="Scale\Scale.h" />
-    <ClInclude Include="Common\Timer.h" />
+    <ClInclude Include="common\timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HoughLines\README.md" />

@@ -44,16 +44,16 @@
     <ClInclude Include="Scale\Scale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Timer.h">
+    <ClInclude Include="common\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HoughLines\HoughLines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Draw.h">
+    <ClInclude Include="common\draw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\types.h">
+    <ClInclude Include="common\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shakhbat.h">
@@ -65,10 +65,10 @@
     <ClInclude Include="SepFilter2D\SepFilter2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Image.h">
+    <ClInclude Include="common\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Pixel.h">
+    <ClInclude Include="common\pixel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

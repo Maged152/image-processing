@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Pixel.h"
+#include "pixel.h"
 #include <string>
-#include "stb/stb_image.h"
-#include "stb/stb_image_write.h"
+#include "stb_image.h"
+#include "stb_image_write.h"
 #include <iostream>
 #include <fstream>
 
