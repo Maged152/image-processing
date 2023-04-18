@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ColorConvert\ColorConvert.cpp" />
     <ClCompile Include="Common\stb_image_impl.cpp" />
     <ClCompile Include="Filter2D\Filter2D.cpp" />
     <ClCompile Include="HoughLines\HoughLines.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ColorConvert\ColorConvert.h" />
     <ClInclude Include="common\draw.h" />
     <ClInclude Include="common\image.h" />
     <ClInclude Include="common\pixel.h" />

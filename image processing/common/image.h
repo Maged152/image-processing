@@ -108,7 +108,7 @@ namespace qlm
 		}
 
 	public:
-		void create(unsigned int img_width, unsigned int img_height, Pixel<frmt, T> pix)
+		void create(unsigned int img_width, unsigned int img_height, Pixel<frmt, T> pix = Pixel<frmt, T>{})
 		{
 			width = img_width;
 			height = img_height;
@@ -132,9 +132,19 @@ namespace qlm
 			data[y * width + x] = pix;
 		}
 
+		void SetPixel(int i, const Pixel<frmt, T>& pix)
+		{
+			data[i] = pix;
+		}
+
 		Pixel<frmt, T> GetPixel(int x, int y) const
 		{
 			return data[y * width + x];
+		}
+
+		Pixel<frmt, T> GetPixel(int i) const
+		{
+			return data[i];
 		}
 
 		bool LoadFromFile(const std::string& file_name);
