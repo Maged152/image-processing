@@ -134,8 +134,8 @@ public:
         T2 min_val = std::numeric_limits<T2>::lowest();
         T2 max_val = std::numeric_limits<T2>::max();
 
-        res.v = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(v, min_val, max_val));
-        res.a = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(a, min_val, max_val));
+        res.v = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(v, min_val, max_val));
+        res.a = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(a, min_val, max_val));
 
         return res;
     }
@@ -235,10 +235,10 @@ public:
         T2 min_val = std::numeric_limits<T2>::lowest();
         T2 max_val = std::numeric_limits<T2>::max();
 
-        res.r = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(r, min_val, max_val));
-        res.g = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(g, min_val, max_val));
-        res.b = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(b, min_val, max_val));
-        res.a = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(a, min_val, max_val));
+        res.r = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(r, min_val, max_val));
+        res.g = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(g, min_val, max_val));
+        res.b = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(b, min_val, max_val));
+        res.a = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(a, min_val, max_val));
 
         return res;
     }
@@ -351,10 +351,10 @@ public:
         T2 min_val = std::numeric_limits<T2>::lowest();
         T2 max_val = std::numeric_limits<T2>::max();
 
-        res.y  = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(y , min_val, max_val));
-        res.cr = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(cr, min_val, max_val));
-        res.cb = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(cb, min_val, max_val));
-        res.a  = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(a , min_val, max_val));
+        res.y  = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(y , min_val, max_val));
+        res.cr = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(cr, min_val, max_val));
+        res.cb = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(cb, min_val, max_val));
+        res.a  = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(a , min_val, max_val));
 
         return res;
     }
@@ -466,10 +466,10 @@ public:
         T2 min_val = std::numeric_limits<T2>::lowest();
         T2 max_val = std::numeric_limits<T2>::max();
 
-        res.h = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(h, min_val, max_val));
-        res.s = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(s, min_val, max_val));
-        res.v = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(v, min_val, max_val));
-        res.a = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(a, min_val, max_val));
+        res.h = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(h, min_val, max_val));
+        res.s = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(s, min_val, max_val));
+        res.v = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(v, min_val, max_val));
+        res.a = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(a, min_val, max_val));
 
         return res;
     }
@@ -581,10 +581,10 @@ public:
         T2 min_val = std::numeric_limits<T2>::lowest();
         T2 max_val = std::numeric_limits<T2>::max();
 
-        res.h = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(h, min_val, max_val));
-        res.s = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(s, min_val, max_val));
-        res.l = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(l, min_val, max_val));
-        res.a = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(a, min_val, max_val));
+        res.h = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(h, min_val, max_val));
+        res.s = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(s, min_val, max_val));
+        res.l = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(l, min_val, max_val));
+        res.a = static_cast<T2>(std::clamp<qlm::cast_t<T, T2>>(a, min_val, max_val));
 
         return res;
     }

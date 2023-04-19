@@ -17,13 +17,12 @@ int main()
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 	
-	qlm::Kernel1D ker{ 3 };
-	ker.Set(0, 1.0 / 3); ker.Set(1, 1.0 / 3); ker.Set(2, 1.0 / 3);
 
 
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::SepFilter2D(in, ker, ker, qlm::Border::BORDER_REFLECT);
+	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> out = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, 
+																		qlm::ImageFormat::GRAY, uint8_t>(in);
 	t.end();
 	
 	t.show();
