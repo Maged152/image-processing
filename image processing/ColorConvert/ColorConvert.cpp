@@ -50,6 +50,43 @@ namespace qlm
 				dst_pix.r = dst_pix.g = dst_pix.b = static_cast<dst_t>(std::clamp<cast_t<src_t, dst_t>>(src_pix.v, min_val, max_val));
 				dst_pix.a = static_cast<dst_t>(std::clamp<cast_t<src_t, dst_t>>(src_pix.a, min_val, max_val));
 			}
+			else if constexpr (src_frmt == ImageFormat::RGB && (dst_frmt == ImageFormat::HSV || dst_frmt == ImageFormat::HLS))
+			{
+				// normalize R,G,B channels to range 0 to 1
+				float r = (src_pix.r - min_val) / (float)(max_val - min_val);
+				float g = (src_pix.g - min_val) / (float)(max_val - min_val);
+				float b = (src_pix.b - min_val) / (float)(max_val - min_val);
+
+				float c_max = std::max(r, g, b);
+				float c_min = std::min(r, g, b);
+				float delta = c_max - c_min;
+
+				if constexpr (dst_frmt == ImageFormat::HSV)
+				{
+					// RGB to HSV
+					if constexpr (std::is_same_v<float, dst_t>)
+					{
+						// v componet
+						dst_pix.v = c_max;
+						// s componet
+						dst_pix.s = c_max ? (delta / c_max) : 0;
+						// h component
+						dst_pix.h = c_max == r ? (60.0f * (g - b) / delta) :
+									c_max == g ? (120.0f + 60.0f * (b - r) / delta) :
+									c_max == b ? (240.0f + 60.0f * (r - g) / delta) : 0;
+					}
+					else
+					{
+						// scale up
+					}
+
+				}
+				else
+				{
+					// RGB to HLS
+
+				}
+			}
 			// set output pixel
 			out.SetPixel(i, dst_pix);
 		}
