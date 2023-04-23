@@ -273,7 +273,7 @@ public:
 template<qlm::pixel_t T>
 class qlm::Pixel<qlm::ImageFormat::YCrCb, T>
 {
-private:
+public:
     T y, cr, cb, a;
 private:
     const T min_value = std::numeric_limits<T>::lowest();
@@ -389,7 +389,7 @@ public:
 template<qlm::pixel_t T>
 class qlm::Pixel<qlm::ImageFormat::HSV, T>
 {
-private:
+public:
     T h, s, v, a;
 private:
     const T min_value = std::numeric_limits<T>::lowest();
@@ -504,7 +504,7 @@ public:
 template<qlm::pixel_t T>
 class qlm::Pixel<qlm::ImageFormat::HLS, T>
 {
-private:
+public:
     T h, l, s, a;
 private:
     const T min_value = std::numeric_limits<T>::lowest();

@@ -5,6 +5,7 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 #include <iostream>
+#include <algorithm>
 #include <fstream>
 
 namespace qlm
@@ -347,6 +348,8 @@ bool qlm::Image<frmt, T>::SaveToFile(const std::string& file_name, bool alpha, i
 	}
 
 	std::string ext = file_name.substr(file_name.find_last_of('.') + 1);
+	std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c) { return std::tolower(c); });
+
 	if (ext == "bmp")
 	{
 		stb_status = stbi_write_bmp(file_name.c_str(), width, height, comp, reinterpret_cast<void*>(img_data));
