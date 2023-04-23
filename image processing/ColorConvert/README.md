@@ -45,7 +45,6 @@ namespace qlm
 | `dst_frmt` | `ImageFormat`  | The output image format.         |
 | `dst_t`    | `pixel_t`      | The output image type.           |
 | `in`       | `Image`        | The input image.                 |
-                |
 
 ## Example 
 
