@@ -109,7 +109,7 @@
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\code;$(SolutionDir)image processing\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
@@ -129,7 +129,7 @@
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\code;$(SolutionDir)image processing\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
@@ -144,32 +144,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ColorConvert\ColorConvert.cpp" />
+    <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
     <ClCompile Include="Common\stb_image_impl.cpp" />
-    <ClCompile Include="Filter2D\Filter2D.cpp" />
-    <ClCompile Include="HoughLines\HoughLines.cpp" />
-    <ClCompile Include="Resize\Resize.cpp" />
-    <ClCompile Include="Scale\Scale.cpp" />
-    <ClCompile Include="SepFilter2D\SepFilter2D.cpp" />
-    <ClCompile Include="Sobel\Sobel.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="code\Filter2D\Filter2D.cpp" />
+    <ClCompile Include="code\HoughLines\HoughLines.cpp" />
+    <ClCompile Include="code\Resize\Resize.cpp" />
+    <ClCompile Include="code\Scale\Scale.cpp" />
+    <ClCompile Include="code\SepFilter2D\SepFilter2D.cpp" />
+    <ClCompile Include="code\Sobel\Sobel.cpp" />
+    <ClCompile Include="run.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ColorConvert\ColorConvert.h" />
+    <ClInclude Include="code\ColorConvert\ColorConvert.h" />
     <ClInclude Include="common\draw.h" />
     <ClInclude Include="common\image.h" />
     <ClInclude Include="common\pixel.h" />
-    <ClInclude Include="Resize\Resize.h" />
-    <ClInclude Include="SepFilter2D\SepFilter2D.h" />
+    <ClInclude Include="code\Resize\Resize.h" />
+    <ClInclude Include="code\SepFilter2D\SepFilter2D.h" />
     <ClInclude Include="shakhbat.h" />
     <ClInclude Include="common\types.h" />
-    <ClInclude Include="HoughLines\HoughLines.h" />
-    <ClInclude Include="Scale\Scale.h" />
+    <ClInclude Include="code\HoughLines\HoughLines.h" />
+    <ClInclude Include="code\Scale\Scale.h" />
     <ClInclude Include="common\timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="HoughLines\README.md" />
-    <None Include="Scale\README.md" />
+    <None Include="code\HoughLines\README.md" />
+    <None Include="code\Scale\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

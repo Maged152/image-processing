@@ -8,5 +8,5 @@
 #include "Filter2D/Filter2D.h"
 #include "Resize/Resize.h"
 #include "SepFilter2D/SepFilter2D.h"
-#include "Sobel/Sobel.h"
 #include "ColorConvert/ColorConvert.h"
+#include "Sobel/Sobel.h"

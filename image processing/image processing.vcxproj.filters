@@ -15,42 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="run.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scale\Scale.cpp">
+    <ClCompile Include="code\Scale\Scale.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HoughLines\HoughLines.cpp">
+    <ClCompile Include="code\HoughLines\HoughLines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Filter2D\Filter2D.cpp">
+    <ClCompile Include="code\Filter2D\Filter2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Resize\Resize.cpp">
+    <ClCompile Include="code\Resize\Resize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SepFilter2D\SepFilter2D.cpp">
+    <ClCompile Include="code\SepFilter2D\SepFilter2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sobel\Sobel.cpp">
+    <ClCompile Include="code\Sobel\Sobel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Common\stb_image_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ColorConvert\ColorConvert.cpp">
+    <ClCompile Include="code\ColorConvert\ColorConvert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Scale\Scale.h">
+    <ClInclude Include="code\Scale\Scale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="common\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HoughLines\HoughLines.h">
+    <ClInclude Include="code\HoughLines\HoughLines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="common\draw.h">
@@ -62,10 +62,10 @@
     <ClInclude Include="shakhbat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Resize\Resize.h">
+    <ClInclude Include="code\Resize\Resize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SepFilter2D\SepFilter2D.h">
+    <ClInclude Include="code\SepFilter2D\SepFilter2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="common\image.h">
@@ -74,12 +74,12 @@
     <ClInclude Include="common\pixel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ColorConvert\ColorConvert.h">
+    <ClInclude Include="code\ColorConvert\ColorConvert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scale\README.md" />
-    <None Include="HoughLines\README.md" />
+    <None Include="code\Scale\README.md" />
+    <None Include="code\HoughLines\README.md" />
   </ItemGroup>
 </Project>
