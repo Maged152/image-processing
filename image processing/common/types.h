@@ -129,7 +129,7 @@ namespace qlm
 		{
 		}
 		// Move Constructor
-		Kernel1D(Kernel1D&& other) : Kernel(std::move(other)), length(other.length)
+		Kernel1D(Kernel1D&& other) noexcept: Kernel(std::move(other)), length(other.length)
 		{
 		}
 		// Copy Assignment Operator
@@ -166,12 +166,73 @@ namespace qlm
 		}
 	};
 
-	//struct SobelDerivatives
-	//{
-	//	sf::Image sobel_x;
-	//	sf::Image sobel_y;
-	//	sf::Image magnitude;
-	//	float* angle;
-	//	// TODO : constructor
-	//};
+	template<pixel_t mag, pixel_t drv = int16_t>
+	struct SobelDerivatives
+	{
+	public:
+		Image<ImageFormat::GRAY, drv> sobel_x;
+		Image<ImageFormat::GRAY, drv> sobel_y;
+		Image<ImageFormat::GRAY, mag> magnitude;
+		float* angle;
+	public:
+		SobelDerivatives() : angle(nullptr), sobel_x(), sobel_y(), magnitude()
+		{}
+		SobelDerivatives(unsigned int width, unsigned int height) : sobel_x(width, height), sobel_y(width, height), magnitude(width, height)
+		{
+			angle = new float[width * height];
+		}
+		// Copy constructor
+		SobelDerivatives(const SobelDerivatives& other): sobel_x(other.sobel_x), sobel_y(other.sobel_y), magnitude(other.magnitude), angle(nullptr)
+		{
+			if (other.angle != nullptr) 
+			{
+				angle = new float[other.sobel_x.get_width() * other.sobel_x.get_height()];
+				std::copy(other.angle, other.angle + other.sobel_x.Width() * other.sobel_x.Height(), angle);
+			}
+		}
+		// Move constructor
+		SobelDerivatives(SobelDerivatives&& other): sobel_x(std::move(other.sobel_x)), sobel_y(std::move(other.sobel_y)), magnitude(std::move(other.magnitude)), angle(other.angle) 
+		{
+			other.angle = nullptr;
+		}
+		// Copy assignment operator
+		SobelDerivatives& operator=(const SobelDerivatives& other)
+		{
+			if (this != &other) 
+			{
+				sobel_x = other.sobel_x;
+				sobel_y = other.sobel_y;
+				magnitude = other.magnitude;
+
+				delete[] angle;
+				angle = nullptr;
+				if (other.angle != nullptr)
+				{
+					angle = new float[other.sobel_x.get_width() * other.sobel_x.get_height()];
+					std::copy(other.angle, other.angle + other.sobel_x.Width() * other.sobel_x.Height(), angle);
+				}
+			}
+			return *this;
+		}
+		// Move assignment operator
+		SobelDerivatives& operator=(SobelDerivatives&& other)
+		{
+			if (this != &other) 
+			{
+				sobel_x = std::move(other.sobel_x);
+				sobel_y = std::move(other.sobel_y);
+				magnitude = std::move(other.magnitude);
+
+				delete[] angle;
+				angle = other.angle;
+				other.angle = nullptr;
+			}
+			return *this;
+		}
+		// Destructor
+		~SobelDerivatives() 
+		{
+			delete[] angle;
+		}
+	};
 }
