@@ -9,7 +9,9 @@ Here you can find the implementation of
 * [Filter2D MxN](/image%20processing/code/Filter2D)
 * [Filter2D MxN Separable](/image%20processing/code/SepFilter2D)
 * [ColorConversion](/image%20processing/code/ColorConvert)
-* Sobel (in progress)
+* [ConvertBitDepth](/image%20processing/code/ConvertBitDepth)
+* [Sobel](/image%20processing/code/Sobel)
+* Gaussian
 * Canny (backlog)
 * Hough circle (backlog)
 * Floyd–Steinberg (backlog)
