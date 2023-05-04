@@ -283,6 +283,8 @@ bool qlm::Image<frmt, T>::LoadFromFile(const std::string& file_name)
 template<qlm::ImageFormat frmt, qlm::pixel_t T>
 bool qlm::Image<frmt, T>::SaveToFile(const std::string& file_name, bool alpha, int quality)
 {
+	// I think stb_write supports only U8 !
+	
 	// check if the data is valid
 	if (data == nullptr)
 	{
@@ -300,7 +302,52 @@ bool qlm::Image<frmt, T>::SaveToFile(const std::string& file_name, bool alpha, i
 	if (alpha)
 	{
 		comp++;
-		img_data = (T*)data;
+		//img_data = (T*)data;
+		// create new datat that ignores the alpha channel
+		img_data = new T[width * height * comp];
+		// copy the data 
+		if constexpr (frmt == qlm::ImageFormat::GRAY)
+		{
+			for (unsigned int i = 0, idx = 0; i < width * height * comp;  i += comp, idx++)
+			{
+				img_data[i] = data[idx].v;
+				img_data[i + 1] = data[idx].a;
+			}
+		}
+		else
+		{
+			for (unsigned int i = 0, idx = 0; i < width * height * comp; i += comp, idx++)
+			{
+				if constexpr (frmt == ImageFormat::RGB)
+				{
+					img_data[i] = data[idx].r;
+					img_data[i + 1] = data[idx].g;
+					img_data[i + 2] = data[idx].b;
+					img_data[i + 3] = data[idx].a;
+				}
+				else if constexpr (frmt == ImageFormat::YCrCb)
+				{
+					img_data[i] = data[idx].y;
+					img_data[i + 1] = data[idx].cr;
+					img_data[i + 2] = data[idx].cb;
+					img_data[i + 3] = data[idx].a;
+				}
+				else if constexpr (frmt == ImageFormat::HSV)
+				{
+					img_data[i] = data[idx].h;
+					img_data[i + 1] = data[idx].s;
+					img_data[i + 2] = data[idx].v;
+					img_data[i + 3] = data[idx].a;
+				}
+				else
+				{
+					img_data[i] = data[idx].h;
+					img_data[i + 1] = data[idx].l;
+					img_data[i + 2] = data[idx].s;
+					img_data[i + 3] = data[idx].a;
+				}
+			}
+		}
 	}
 	else
 	{
@@ -385,8 +432,9 @@ bool qlm::Image<frmt, T>::SaveToFile(const std::string& file_name, bool alpha, i
 		stb_status = stbi_write_jpg(file_name.c_str(), width, height, comp, reinterpret_cast<void*>(img_data), quality);
 	}
 	
-	if (!alpha)
-		delete[] img_data;
+	delete[] img_data;
+
+	img_data = nullptr;
 
 	return stb_status ? true : false;
 }

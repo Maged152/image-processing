@@ -3,64 +3,160 @@
 ## Description
 Applys sobel filter of size NxN on the input image.
 
-We provide three functions for performing Sobel edge detection on images, as well as a new data type to hold the output of the edge detection.
+## C++ API
+
+### `SobelX` Function
+ Performs Sobel X derivative on the input image. input image must be in GRAY format
+
+```c++
+    template<pixel_t in_t, pixel_t out_t = int16_t>
+	Image<ImageFormat::GRAY, out_t> SobelX(
+		const Image <ImageFormat::GRAY, in_t>& in,
+		const unsigned int kernel_size,
+			  Border border_type = Border::BORDER_CONSTANT,
+			  int border_value = 0
+	);
+```
+## Parameters
+
+| Name           | Type           | Description                                                                                  |
+|----------------|----------------|----------------------------------------------------------------------------------------------|
+| `in_t`         | `pixel_t`      | The data type of the input image.                                                            |
+| `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
+| `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
+| `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
+| `border_type`  | `BORDER`       | The pixel extrapolation method.                                                              |
+| `border_value` | `int`          | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
+
+
+
+### `SobelY` Function
+ Performs Sobel Y derivative on the input image. input image must be in GRAY format
+
+```c++
+    template<pixel_t in_t, pixel_t out_t = int16_t>
+	Image<ImageFormat::GRAY, out_t> SobelY(
+		const Image <ImageFormat::GRAY, in_t>& in,
+		const unsigned int kernel_size,
+			  Border border_type = Border::BORDER_CONSTANT,
+			  int border_value = 0
+	);
+```
+## Parameters
+
+| Name           | Type           | Description                                                                                  |
+|----------------|----------------|----------------------------------------------------------------------------------------------|
+| `in_t`         | `pixel_t`      | The data type of the input image.                                                            |
+| `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
+| `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
+| `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
+| `border_type`  | `BORDER`       | The pixel extrapolation method.                                                              |
+| `border_value` | `int`          | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
+
+
+### `Sobel` Function
+ Performs Sobel derivative on the input image. input image must be in GRAY format
+ The return data type is `SobelDerivatives`
+
+```c++
+    template<pixel_t in_t, pixel_t out_t = int16_t>
+	SobelDerivatives<in_t, out_t> Sobel(
+		const Image<ImageFormat::GRAY, in_t>& in,
+		const unsigned int kernel_size,
+		      Border border_type = Border::BORDER_CONSTANT,
+		      int border_value = 0
+	);
+```
+## Parameters
+
+| Name           | Type           | Description                                                                                  |
+|----------------|----------------|----------------------------------------------------------------------------------------------|
+| `in_t`         | `pixel_t`      | The data type of the input image.                                                            |
+| `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
+| `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
+| `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
+| `border_type`  | `BORDER`       | The pixel extrapolation method.                                                              |
+| `border_value` | `int`          | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
+
 
 ### ``SobelDerivatives`` Data Type
 The  struct  contains four members:
 
 | Name           | Type         | Description                                                                                  |
 |----------------|--------------|----------------------------------------------------------------------------------------------|
-| `sobel_x`      | `sf::Image`  | The Sobel X derivative of the input image.                                                   |
-| `sobel_y`      | `sf::Image`  | The Sobel Y derivative of the input image.                                                   |
-| `magnitude`    | `sf::Image`  | The magnitude of the Sobel derivatives.                                                      |
+| `sobel_x`      | `Image`      | The Sobel X derivative of the input image.                                                   |
+| `sobel_y`      | `Image`      | The Sobel Y derivative of the input image.                                                   |
+| `magnitude`    | `Image`      | The magnitude of the Sobel derivatives.                                                      |
 | `angle`        | `float*`     | A 2D array of float values that holds the angle of the Sobel derivatives.                    |
  
-## C++ API
 
-### `SobelX` Function
- Performs Sobel X derivative of the input image.
+### Get Derivative coefficients
 
 ```c++
-    sf::Image SobelX(
-		const sf::Image& in,
-		const unsigned int kernel_size,
-		      BORDER border_type = BORDER::BORDER_CONSTANT,
-		      int border_value = 0
-	);
+    // generate derivative kernel
+	Kernel1D GetDerivKernel(unsigned int n, int order = 1);
+	// generate coefficients for Sobel X
+	SepKernel GetDerivXKernel(unsigned int n);
+	// generate coefficients for Sobel Y
+	SepKernel GetDerivYKernel(unsigned int n);
+	// change Bit Depth to sobel from S16 to U8
+	Image<ImageFormat::GRAY, uint8_t> ConvertSobelDepth(Image < ImageFormat::GRAY, int16_t>& in,
+	                                                    unsigned int filter_size);
 ```
-### `Sobely` Function
-Performs Sobel Y derivative of the input image.
-
+### Example
 ```c++
+    qlm::Timer<qlm::msec> t{};
+	std::string file_name = "input.jpg";
+	// load the image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	if (!in.LoadFromFile(file_name))
+	{
+		std::cout << "Failed to read the image\n";
+		return -1;
+	}
+	// check alpha component
+	bool alpha{ true };
+	if (in.NumerOfChannels() == 3)
+		alpha = false;
 
-	sf::Image SobelY(
-		const sf::Image& in,
-		const unsigned int kernel_size,
-		      BORDER border_type = BORDER::BORDER_CONSTANT,
-		      int border_value = 0
-	);
+	unsigned int filter_size = 3;
+	// RGB to GRAY
+	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	// do the operation
+	t.start();
+	auto out = qlm::Sobel<uint8_t, int16_t>(gray, filter_size);
+	t.end();
+
+	t.show();
+
+	// S16 to U8
+	auto x = qlm::ConvertSobelDepth(out.sobel_x, filter_size);
+	auto y = qlm::ConvertSobelDepth(out.sobel_y, filter_size);
+
+	if (!x.SaveToFile("resultx.jpg", alpha))
+	{
+		std::cout << "Falied to write \n";
+	}
+
+	if (!y.SaveToFile("resulty.jpg", alpha))
+	{
+		std::cout << "Falied to write \n";
+	}
+
+	if (!out.magnitude.SaveToFile("result.jpg", alpha))
+	{
+		std::cout << "Falied to write \n";
+	}
 ```
 
-### ``Sobel`` Function
-Performs both Sobel X & Sobel Y also calculate the magnitude and the angles
+### The input
+![Input Image](input.jpg)
+### The output X
+![Input Image](resultx.jpg)
+### The output Y
+![Input Image](resulty.jpg)
+### The output
+![Input Image](result.jpg)
 
-```c++
-SobelDerivatives Sobel(
-		const sf::Image& in,
-		const unsigned int kernel_size,
-		      BORDER border_type = BORDER::BORDER_CONSTANT,
-		      int border_value = 0
-	);
-```
-
-
-## Parameters
-
-| Name           | Type           | Description                                                                                  |
-|----------------|----------------|----------------------------------------------------------------------------------------------|
-| `in`           | `sf::Image`    | The input image.                                                                             |
-| `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
-| `border_type`  | `BORDER`       | The pixel extrapolation method.                                                              |
-| `border_value` | `int`          | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
-
+Time = 30 ms
 

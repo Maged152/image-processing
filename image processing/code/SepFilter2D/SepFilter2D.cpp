@@ -15,8 +15,8 @@ static inline int ReflectBorderIndex(int idx, int max_idx)
 	return reflect_idx;
 }
 
-template<qlm::ImageFormat frmt, qlm::pixel_t T>
-qlm::Image<frmt, T> qlm::SepFilter2D(const qlm::Image<frmt, T>& in,
+template<qlm::ImageFormat frmt, qlm::pixel_t src_t, qlm::pixel_t dst_t>
+qlm::Image<frmt, dst_t> qlm::SepFilter2D(const qlm::Image<frmt, src_t>& in,
 	                       const qlm::Kernel1D& x_kernel, const qlm::Kernel1D& y_kernel, 
 	                       const qlm::Border border_type, const int border_value)
 {
@@ -24,8 +24,8 @@ qlm::Image<frmt, T> qlm::SepFilter2D(const qlm::Image<frmt, T>& in,
 	unsigned int img_height = in.Height();
 
 	// create the output image
-	qlm::Image<frmt, T> out;
-	out.create(img_width, img_height, qlm::Pixel<frmt, T>{});
+	qlm::Image<frmt, dst_t> out;
+	out.create(img_width, img_height, qlm::Pixel<frmt, dst_t>{});
 
 	int x_padding_length = x_kernel.length / 2;
 	int y_padding_length = y_kernel.length / 2;
@@ -146,30 +146,44 @@ qlm::Image<frmt, T> qlm::SepFilter2D(const qlm::Image<frmt, T>& in,
 }
 
 
-// Explicit instantiation for RGB , uint8_t
+// Explicit instantiation for RGB , uint8_t , uint8_t
 template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
-qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
+qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, uint8_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
 	const qlm::Border,
 	const int);
-// Explicit instantiation for RGB , int16_t
+// Explicit instantiation for RGB , uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::RGB, int16_t>
-qlm::SepFilter2D<qlm::ImageFormat::RGB, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, int16_t>&,
+qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
 	const qlm::Border,
 	const int);
-// Explicit instantiation for GRAY , uint8_t
-template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
-qlm::SepFilter2D<qlm::ImageFormat::GRAY, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
+// Explicit instantiation for RGB , int16_t, int16_t
+template qlm::Image<qlm::ImageFormat::RGB, int16_t>
+qlm::SepFilter2D<qlm::ImageFormat::RGB, int16_t, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, int16_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
 	const qlm::Border,
 	const int);
-// Explicit instantiation for GRAY , int16_t
+// Explicit instantiation for GRAY , uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
-qlm::SepFilter2D<qlm::ImageFormat::GRAY, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
+qlm::SepFilter2D<qlm::ImageFormat::GRAY, uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
+	const qlm::Kernel1D&,
+	const qlm::Kernel1D&,
+	const qlm::Border,
+	const int);
+// Explicit instantiation for GRAY , int16_t, int16_t
+template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
+qlm::SepFilter2D<qlm::ImageFormat::GRAY, int16_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
+	const qlm::Kernel1D&,
+	const qlm::Kernel1D&,
+	const qlm::Border,
+	const int);
+// Explicit instantiation for GRAY , uint8_t, uint8_t
+template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
+qlm::SepFilter2D<qlm::ImageFormat::GRAY, uint8_t, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
 	const qlm::Border,

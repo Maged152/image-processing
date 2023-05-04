@@ -9,4 +9,5 @@
 #include "Resize/Resize.h"
 #include "SepFilter2D/SepFilter2D.h"
 #include "ColorConvert/ColorConvert.h"
+#include "ConvertBitDepth/ConvertBitDepth.h"
 #include "Sobel/Sobel.h"

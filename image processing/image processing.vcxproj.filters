@@ -42,6 +42,9 @@
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Scale\Scale.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\ColorConvert\ColorConvert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\ConvertBitDepth\ConvertBitDepth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

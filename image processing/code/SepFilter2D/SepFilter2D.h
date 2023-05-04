@@ -4,9 +4,9 @@
 
 namespace qlm
 {
-	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> SepFilter2D(
-		const Image<frmt, T>& in,
+	template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
+	Image<frmt, dst_t> SepFilter2D(
+		const Image<frmt, src_t>& in,
 		const Kernel1D& x_kernel,
 		const Kernel1D& y_kernel,
 		const Border border_type = Border::BORDER_CONSTANT,

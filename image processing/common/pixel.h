@@ -19,8 +19,9 @@ namespace qlm
 
     // Supported pixel types
     template <class T>
-    concept pixel_t = std::same_as<T, uint8_t> ||
-                      std::same_as<T, int16_t> ||
+    concept pixel_t = std::same_as<T, uint8_t>  ||
+                      std::same_as<T, int16_t>  ||
+                      std::same_as<T, uint16_t> ||
                       std::floating_point<T>;
     // Arithmetic data type
     template<typename T>
@@ -52,7 +53,7 @@ namespace qlm
         typename std::conditional<(std::is_floating_point_v<T2> || std::is_floating_point_v<T>), double,
         typename std::conditional<((sizeof(T) > sizeof(T2)) && (std::is_signed_v<T2> || std::is_signed_v<T>)), wider_t<signed_t<T>>,
         typename std::conditional<((sizeof(T) < sizeof(T2)) && (std::is_signed_v<T2> || std::is_signed_v<T>)), wider_t<signed_t<T2>>,
-        typename std::conditional<(sizeof(T) > sizeof(T2)), T, T2
+        typename std::conditional<(sizeof(T) > sizeof(T2)), wider_t<T>, wider_t<T2>
         >::type
         >::type
         >::type

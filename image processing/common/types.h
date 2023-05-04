@@ -17,18 +17,6 @@ namespace qlm
 		BORDER_REPLICATE,
 		BORDER_REFLECT,
 	};
-	
-	enum class ColorCvtCode
-	{
-		RGB2GRAY,
-		GRAY2RGB,
-		RGB2YCrCb,
-		YCrCb2RGB,
-		RGB2HSV,
-		HSV2RGB,
-		RGB2HLS,
-		HLS2RGB,
-	};
 }
 
 /***************************************************************************/
@@ -117,7 +105,7 @@ namespace qlm
 		}
 	};
 
-	class Kernel1D : protected Kernel
+	class Kernel1D : private Kernel
 	{
 	public:
 		const unsigned int length;
@@ -166,7 +154,17 @@ namespace qlm
 		}
 	};
 
-	template<pixel_t mag, pixel_t drv = int16_t>
+	class SepKernel
+	{
+	public:
+		Kernel1D x_ker;
+		Kernel1D y_ker;
+	public:
+		SepKernel(unsigned int len) : x_ker(len), y_ker(len)
+		{}
+	};
+
+	template<pixel_t mag = uint8_t, pixel_t drv = int16_t>
 	struct SobelDerivatives
 	{
 	public:
@@ -191,7 +189,7 @@ namespace qlm
 			}
 		}
 		// Move constructor
-		SobelDerivatives(SobelDerivatives&& other): sobel_x(std::move(other.sobel_x)), sobel_y(std::move(other.sobel_y)), magnitude(std::move(other.magnitude)), angle(other.angle) 
+		SobelDerivatives(SobelDerivatives&& other) noexcept : sobel_x(std::move(other.sobel_x)), sobel_y(std::move(other.sobel_y)), magnitude(std::move(other.magnitude)), angle(other.angle)
 		{
 			other.angle = nullptr;
 		}

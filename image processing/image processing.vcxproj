@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
+    <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
     <ClCompile Include="Common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
     <ClCompile Include="code\HoughLines\HoughLines.cpp" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\ColorConvert\ColorConvert.h" />
+    <ClInclude Include="code\ConvertBitDepth\ConvertBitDepth.h" />
     <ClInclude Include="common\draw.h" />
     <ClInclude Include="common\image.h" />
     <ClInclude Include="common\pixel.h" />
