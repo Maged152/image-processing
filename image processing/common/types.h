@@ -38,18 +38,43 @@ namespace qlm
 		float angle;
 	};
 
+	template<class T = int>
 	class Point
 	{
 	public:
-		int x;
-		int y;
+		T x;
+		T y;
 	public:
 		Point() : x(0), y(0)
 		{}
-		Point(int x, int y) : x(x), y(y)
+		Point(T x, T y) : x(x), y(y)
 		{}
 	public:
-		// add operators
+		// addition operator
+		Point operator+(const Point& other) const
+		{
+			return Point(x + other.x, y + other.y);
+		}
+
+		// assignment operator
+		Point& operator=(const Point& other)
+		{
+			x = other.x;
+			y = other.y;
+			return *this;
+		}
+
+		// equality operator
+		bool operator==(const Point& other) const
+		{
+			return (x == other.x) && (y == other.y);
+		}
+
+		// subtraction operator
+		Point operator-(const Point& other) const
+		{
+			return Point(x - other.x, y - other.y);
+		}
 	};
 
 	class Kernel
