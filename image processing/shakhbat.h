@@ -11,4 +11,4 @@
 #include "ColorConvert/ColorConvert.h"
 #include "ConvertBitDepth/ConvertBitDepth.h"
 #include "Sobel/Sobel.h"
-#include "Rotate/Rotate.h"
+#include "WrapRotate/WrapRotate.h"

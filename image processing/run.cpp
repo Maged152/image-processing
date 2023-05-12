@@ -17,31 +17,22 @@ int main()
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	unsigned int filter_size = 3;
-	// RGB to GRAY
-	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	float angle = 30.0f;
+	float scale = 1.0f;
+	int centre_x = (in.Width() - 1) / 2;
+	int centre_y = (in.Height() - 1) / 2;
+	qlm::Point<int> centre{ centre_x, centre_y };
+	// background color
+	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> pix{ 255, 0, 0 };
 	// do the operation
 	t.start();
-	auto out = qlm::Sobel<uint8_t, int16_t>(gray, filter_size);
+	auto out = qlm::WrapRotate(in, angle, centre, scale, pix);
 	t.end();
 
 	t.show();
 
-	// S16 to U8
-	auto x = qlm::ConvertSobelDepth(out.sobel_x, filter_size);
-	auto y = qlm::ConvertSobelDepth(out.sobel_y, filter_size);
-
-	if (!x.SaveToFile("resultx.jpg", alpha))
-	{
-		std::cout << "Falied to write \n";
-	}
-
-	if (!y.SaveToFile("resulty.jpg", alpha))
-	{
-		std::cout << "Falied to write \n";
-	}
-
-	if (!out.magnitude.SaveToFile("result.jpg", alpha))
+	
+	if (!out.SaveToFile("result.jpg", alpha))
 	{
 		std::cout << "Falied to write \n";
 	}

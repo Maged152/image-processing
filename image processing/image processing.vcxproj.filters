@@ -45,6 +45,9 @@
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="code\WrapRotate\WrapRotate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Scale\Scale.h">
@@ -83,9 +86,13 @@
     <ClInclude Include="code\ConvertBitDepth\ConvertBitDepth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="code\WrapRotate\WrapRotate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="code\Scale\README.md" />
     <None Include="code\HoughLines\README.md" />
+    <None Include="code\WrapRotate\README.md" />
   </ItemGroup>
 </Project>

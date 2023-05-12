@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
+    <ClCompile Include="code\WrapRotate\WrapRotate.cpp" />
     <ClCompile Include="Common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
     <ClCompile Include="code\HoughLines\HoughLines.cpp" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="code\ColorConvert\ColorConvert.h" />
     <ClInclude Include="code\ConvertBitDepth\ConvertBitDepth.h" />
+    <ClInclude Include="code\WrapRotate\WrapRotate.h" />
     <ClInclude Include="common\draw.h" />
     <ClInclude Include="common\image.h" />
     <ClInclude Include="common\pixel.h" />
@@ -172,6 +174,7 @@
   <ItemGroup>
     <None Include="code\HoughLines\README.md" />
     <None Include="code\Scale\README.md" />
+    <None Include="code\WrapRotate\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
