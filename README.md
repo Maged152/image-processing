@@ -11,6 +11,7 @@ Here you can find the implementation of
 * Geometric Transformations:
     * [Scale](/image%20processing/code/Scale)
     * [Resize](/image%20processing/code/Resize)
+    * [Wrap Rotate](/image%20processing/code/WrapRotate)
     * Rotate (backlog)
     * Flip (backlog)
     * Translate (backlog)

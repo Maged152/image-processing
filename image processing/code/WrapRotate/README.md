@@ -1,4 +1,4 @@
-# Scale
+# Wrap Rotate
 
 ## Description
 The function rotates an image for an angle around a centre by the transformation matrix.
