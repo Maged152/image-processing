@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
+    <ClCompile Include="code\Rotate\Rotate.cpp" />
     <ClCompile Include="code\WrapRotate\WrapRotate.cpp" />
     <ClCompile Include="Common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />

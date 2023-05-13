@@ -17,6 +17,13 @@ namespace qlm
 		BORDER_REPLICATE,
 		BORDER_REFLECT,
 	};
+
+	enum class RotateFlag
+	{
+		ROTATE_90_CLOCKWISE,
+		ROTATE_180,
+		ROTATE_90_COUNTERCLOCKWISE,
+	};
 }
 
 /***************************************************************************/

@@ -12,3 +12,4 @@
 #include "ConvertBitDepth/ConvertBitDepth.h"
 #include "Sobel/Sobel.h"
 #include "WrapRotate/WrapRotate.h"
+#include "Rotate/Rotate.h"
