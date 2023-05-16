@@ -12,9 +12,10 @@ Here you can find the implementation of
     * [Scale](/image%20processing/code/Scale)
     * [Resize](/image%20processing/code/Resize)
     * [Wrap Rotate](/image%20processing/code/WrapRotate)
-    * Rotate (backlog)
+    * [Rotate](/image%20processing/code/Rotate)
     * Flip (backlog)
     * Translate (backlog)
+    + Transpose (backlog)
 * Feature Detection
     * [Hough lines](/image%20processing/code/HoughLines)
     * Canny (backlog)
