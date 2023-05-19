@@ -36,7 +36,7 @@
     <ClCompile Include="code\Sobel\Sobel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common\stb_image_impl.cpp">
+    <ClCompile Include="include\common\stb_image_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp">
@@ -53,43 +53,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code\Scale\Scale.h">
+    <ClInclude Include="include\common\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="common\timer.h">
+    <ClInclude Include="include\common\draw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\HoughLines\HoughLines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="common\draw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="common\types.h">
+    <ClInclude Include="include\common\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shakhbat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Resize\Resize.h">
+    <ClInclude Include="include\common\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\SepFilter2D\SepFilter2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="common\image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="common\pixel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\ColorConvert\ColorConvert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\ConvertBitDepth\ConvertBitDepth.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\WrapRotate\WrapRotate.h">
+    <ClInclude Include="include\common\pixel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

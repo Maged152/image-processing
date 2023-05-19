@@ -1,6 +1,6 @@
 #define _USE_MATH_DEFINES
 
-#include "Sobel.h"
+#include "Sobel/Sobel.h"
 #include "SepFilter2D/SepFilter2D.h"
 #include <iostream>
 #include <cmath>

@@ -1,5 +1,5 @@
-#include "Resize.h"
-#include "../Scale/Scale.h"
+#include "Resize/Resize.h"
+#include "Scale/Scale.h"
 
 template<qlm::ImageFormat frmt, qlm::pixel_t T>
 qlm::Image<frmt, T> qlm::Resize(const qlm::Image<frmt, T>& in, const unsigned int width, const unsigned int height, qlm::ScaleMethod method)

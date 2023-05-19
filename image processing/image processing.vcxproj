@@ -109,7 +109,7 @@
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\code;$(SolutionDir)image processing\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
@@ -129,7 +129,7 @@
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\code;$(SolutionDir)image processing\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)image processing\dependencies\stb;$(SolutionDir)image processing\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
@@ -148,7 +148,7 @@
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
     <ClCompile Include="code\Rotate\Rotate.cpp" />
     <ClCompile Include="code\WrapRotate\WrapRotate.cpp" />
-    <ClCompile Include="Common\stb_image_impl.cpp" />
+    <ClCompile Include="include\common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
     <ClCompile Include="code\HoughLines\HoughLines.cpp" />
     <ClCompile Include="code\Resize\Resize.cpp" />
@@ -158,19 +158,12 @@
     <ClCompile Include="run.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code\ColorConvert\ColorConvert.h" />
-    <ClInclude Include="code\ConvertBitDepth\ConvertBitDepth.h" />
-    <ClInclude Include="code\WrapRotate\WrapRotate.h" />
-    <ClInclude Include="common\draw.h" />
-    <ClInclude Include="common\image.h" />
-    <ClInclude Include="common\pixel.h" />
-    <ClInclude Include="code\Resize\Resize.h" />
-    <ClInclude Include="code\SepFilter2D\SepFilter2D.h" />
+    <ClInclude Include="include\common\draw.h" />
+    <ClInclude Include="include\common\image.h" />
+    <ClInclude Include="include\common\pixel.h" />
     <ClInclude Include="shakhbat.h" />
-    <ClInclude Include="common\types.h" />
-    <ClInclude Include="code\HoughLines\HoughLines.h" />
-    <ClInclude Include="code\Scale\Scale.h" />
-    <ClInclude Include="common\timer.h" />
+    <ClInclude Include="include\common\types.h" />
+    <ClInclude Include="include\common\timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="code\HoughLines\README.md" />

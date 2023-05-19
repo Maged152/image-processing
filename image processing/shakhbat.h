@@ -1,8 +1,8 @@
 #pragma once
 
-#include "timer.h"
-#include "draw.h"
-#include "types.h"
+#include "common/timer.h"
+#include "common/draw.h"
+#include "common/types.h"
 #include "HoughLines/HoughLines.h"
 #include "Scale/Scale.h"
 #include "Filter2D/Filter2D.h"
