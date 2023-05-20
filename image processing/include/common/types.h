@@ -24,6 +24,13 @@ namespace qlm
 		ROTATE_180,
 		ROTATE_90_COUNTERCLOCKWISE,
 	};
+
+	enum class FlipFlag
+	{
+		FLIP_VERTICAL_AXIS,
+		FLIP_HORIZONTAL_AXIS,
+		FLIP_VERTICAL_HORIZONTAL_AXIS,
+	};
 }
 
 /***************************************************************************/

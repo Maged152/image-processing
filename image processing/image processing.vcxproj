@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
+    <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\Rotate\Rotate.cpp" />
     <ClCompile Include="code\WrapRotate\WrapRotate.cpp" />
     <ClCompile Include="include\common\stb_image_impl.cpp" />
@@ -161,7 +162,8 @@
     <ClInclude Include="include\common\draw.h" />
     <ClInclude Include="include\common\image.h" />
     <ClInclude Include="include\common\pixel.h" />
-    <ClInclude Include="shakhbat.h" />
+    <ClInclude Include="include\Flip\Flip.h" />
+    <ClInclude Include="include\shakhbat.h" />
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />
   </ItemGroup>

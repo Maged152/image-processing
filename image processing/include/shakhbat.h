@@ -13,3 +13,4 @@
 #include "Sobel/Sobel.h"
 #include "WrapRotate/WrapRotate.h"
 #include "Rotate/Rotate.h"
+#include "Flip/Flip.h"

@@ -13,7 +13,7 @@ Here you can find the implementation of
     * [Resize](/image%20processing/code/Resize)
     * [Wrap Rotate](/image%20processing/code/WrapRotate)
     * [Rotate](/image%20processing/code/Rotate)
-    * Flip (backlog)
+    * [Flip](/image%20processing/code/Flip)
     * Translate (backlog)
     + Transpose (backlog)
 * Feature Detection

@@ -19,7 +19,7 @@ int main()
 
 	// do the operation
 	t.start();
-	auto out = qlm::Rotate(in, qlm::RotateFlag::ROTATE_90_CLOCKWISE);
+	auto out = qlm::Flip(in, qlm::FlipFlag::FLIP_VERTICAL_AXIS);
 	t.end();
 
 	t.show();

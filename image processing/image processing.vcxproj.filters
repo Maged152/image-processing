@@ -51,6 +51,9 @@
     <ClCompile Include="code\Rotate\Rotate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="code\Flip\Flip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common\timer.h">
@@ -62,13 +65,16 @@
     <ClInclude Include="include\common\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="shakhbat.h">
+    <ClInclude Include="include\shakhbat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\common\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\common\pixel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Flip\Flip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
