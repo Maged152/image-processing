@@ -14,8 +14,9 @@ Here you can find the implementation of
     * [Wrap Rotate](/image%20processing/code/WrapRotate)
     * [Rotate](/image%20processing/code/Rotate)
     * [Flip](/image%20processing/code/Flip)
-    * Translate (backlog)
-    + Transpose (backlog)
+    * [Transpose](/image%20processing/code/Transpose)
+    + Translate (backlog)
+    * Affine Transformation (backlog)
 * Feature Detection
     * [Hough lines](/image%20processing/code/HoughLines)
     * Canny (backlog)
