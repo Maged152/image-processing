@@ -148,6 +148,7 @@
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
     <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\Rotate\Rotate.cpp" />
+    <ClCompile Include="code\Transpose\Transpose.cpp" />
     <ClCompile Include="code\WrapRotate\WrapRotate.cpp" />
     <ClCompile Include="include\common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="include\shakhbat.h" />
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />
+    <ClInclude Include="include\Transpose\Transposeh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="code\HoughLines\README.md" />

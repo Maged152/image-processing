@@ -19,7 +19,7 @@ int main()
 
 	// do the operation
 	t.start();
-	auto out = qlm::Flip(in, qlm::FlipFlag::FLIP_VERTICAL_AXIS);
+	auto out = qlm::Transpose(in);
 	t.end();
 
 	t.show();
