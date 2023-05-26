@@ -17,9 +17,10 @@ int main()
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
+	qlm::Point displacement{ 50 ,50 };
 	// do the operation
 	t.start();
-	auto out = qlm::Transpose(in);
+	auto out = qlm::Translate(in, displacement);
 	t.end();
 
 	t.show();

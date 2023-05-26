@@ -15,7 +15,7 @@ Here you can find the implementation of
     * [Rotate](/image%20processing/code/Rotate)
     * [Flip](/image%20processing/code/Flip)
     * [Transpose](/image%20processing/code/Transpose)
-    + Translate (backlog)
+    * [Translate](/image%20processing/code/Translate)
     * Affine Transformation (backlog)
 * Feature Detection
     * [Hough lines](/image%20processing/code/HoughLines)
@@ -27,5 +27,5 @@ Here you can find the implementation of
 * Image Enhancement
     * Histogram (backlog)
 * Image Dithering
-    * Floyd�Steinberg (backlog)
+    * Floyd-Steinberg (backlog)
 

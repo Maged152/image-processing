@@ -54,7 +54,7 @@
     <ClCompile Include="code\Flip\Flip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code\Transpose\Transpose.cpp">
+    <ClCompile Include="code\Translation\Translate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -15,3 +15,4 @@
 #include "Rotate/Rotate.h"
 #include "Flip/Flip.h"
 #include "Transpose/Transposeh.h"
+#include "Translate/Translate.h"

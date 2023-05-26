@@ -148,7 +148,7 @@
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
     <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\Rotate\Rotate.cpp" />
-    <ClCompile Include="code\Transpose\Transpose.cpp" />
+    <ClCompile Include="code\Translation\Translate.cpp" />
     <ClCompile Include="code\WrapRotate\WrapRotate.cpp" />
     <ClCompile Include="include\common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
