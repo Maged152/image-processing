@@ -83,6 +83,9 @@
     <ClInclude Include="include\Transpose\Transposeh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\FloodFill\FloodFill.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="code\Scale\README.md" />

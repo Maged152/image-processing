@@ -164,6 +164,7 @@
     <ClInclude Include="include\common\image.h" />
     <ClInclude Include="include\common\pixel.h" />
     <ClInclude Include="include\Flip\Flip.h" />
+    <ClInclude Include="include\FloodFill\FloodFill.h" />
     <ClInclude Include="include\shakhbat.h" />
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />
