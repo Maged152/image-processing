@@ -17,10 +17,12 @@ int main()
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	qlm::Point displacement{ 50 ,50 };
+	qlm::Point seed{ 600 ,600 };
+	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{255,255,255};
+	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> threshold{ 20,20,20 };
 	// do the operation
 	t.start();
-	auto out = qlm::Translate(in, displacement);
+	auto out = qlm::FloodFill(in, seed, color, threshold);
 	t.end();
 
 	t.show();
@@ -30,5 +32,6 @@ int main()
 	{
 		std::cout << "Falied to write \n";
 	}
+
 }
 

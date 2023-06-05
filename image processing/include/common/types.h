@@ -65,29 +65,32 @@ namespace qlm
 		{}
 	public:
 		// addition operator
-		Point operator+(const Point& other) const
+		Point<T> operator+(const Point<T>& other) const
 		{
-			return Point(x + other.x, y + other.y);
+			return Point<T>(x + other.x, y + other.y);
 		}
 
 		// assignment operator
-		Point& operator=(const Point& other)
+		Point<T>& operator=(const Point<T>& other)
 		{
-			x = other.x;
-			y = other.y;
+			if (this != &other)
+			{
+				x = other.x;
+				y = other.y;
+			}
 			return *this;
 		}
 
 		// equality operator
-		bool operator==(const Point& other) const
+		bool operator==(const Point<T>& other) const
 		{
 			return (x == other.x) && (y == other.y);
 		}
 
 		// subtraction operator
-		Point operator-(const Point& other) const
+		Point<T> operator-(const Point<T>& other) const
 		{
-			return Point(x - other.x, y - other.y);
+			return Point<T>(x - other.x, y - other.y);
 		}
 	};
 

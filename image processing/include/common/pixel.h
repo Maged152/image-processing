@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include<cmath>
 #include <type_traits>
 #include <algorithm>
 #include <concepts>
@@ -126,6 +127,30 @@ public:
         result.a = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(a * other.a, min_value, max_value));
         return result;
     }
+    // < comparison operator
+    bool operator<(const Pixel& other) const
+    {
+        if (v < other.v && a < other.a)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    // <= comparison operator
+    bool operator<=(const Pixel& other) const
+    {
+        if (v <= other.v && a <= other.a)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     // Cast operator
     template<qlm::pixel_t T2>
     operator Pixel<qlm::ImageFormat::GRAY, T2>() const
@@ -226,6 +251,42 @@ public:
         result.b = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(b * other.b, min_value, max_value));
         result.a = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(a * other.a, min_value, max_value));
         return result;
+    }
+    // < comparison operator
+    bool operator<(const Pixel& other) const
+    {
+        if (r < other.r && g < other.g && b < other.b && a < other.a)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    // <= comparison operator
+    bool operator<=(const Pixel& other) const
+    {
+        if (r <= other.r && g <= other.g && b <= other.b && a <= other.a)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    // == comparison operator
+    bool operator ==(const Pixel& other) const
+    {
+        if (r == other.r && g == other.g && b == other.b && a == other.a)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // Cast operator
     template<qlm::pixel_t T2>
@@ -657,3 +718,43 @@ qlm::Pixel<frmt, T> operator*(const qlm::Pixel<frmt, T>& c, T2 num)
     return result;
 }
 
+// absolute difference
+template<qlm::ImageFormat frmt, qlm::pixel_t T>
+qlm::Pixel<frmt, T>  AbsDiff(const qlm::Pixel<frmt, T>& in1, const qlm::Pixel<frmt, T>& in2)
+{
+    qlm::Pixel<frmt, T> result;
+
+    using type_t = qlm::wider_t<qlm::signed_t<T>>;
+
+    const T min_val = std::numeric_limits<T>::lowest();
+    const T max_val = std::numeric_limits<T>::max();
+
+    if constexpr (frmt == qlm::ImageFormat::GRAY)
+    {
+        result.v = static_cast<T>(std::clamp<type_t>(std::abs(in1.v - in2.v), min_val, max_val));
+        result.a = static_cast<T>(std::clamp<type_t>(std::abs(in1.a - in2.a), min_val, max_val));
+    }
+    else if constexpr (frmt == qlm::ImageFormat::RGB)
+    {
+        result.r = static_cast<T>(std::clamp<type_t>(std::abs(in1.r - in2.r), min_val, max_val));
+        result.g = static_cast<T>(std::clamp<type_t>(std::abs(in1.g - in2.g), min_val, max_val));
+        result.b = static_cast<T>(std::clamp<type_t>(std::abs(in1.b - in2.b), min_val, max_val));
+        result.a = static_cast<T>(std::clamp<type_t>(std::abs(in1.a - in2.a), min_val, max_val));
+    }
+    else if constexpr (frmt == qlm::ImageFormat::HLS)
+    {
+        result.h = (std::abs((type_t)in1.h - (type_t)in2.h)) % 360;
+        result.l = static_cast<T>(std::clamp<type_t>(std::abs(in1.l - in2.l), min_val, max_val));
+        result.s = static_cast<T>(std::clamp<type_t>(std::abs(in1.s - in2.s), min_val, max_val));
+        result.a = static_cast<T>(std::clamp<type_t>(std::abs(in1.a - in2.a), min_val, max_val));
+    }
+    else
+    {
+        result.h = (std::abs((type_t)in1.h - (type_t)in2.h)) % 360;
+        result.v = static_cast<T>(std::clamp<type_t>(std::abs(in1.v - in2.v), min_val, max_val));
+        result.s = static_cast<T>(std::clamp<type_t>(std::abs(in1.s - in2.s), min_val, max_val));
+        result.a = static_cast<T>(std::clamp<type_t>(std::abs(in1.a - in2.a), min_val, max_val));
+    }
+
+    return result;
+}
