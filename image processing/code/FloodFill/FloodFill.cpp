@@ -15,6 +15,12 @@ namespace qlm
 
 		Pixel<frmt, T> seed_pixel{ in.GetPixel(seed_point.x, seed_point.y) };
 		Pixel<frmt, T> neighbour_pixel;
+
+		if (AbsDiff(fill_color, seed_pixel) <= threshold)
+		{
+			return out;
+		}
+
 		// mark seed point as visited
 		out.SetPixel(seed_point.x, seed_point.y, fill_color);
 		// enqueue seed point

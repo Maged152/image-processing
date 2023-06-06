@@ -17,8 +17,8 @@ int main()
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	qlm::Point seed{ 600 ,600 };
-	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{255,255,255};
+	qlm::Point seed{ 300 ,300 };
+	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{0,0,0};
 	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> threshold{ 20,20,20 };
 	// do the operation
 	t.start();
