@@ -1,4 +1,4 @@
-# Sobel
+# Gaussian
 
 ## Description
 Applys gaussian filter of size NxN on the input image.
