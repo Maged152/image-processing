@@ -7,7 +7,7 @@ Here you can find the implementation of
     * [Filter2D MxN](/image%20processing/code/Filter2D)
     * [Filter2D MxN Separable](/image%20processing/code/SepFilter2D)
     * [Sobel](/image%20processing/code/Sobel)
-    * Gaussian (backlog)
+    * [Gaussian](/image%20processing/code/Gaussian)
 * Geometric Transformations:
     * [Scale](/image%20processing/code/Scale)
     * [Resize](/image%20processing/code/Resize)
@@ -16,7 +16,7 @@ Here you can find the implementation of
     * [Flip](/image%20processing/code/Flip)
     * [Transpose](/image%20processing/code/Transpose)
     * [Translate](/image%20processing/code/Translate)
-    * Affine Transformation (backlog)
+    * perspective Transformation (backlog)
 * Feature Detection
     * [Hough lines](/image%20processing/code/HoughLines)
     * Canny (backlog)
