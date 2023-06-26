@@ -1,5 +1,4 @@
 #include "SepFilter2D/SepFilter2D.h"
-#include <iostream>
 
 static inline int ReflectBorderIndex(int idx, int max_idx)
 {

@@ -1,6 +1,5 @@
 #include "shakhbat.h"
 
-
 int main()
 {
 	qlm::Timer<qlm::msec> t{};
@@ -17,12 +16,11 @@ int main()
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	qlm::Point seed{ 300 ,300 };
-	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{0,0,0};
-	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> threshold{ 20,20,20 };
+	unsigned int filter_size = 3;
+	float sigma = 1.0f;
 	// do the operation
 	t.start();
-	auto out = qlm::FloodFill(in, seed, color, threshold);
+	auto out = qlm::Gaussian<qlm::ImageFormat::RGB, uint8_t>(in, filter_size, sigma);
 	t.end();
 
 	t.show();

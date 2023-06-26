@@ -148,6 +148,7 @@
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
     <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\FloodFill\FloodFill.cpp" />
+    <ClCompile Include="code\Gaussian\Gaussian.cpp" />
     <ClCompile Include="code\Rotate\Rotate.cpp" />
     <ClCompile Include="code\Translate\Translate.cpp" />
     <ClCompile Include="code\WrapRotate\WrapRotate.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="include\common\pixel.h" />
     <ClInclude Include="include\Flip\Flip.h" />
     <ClInclude Include="include\FloodFill\FloodFill.h" />
+    <ClInclude Include="include\Gaussian\Gaussian.h" />
     <ClInclude Include="include\shakhbat.h" />
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />

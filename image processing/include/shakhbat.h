@@ -17,3 +17,4 @@
 #include "Transpose/Transposeh.h"
 #include "Translate/Translate.h"
 #include "FloodFill/FloodFill.h"
+#include "Gaussian/Gaussian.h"

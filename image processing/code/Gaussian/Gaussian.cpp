@@ -1,14 +1,15 @@
 #include "Gaussian/Gaussian.h"
+#include "SepFilter2D/SepFilter2D.h"
 #include <cmath>
 namespace qlm
 {
-	Kernel1D GetGaussianKernel(unsigned int filter_size, double sigma)
+	Kernel1D GetGaussianKernel(const unsigned int filter_size, float sigma)
 	{
 		Kernel1D out{ filter_size };
 
-		double sum{ 0 };
-		double gaussian_value{ 0 };
-		double center = (filter_size - 1) * 0.5;
+		float sum{ 0 };
+		float gaussian_value{ 0 };
+		float center = (filter_size - 1) * 0.5;
 
 		if (sigma <= 0)
 		{
@@ -33,8 +34,46 @@ namespace qlm
 	}
 
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> Gaussian(const Image<frmt, T>& in, unsigned int filter_size, double sigma_x, double sigma_y, int border_value)
+	Image<frmt, T> Gaussian(const Image<frmt, T>& in, const unsigned int filter_size, float sigma_x, float sigma_y, const Border border_type, const int border_value)
 	{
-		return Image<frmt, T>();
+		sigma_y = sigma_y == 0 ? sigma_x : sigma_y;
+
+		auto ker_x = GetGaussianKernel(filter_size, sigma_x);
+		auto ker_y = GetGaussianKernel(filter_size, sigma_y);
+
+		return SepFilter2D<frmt, T, T>(in, ker_x, ker_y, border_type, border_value);
 	}
 }
+
+// Explicit instantiation for RGB , uint8_t
+template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
+qlm::Gaussian<qlm::ImageFormat::RGB, uint8_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
+	const unsigned int,
+	float,
+	float,
+	const qlm::Border,
+	const int);
+// Explicit instantiation for RGB , int16_t
+template qlm::Image<qlm::ImageFormat::RGB, int16_t>
+qlm::Gaussian<qlm::ImageFormat::RGB, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, int16_t>&,
+	const unsigned int,
+	float,
+	float,
+	const qlm::Border,
+	const int);
+// Explicit instantiation for GRAY , uint8_t
+template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
+qlm::Gaussian<qlm::ImageFormat::GRAY, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
+	const unsigned int,
+	float,
+	float,
+	const qlm::Border,
+	const int);
+// Explicit instantiation for GRAY , int16_t
+template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
+qlm::Gaussian<qlm::ImageFormat::GRAY, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
+	const unsigned int,
+	float,
+	float,
+	const qlm::Border,
+	const int);
