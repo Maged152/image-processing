@@ -94,6 +94,22 @@ namespace qlm
 		}
 	};
 
+	template<class T = int>
+	struct KeyPoint {
+		// Member variables
+		Point<T> point;
+		float size;
+		float angle;
+		float response;
+		int octave;
+		int class_id;
+
+		// Constructor
+		KeyPoint(Point<T> _pt, float _response = 0, float _size = 0, float _angle = -1, int _octave = 0, int _class_id = -1)
+			: point(_pt), size(_size), angle(_angle), response(_response), octave(_octave), class_id(_class_id) 
+		{}
+	};
+
 	class Kernel
 	{
 	private:
