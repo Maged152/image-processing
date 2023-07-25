@@ -37,7 +37,6 @@ namespace qlm
 
 namespace qlm
 {
-	
 	struct Line
 	{
 		int x0;
@@ -92,6 +91,13 @@ namespace qlm
 		{
 			return Point<T>(x - other.x, y - other.y);
 		}
+	};
+
+	template<class T>
+	struct Circle
+	{
+		Point<T> center;
+		float radius;
 	};
 
 	template<class T = int>

@@ -5,6 +5,48 @@
 namespace qlm
 {
     template<ImageFormat frmt, pixel_t T>
+    void DrawCircle(Image<frmt, T>& in, const Circle<int>& circle, const Pixel<frmt, T>& color, int thickness = 1)
+    {
+        const int center_x = circle.center.x;
+        const int center_y = circle.center.y;
+        const int radius = circle.radius;
+
+        if (thickness <= 0) {
+            return;
+        }
+
+        // Draw the circle boundary at all thickness levels
+        for (int t = 0; t < thickness; t++) {
+            int sign = t % 2 ? 1 : -1;
+            int side = sign * (std::ceil(t / 2.0f));
+            int x = 0;
+            int y = radius + side;
+            int d = 3 - 2 * (radius + side);
+
+            while (y >= x) {
+                // Draw pixels at all thickness levels
+                in.SetPixel(center_x + x, center_y + y, color);
+                in.SetPixel(center_x - x, center_y + y, color);
+                in.SetPixel(center_x + x, center_y - y, color);
+                in.SetPixel(center_x - x, center_y - y, color);
+                in.SetPixel(center_x + y, center_y + x, color);
+                in.SetPixel(center_x - y, center_y + x, color);
+                in.SetPixel(center_x + y, center_y - x, color);
+                in.SetPixel(center_x - y, center_y - x, color);
+
+                if (d < 0) {
+                    d = d + 4 * x + 6;
+                }
+                else {
+                    d = d + 4 * (x - y) + 10;
+                    y--;
+                }
+                x++;
+            }
+        }
+    }
+
+    template<ImageFormat frmt, pixel_t T>
     void DrawLine(Image<frmt, T>& in, const Line& line, const Pixel<frmt, T>& c)
     {
         int width = in.Width();
