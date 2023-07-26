@@ -123,7 +123,7 @@ namespace qlm
         Pixel operator*(const Pixel& other) const
         {
             Pixel result;
-            result.v = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(v * other.r, min_value, max_value));
+            result.v = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(v * other.v, min_value, max_value));
             result.a = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(a * other.a, min_value, max_value));
             return result;
         }
