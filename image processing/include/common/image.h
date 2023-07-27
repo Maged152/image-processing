@@ -89,7 +89,7 @@ namespace qlm
 			return *this;
 		}
 
-		Image<frmt, T>& operator=(Image<frmt, T>&& other)
+		Image<frmt, T>& operator=(Image<frmt, T>&& other) noexcept
 		{
 			if (this != &other)
 			{
@@ -130,12 +130,18 @@ namespace qlm
 		
 		void SetPixel(int x, int y, const Pixel<frmt, T> &pix)
 		{
-			data[y * width + x] = pix;
+			if (x > 0 && x < width && y > 0 && y < height)
+			{
+				data[y * width + x] = pix;
+			}
 		}
 
 		void SetPixel(int i, const Pixel<frmt, T>& pix)
 		{
-			data[i] = pix;
+			if (i > 0 && i < width * height)
+			{
+				data[i] = pix;
+			}	
 		}
 
 		Pixel<frmt, T> GetPixel(int x, int y) const
