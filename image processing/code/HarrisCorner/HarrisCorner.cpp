@@ -50,7 +50,7 @@ namespace qlm
 		Image<ImageFormat::GRAY, int16_t> Iyy_sum = Gaussian(Iyy, block_size, sigma, sigma, border_type, border_value);
 		Image<ImageFormat::GRAY, int16_t> Ixy_sum = Gaussian(Ixy, block_size, sigma, sigma, border_type, border_value);
 		
-		std::vector<KeyPoint<int>> key_points;
+		Image<ImageFormat::GRAY, float> corners_response{ width, height };
 		// compute R
 		for (int y = 0; y < height; y++)
 		{
@@ -67,11 +67,140 @@ namespace qlm
 				// check if it is a corner
 				if (response > threshold)
 				{
-					key_points.emplace_back(KeyPoint<int>{{ x, y}, response });
+					corners_response.SetPixel(x, y, response);
 				}
-				// non-max suppression
+				else
+				{
+					corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
+				}
+				
 			}
 		}
+		std::vector<KeyPoint<int>> key_points;
+		// non-max suppression
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				// check if it is a corner
+				if (corners_response.GetPixel(x, y).v != std::numeric_limits<float>::min())
+				{
+					// 8-way non-max suppression
+					float cur_response = corners_response.GetPixel(x, y).v;
+					// offset arrays
+					const int x_offset[3] = { x - 1 , x, x + 1 };
+					const int y_offset[3] = { y - 1 , y, y + 1 };
+					
+					// top left neighbour
+					if (x_offset[0] > 0 && y_offset[0] > 0)
+					{
+						float neighbour_response = corners_response.GetPixel(x_offset[0], y_offset[0]).v;
+						if (cur_response <= neighbour_response)
+						{
+							// supress this response
+							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
+
+							continue;
+						}
+					}
+
+					// top neighbour
+					if (y_offset[0] > 0)
+					{
+						float neighbour_response = corners_response.GetPixel(x_offset[1], y_offset[0]).v;
+						if (cur_response <= neighbour_response)
+						{
+							// supress this response
+							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
+
+							continue;
+						}
+					}
+
+					// top right neighbour
+					if (x_offset[2] < width && y_offset[0] > 0)
+					{
+						float neighbour_response = corners_response.GetPixel(x_offset[2], y_offset[0]).v;
+						if (cur_response <= neighbour_response)
+						{
+							// supress this response
+							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
+
+							continue;
+						}
+					}
+
+					// left neighbour
+					if (x_offset[0] > 0)
+					{
+						float neighbour_response = corners_response.GetPixel(x_offset[0], y_offset[1]).v;
+						if (cur_response <= neighbour_response)
+						{
+							// supress this response
+							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
+
+							continue;
+						}
+					}
+
+					// right neighbour
+					if (x_offset[2] < width)
+					{
+						float neighbour_response = corners_response.GetPixel(x_offset[2], y_offset[1]).v;
+						if (cur_response <= neighbour_response)
+						{
+							// supress this response
+							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
+
+							continue;
+						}
+					}
+
+					// bottom left neighbour
+					if (x_offset[0] > 0 && y_offset[2] < height)
+					{
+						float neighbour_response = corners_response.GetPixel(x_offset[0], y_offset[2]).v;
+						if (cur_response <= neighbour_response)
+						{
+							// supress this response
+							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
+
+							continue;
+						}
+					}
+
+					// bottom neighbour
+					if (y_offset[2] < height)
+					{
+						float neighbour_response = corners_response.GetPixel(x_offset[1], y_offset[2]).v;
+						if (cur_response <= neighbour_response)
+						{
+							// supress this response
+							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
+
+							continue;
+						}
+					}
+
+					// bottom right neighbour
+					if (x_offset[2] < width && y_offset[2] < height)
+					{
+						float neighbour_response = corners_response.GetPixel(x_offset[2], y_offset[2]).v;
+						if (cur_response <= neighbour_response)
+						{
+							// supress this response
+							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
+
+							continue;
+						}
+					}
+
+					key_points.emplace_back(KeyPoint<int>{ { x, y}, cur_response});
+				}
+			
+			}
+		}
+		
 		return key_points;
 	}
 
