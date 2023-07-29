@@ -19,11 +19,12 @@ Here you can find the implementation of
     * perspective Transformation (backlog)
 * Feature Detection
     * [Hough lines](/image%20processing/code/HoughLines)
+    * [Harris Corner](/image%20processing/code/HarrisCorner)
     * Canny (backlog)
     * Hough circle (backlog)
 * Color Manipulation
-    * [ColorConversion](/image%20processing/code/ColorConvert)
-    * [ConvertBitDepth](/image%20processing/code/ConvertBitDepth)
+    * [Color Conversion](/image%20processing/code/ColorConvert)
+    * [Convert Bit Depth](/image%20processing/code/ConvertBitDepth)
     * [Flood Fill](/image%20processing/code/FloodFill)
 * Image Enhancement
     * Histogram (backlog)
