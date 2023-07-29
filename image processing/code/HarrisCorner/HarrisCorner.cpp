@@ -1,6 +1,7 @@
 #include "HarrisCorner/HarrisCorner.h"
 #include "ColorConvert/ColorConvert.h"
 #include "Gaussian/Gaussian.h"
+#include "SepFilter2D/SepFilter2D.h"
 #include "Sobel/Sobel.h"
 
 namespace qlm
@@ -45,11 +46,16 @@ namespace qlm
 				Iyy.SetPixel(x, y, Iy * Iy);
 			}
 		}
-		// use gaussian filter to sum on block size
-		Image<ImageFormat::GRAY, int16_t> Ixx_sum = Gaussian(Ixx, block_size, sigma, sigma, border_type, border_value);
-		Image<ImageFormat::GRAY, int16_t> Iyy_sum = Gaussian(Iyy, block_size, sigma, sigma, border_type, border_value);
-		Image<ImageFormat::GRAY, int16_t> Ixy_sum = Gaussian(Ixy, block_size, sigma, sigma, border_type, border_value);
-		
+		// sum on block size
+		Kernel1D box{ block_size };
+		for (int i = 0; i < block_size; i++)
+		{
+			box.Set(i, 1.0f / block_size);
+		}
+		Image<ImageFormat::GRAY, int16_t> Ixx_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixx, box, box, border_type, border_value);
+		Image<ImageFormat::GRAY, int16_t> Iyy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Iyy, box, box, border_type, border_value);
+		Image<ImageFormat::GRAY, int16_t> Ixy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixy, box, box, border_type, border_value);
+
 		Image<ImageFormat::GRAY, float> corners_response{ width, height };
 		// compute R
 		for (int y = 0; y < height; y++)
@@ -72,8 +78,7 @@ namespace qlm
 				else
 				{
 					corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
-				}
-				
+				}	
 			}
 		}
 		std::vector<KeyPoint<int>> key_points;
@@ -196,8 +201,7 @@ namespace qlm
 					}
 
 					key_points.emplace_back(KeyPoint<int>{ { x, y}, cur_response});
-				}
-			
+				}		
 			}
 		}
 		
