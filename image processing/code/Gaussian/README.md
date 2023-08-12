@@ -13,8 +13,7 @@ Applys gaussian filter of size NxN on the input image.
 		const unsigned int filter_size,
 		float sigma_x,
 		float sigma_y = 0,
-		const Border border_type = Border::BORDER_CONSTANT,
-		const int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 ```
 ## Parameters
@@ -25,9 +24,7 @@ Applys gaussian filter of size NxN on the input image.
 | `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                                           |
 | `sigma_x`      | `float`        | Gaussian kernel standard deviation in X direction.                                                       |
 | `sigma_y`      | `float`        | Gaussian kernel standard deviation in Y direction, if sigmaY is zero, it is set to be equal to sigmaX    |
-| `border_type`  | `BORDER`       | The pixel extrapolation method.                                                                          |
-| `border_value` | `int`          | The value to be used if the border is BORDER::BORDER_CONSTANT.                                           |
-
+| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
  
 

@@ -11,7 +11,7 @@ namespace qlm
 		BICUBIC
 	};
 
-	enum class Border
+	enum class BorderType
 	{
 		BORDER_CONSTANT,
 		BORDER_REPLICATE,
@@ -37,6 +37,12 @@ namespace qlm
 
 namespace qlm
 {
+	struct BorderMode
+	{
+		BorderType border_type = BorderType::BORDER_CONSTANT;
+		int border_value = 0;
+	};
+
 	struct Line
 	{
 		int x0;

@@ -8,7 +8,6 @@ namespace qlm
 	Image<frmt, T> Filter2D(
 		const Image<frmt, T>& in,
 		const Kernel& kernel,
-		      Border border_type = Border::BORDER_CONSTANT,
-		      int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 }

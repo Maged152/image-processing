@@ -13,8 +13,7 @@ namespace qlm
 		const unsigned int filter_size,
 		float k,
 		float threshold,
-		const Border border_type = Border::BORDER_CONSTANT,
-		const int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	)
 }
 ```
@@ -41,8 +40,7 @@ namespace qlm
 | `filter_size` | `unsigned int`| The aperture parameter for the Sobel operator.                                               |
 | `k`           | `float`       | Harris detector free parameter.															   |
 | `threshold`   | `float`       | The threshold parameter. Only those corners are returned that have response ( >threshold ).  |
-| `border_type` | `BORDER`      | The pixel extrapolation method.															   |
-| `border_value`| `int`         | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
+| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 ## Example 
 	unsigned int filter_size = 3;

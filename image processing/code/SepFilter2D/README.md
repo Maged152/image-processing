@@ -11,8 +11,7 @@ namespace qlm
 		const Image<frmt, T>& in,
 		const Kernel1D& x_kernel,
 		const Kernel1D& y_kernel,
-		const Border border_type = Border::BORDER_CONSTANT,
-		const int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 }
 ```
@@ -25,6 +24,12 @@ namespace qlm
 		BORDER_REPLICATE,
 		BORDER_REFLECT,
 	};
+
+	struct BorderMode
+	{
+		BorderType border_type = BorderType::BORDER_CONSTANT;
+		int border_value = 0;
+	};
 }
 ```
 ## Parameters
@@ -34,8 +39,7 @@ namespace qlm
 | `in`           | `Image`      | The input image.                                                                  |
 | `x_kernel`     | `Kernel1D`   | The kernel for filtering each row.                                                |
 | `y_kernel`     | `Kernel1D`   | The kernel  for filtering each column.                                            |
-| `border_type`  | `BORDER`     | The pixel extrapolation method.                                                   |
-| `border_value` | `int`        | The value to be used if the border is BORDER::BORDER_CONSTANT.                    |
+| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 ## Example 
 	x_kernel = |1/3  1/3  1/3|
@@ -68,7 +72,7 @@ namespace qlm
 
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::SepFilter2D(in, ker, ker, qlm::Border::BORDER_REFLECT);
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::SepFilter2D(in, ker, ker, qlm::BorderMode{ .border_type = qlm::BorderType::BORDER_REFLECT});
 	t.end();
 	
 	t.show();

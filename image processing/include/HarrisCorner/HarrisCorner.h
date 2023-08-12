@@ -11,7 +11,6 @@ namespace qlm
 		const unsigned int filter_size,
 		float k,
 		float threshold,
-		const Border border_type = Border::BORDER_CONSTANT,
-		const int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 }

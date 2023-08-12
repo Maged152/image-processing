@@ -10,8 +10,7 @@ namespace qlm
 	Image<frmt, T> Filter2D(
 		const Image<frmt, T>& in,
 		const Kernel& kernel,
-		      Border border_type = Border::BORDER_CONSTANT,
-		      int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 }
 ```
@@ -24,6 +23,12 @@ namespace qlm
 		BORDER_REPLICATE,
 		BORDER_REFLECT,
 	};
+
+	struct BorderMode
+	{
+		BorderType border_type = BorderType::BORDER_CONSTANT;
+		int border_value = 0;
+	};
 }
 ```
 ## Parameters
@@ -32,9 +37,7 @@ namespace qlm
 |----------------|--------------|----------------------------------------------------------------------------------------------|
 | `in`           | `Image`      | The input image.                                                                             |
 | `kernel`       | `Kernel`     | The kernel to be applied on the input image.                                                 |
-| `border_type`  | `BORDER`     | The pixel extrapolation method.                                                              |
-| `border_value` | `int`        | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
-
+| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 ## Example
 
@@ -42,7 +45,6 @@ namespace qlm
 	|-1  5 -1|
 	|0  -1  0|
 
-	border = :BORDER::BORDER_REFLECT
 
 ```c++
 namespace qlm
@@ -69,7 +71,7 @@ namespace qlm
 
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::Filter2D(in, k, qlm::Border::BORDER_REFLECT);
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::Filter2D(in, k, qlm::BorderMode{});
 	t.end();
 	
 	t.show();

@@ -17,7 +17,7 @@ static inline int ReflectBorderIndex(int idx, int max_idx)
 }
 
 template<qlm::ImageFormat frmt, qlm::pixel_t T>
-qlm::Image<frmt, T> qlm::Filter2D(const qlm::Image<frmt, T>& in, const qlm::Kernel& kernel, qlm::Border border_type, int border_value)
+qlm::Image<frmt, T> qlm::Filter2D(const qlm::Image<frmt, T>& in, const qlm::Kernel& kernel, const BorderMode& border_mode)
 {
 	unsigned int img_width = in.Width();
 	unsigned int img_height = in.Height();
@@ -54,21 +54,21 @@ qlm::Image<frmt, T> qlm::Filter2D(const qlm::Image<frmt, T>& in, const qlm::Kern
 					}
 					else
 					{
-						switch (border_type)
+						switch (border_mode.border_type)
 						{
-							case qlm::Border::BORDER_CONSTANT:
+							case qlm::BorderType::BORDER_CONSTANT:
 							{
-								pixel_filter.Set(border_value);
+								pixel_filter.Set(border_mode.border_value);
 								break;
 							}
-							case qlm::Border::BORDER_REPLICATE:
+							case qlm::BorderType::BORDER_REPLICATE:
 							{
 								x_idx = std::clamp(x_idx, 0, static_cast<int>(img_width) - 1);
 								y_idx = std::clamp(y_idx, 0, static_cast<int>(img_height) - 1);
 								pixel_filter = in.GetPixel(x_idx, y_idx);
 								break;
 							}
-							case qlm::Border::BORDER_REFLECT:
+							case qlm::BorderType::BORDER_REFLECT:
 							{
 								x_idx = ReflectBorderIndex(x_idx, img_width);
 								y_idx = ReflectBorderIndex(y_idx, img_height);
@@ -93,23 +93,19 @@ qlm::Image<frmt, T> qlm::Filter2D(const qlm::Image<frmt, T>& in, const qlm::Kern
 template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
 qlm::Filter2D<qlm::ImageFormat::RGB, uint8_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
 											  const qlm::Kernel& ,
-											  qlm::Border,
-											  int);
+											  const BorderMode&);
 // Explicit instantiation for RGB , int16_t
 template qlm::Image<qlm::ImageFormat::RGB, int16_t>
 qlm::Filter2D<qlm::ImageFormat::RGB, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, int16_t>&,
 	                                          const qlm::Kernel&,
-	                                          qlm::Border,
-	                                          int);
+											  const BorderMode&);
 // Explicit instantiation for GRAY , uint8_t
 template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
 qlm::Filter2D<qlm::ImageFormat::GRAY, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	                                           const qlm::Kernel&,
-	                                           qlm::Border,
-	                                           int);
+											   const BorderMode&);
 // Explicit instantiation for GRAY , int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::Filter2D<qlm::ImageFormat::GRAY, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
 	                                           const qlm::Kernel&,
-	                                           qlm::Border,
-	                                           int);
+											   const BorderMode&);

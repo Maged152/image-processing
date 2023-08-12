@@ -13,8 +13,7 @@ Applys sobel filter of size NxN on the input image.
 	Image<ImageFormat::GRAY, out_t> SobelX(
 		const Image <ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
-			  Border border_type = Border::BORDER_CONSTANT,
-			  int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 ```
 ## Parameters
@@ -25,9 +24,7 @@ Applys sobel filter of size NxN on the input image.
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
 | `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
-| `border_type`  | `BORDER`       | The pixel extrapolation method.                                                              |
-| `border_value` | `int`          | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
-
+| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 
 ### `SobelY` Function
@@ -38,8 +35,7 @@ Applys sobel filter of size NxN on the input image.
 	Image<ImageFormat::GRAY, out_t> SobelY(
 		const Image <ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
-			  Border border_type = Border::BORDER_CONSTANT,
-			  int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 ```
 ## Parameters
@@ -50,8 +46,7 @@ Applys sobel filter of size NxN on the input image.
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
 | `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
-| `border_type`  | `BORDER`       | The pixel extrapolation method.                                                              |
-| `border_value` | `int`          | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
+| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 
 ### `Sobel` Function
@@ -63,8 +58,7 @@ Applys sobel filter of size NxN on the input image.
 	SobelDerivatives<in_t, out_t> Sobel(
 		const Image<ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
-		      Border border_type = Border::BORDER_CONSTANT,
-		      int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 ```
 ## Parameters
@@ -75,8 +69,7 @@ Applys sobel filter of size NxN on the input image.
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
 | `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
-| `border_type`  | `BORDER`       | The pixel extrapolation method.                                                              |
-| `border_value` | `int`          | The value to be used if the border is BORDER::BORDER_CONSTANT.                               |
+| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 
 ### ``SobelDerivatives`` Data Type

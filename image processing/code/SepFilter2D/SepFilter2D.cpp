@@ -17,7 +17,7 @@ static inline int ReflectBorderIndex(int idx, int max_idx)
 template<qlm::ImageFormat frmt, qlm::pixel_t src_t, qlm::pixel_t dst_t>
 qlm::Image<frmt, dst_t> qlm::SepFilter2D(const qlm::Image<frmt, src_t>& in,
 	                       const qlm::Kernel1D& x_kernel, const qlm::Kernel1D& y_kernel, 
-	                       const qlm::Border border_type, const int border_value)
+						   const BorderMode& border_mode)
 {
 	unsigned int img_width = in.Width();
 	unsigned int img_height = in.Height();
@@ -46,21 +46,21 @@ qlm::Image<frmt, dst_t> qlm::SepFilter2D(const qlm::Image<frmt, src_t>& in,
 		}
 		else
 		{
-			switch (border_type)
+			switch (border_mode.border_type)
 			{
-				case qlm::Border::BORDER_CONSTANT:
+				case qlm::BorderType::BORDER_CONSTANT:
 					{
-						pixel_filter.Set(border_value);
+						pixel_filter.Set(border_mode.border_value);
 						break;
 					}
-				case qlm::Border::BORDER_REPLICATE:
+				case qlm::BorderType::BORDER_REPLICATE:
 					{
 						x_idx = std::clamp(x_idx, 0, static_cast<int>(img_width) - 1);
 						y_idx = std::clamp(y_idx, 0, static_cast<int>(img_height) - 1);
 						pixel_filter = in.GetPixel(x_idx, y_idx);
 						break;
 					}
-				case qlm::Border::BORDER_REFLECT:
+				case qlm::BorderType::BORDER_REFLECT:
 					{
 						x_idx = ReflectBorderIndex(x_idx, img_width);
 						y_idx = ReflectBorderIndex(y_idx, img_height);
@@ -81,20 +81,20 @@ qlm::Image<frmt, dst_t> qlm::SepFilter2D(const qlm::Image<frmt, src_t>& in,
 		}
 		else
 		{
-			switch (border_type)
+			switch (border_mode.border_type)
 			{
-				case qlm::Border::BORDER_CONSTANT:
+				case qlm::BorderType::BORDER_CONSTANT:
 				{
-					temp_pixel.Set(border_value);
+					temp_pixel.Set(border_mode.border_value);
 					break;
 				}
-				case qlm::Border::BORDER_REPLICATE:
+				case qlm::BorderType::BORDER_REPLICATE:
 				{
 					x_idx = std::clamp(x_idx, 0, static_cast<int>(img_width) - 1);
 					temp_pixel = temp_pixel_array[x_idx];
 					break;
 				}
-				case qlm::Border::BORDER_REFLECT:
+				case qlm::BorderType::BORDER_REFLECT:
 				{
 					x_idx = ReflectBorderIndex(x_idx, img_width);
 					temp_pixel = temp_pixel_array[x_idx];
@@ -150,41 +150,35 @@ template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
 qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, uint8_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
-	const qlm::Border,
-	const int);
+	const BorderMode&);
 // Explicit instantiation for RGB , uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::RGB, int16_t>
 qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
-	const qlm::Border,
-	const int);
+	const BorderMode&);
 // Explicit instantiation for RGB , int16_t, int16_t
 template qlm::Image<qlm::ImageFormat::RGB, int16_t>
 qlm::SepFilter2D<qlm::ImageFormat::RGB, int16_t, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, int16_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
-	const qlm::Border,
-	const int);
+	const BorderMode&);
 // Explicit instantiation for GRAY , uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::SepFilter2D<qlm::ImageFormat::GRAY, uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
-	const qlm::Border,
-	const int);
+	const BorderMode&);
 // Explicit instantiation for GRAY , int16_t, int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::SepFilter2D<qlm::ImageFormat::GRAY, int16_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
-	const qlm::Border,
-	const int);
+	const BorderMode&);
 // Explicit instantiation for GRAY , uint8_t, uint8_t
 template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
 qlm::SepFilter2D<qlm::ImageFormat::GRAY, uint8_t, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	const qlm::Kernel1D&,
 	const qlm::Kernel1D&,
-	const qlm::Border,
-	const int);
+	const BorderMode&);
 

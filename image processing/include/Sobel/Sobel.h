@@ -15,24 +15,21 @@ namespace qlm
 	Image<ImageFormat::GRAY, out_t> SobelX(
 		const Image <ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
-			  Border border_type = Border::BORDER_CONSTANT,
-			  int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 	// Sobel Y operation
 	template<pixel_t in_t, pixel_t out_t = int16_t>
 	Image<ImageFormat::GRAY, out_t> SobelY(
 		const Image<ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
-			  Border border_type = Border::BORDER_CONSTANT,
-			  int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 	// Sobel
 	template<pixel_t in_t, pixel_t out_t = int16_t>
 	SobelDerivatives<in_t, out_t> Sobel(
 		const Image<ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
-		      Border border_type = Border::BORDER_CONSTANT,
-		      int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 	// change Bit Depth to sobel from S16 to U8
 	Image<ImageFormat::GRAY, uint8_t> ConvertSobelDepth(

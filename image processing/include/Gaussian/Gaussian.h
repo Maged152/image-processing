@@ -14,8 +14,7 @@ namespace qlm
 		const unsigned int filter_size,
 		float sigma_x,
 		float sigma_y = 0,
-		const Border border_type = Border::BORDER_CONSTANT,
-		const int border_value = 0
+		const BorderMode& border_mode = BorderMode{}
 	);
 
 }
