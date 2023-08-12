@@ -79,11 +79,12 @@ namespace qlm
 
 	qlm::Circle<int> circle = { .radius = 2 };
 	qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0};
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> draw = in;
 
 	for (auto& i : out)
 	{
 		circle.center = i.point;
-		qlm::DrawCircle(in, circle, green);
+		draw = qlm::DrawCircle(draw, circle, green);
 	}
 
 	

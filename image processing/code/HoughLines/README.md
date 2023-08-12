@@ -65,32 +65,18 @@ namespace qlm
 	t.show();
 
 	// out image to draw on
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out;
-	out.create(in.Width(), in.Height(), qlm::Pixel<qlm::ImageFormat::RGB, uint8_t>{ 0, 0, 0 });
-	// copy GRAY to RGB (for now until color convert implemented)
-	for (int y = 0; y < in.Height(); y++)
-	{
-		for (int x = 0; x < in.Width(); x++)
-		{
-			qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t> pix = in.GetPixel(x, y);
-			qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> pix_out;
-			pix_out.Set(pix.v, pix.a);
-			out.SetPixel(x, y, pix_out);
-		}
-	}
-	
+	auto draw = qlm::ColorConvert< qlm::ImageFormat::GRAY, uint8_t, qlm::ImageFormat::RGB, uint8_t>(in);
 
-	std::cout << "number of lines : " << lines.size() << "\n";
 	for (auto& line : lines)
 	{
-		std::cout << "r: " << line.radius << "  theta: " << line.angle << "\n";
-		qlm::DrawLine(out, line, qlm::Pixel<qlm::ImageFormat::RGB, uint8_t>{ 0,255,0 });
+		draw = qlm::DrawLine(draw, line, qlm::Pixel<qlm::ImageFormat::RGB, uint8_t>{ 0, 255, 0 });
 	}
-	
-	if (!out.SaveToFile("result.jpg", alpha))
+
+	if (!draw.SaveToFile("result.jpg", alpha))
 	{
 		std::cout << "Falied to write \n";
 	}
+
 ```
 
 ### The input

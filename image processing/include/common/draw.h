@@ -5,50 +5,59 @@
 namespace qlm
 {
     template<ImageFormat frmt, pixel_t T>
-    void DrawCircle(Image<frmt, T>& in, const Circle<int>& circle, const Pixel<frmt, T>& color, int thickness = 1)
+    Image<frmt, T> DrawCircle(const Image<frmt, T>& in, const Circle<int>& circle, const Pixel<frmt, T>& color, int thickness = 1)
     {
+        Image<frmt, T> out = in;
+
         const int center_x = circle.center.x;
         const int center_y = circle.center.y;
         const int radius = circle.radius;
 
         if (thickness <= 0) {
-            return;
+            return out;
         }
 
         // Draw the circle boundary at all thickness levels
-        for (int t = 0; t < thickness; t++) {
+        for (int t = 0; t < thickness; t++) 
+        {
             int sign = t % 2 ? 1 : -1;
             int side = sign * (std::ceil(t / 2.0f));
             int x = 0;
             int y = radius + side;
             int d = 3 - 2 * (radius + side);
 
-            while (y >= x) {
+            while (y >= x) 
+            {
                 // Draw pixels at all thickness levels
-                in.SetPixel(center_x + x, center_y + y, color);
-                in.SetPixel(center_x - x, center_y + y, color);
-                in.SetPixel(center_x + x, center_y - y, color);
-                in.SetPixel(center_x - x, center_y - y, color);
-                in.SetPixel(center_x + y, center_y + x, color);
-                in.SetPixel(center_x - y, center_y + x, color);
-                in.SetPixel(center_x + y, center_y - x, color);
-                in.SetPixel(center_x - y, center_y - x, color);
+                out.SetPixel(center_x + x, center_y + y, color);
+                out.SetPixel(center_x - x, center_y + y, color);
+                out.SetPixel(center_x + x, center_y - y, color);
+                out.SetPixel(center_x - x, center_y - y, color);
+                out.SetPixel(center_x + y, center_y + x, color);
+                out.SetPixel(center_x - y, center_y + x, color);
+                out.SetPixel(center_x + y, center_y - x, color);
+                out.SetPixel(center_x - y, center_y - x, color);
 
-                if (d < 0) {
+                if (d < 0) 
+                {
                     d = d + 4 * x + 6;
                 }
-                else {
+                else 
+                {
                     d = d + 4 * (x - y) + 10;
                     y--;
                 }
                 x++;
             }
         }
+        return out;
     }
 
     template<ImageFormat frmt, pixel_t T>
-    void DrawLine(Image<frmt, T>& in, const Line& line, const Pixel<frmt, T>& c)
+    Image<frmt, T> DrawLine(const Image<frmt, T>& in, const Line& line, const Pixel<frmt, T>& c)
     {
+        Image<frmt, T> out = in;
+
         int width = in.Width();
         int height = in.Height();
 
@@ -62,9 +71,9 @@ namespace qlm
             if (0 <= x1 && x1 < width && 0 <= y1 && y1 < height)
             {
                 // just a point
-                in.SetPixel(x1, y1, c);
+                out.SetPixel(x1, y1, c);
             }
-            return;
+            return out;
         }
 
         if (std::abs(dx) > std::abs(dy))
@@ -80,11 +89,12 @@ namespace qlm
                 int y = dy * (x - x1) / dx + y1;
                 if (0 <= y && y < height && 0 <= x && x < width)
                 {
-                    in.SetPixel(x, y, c);
+                    out.SetPixel(x, y, c);
                 }
             }
         }
-        else {
+        else 
+        {
             if (y1 > y2) {
                 std::swap(x1, x2);
                 std::swap(y1, y2);
@@ -95,14 +105,15 @@ namespace qlm
                 int x = dx * (y - y1) / dy + x1;
                 if (0 <= y && y < height && 0 <= x && x < width)
                 {
-                    in.SetPixel(x, y, c);
+                    out.SetPixel(x, y, c);
                 }
             }
         }
+        return out;
     }
 
     template<ImageFormat frmt, pixel_t T>
-    void DrawLine(Image<frmt, T>& in, const LinePolar& line, const  Pixel<frmt, T>& color)
+    Image<frmt, T> DrawLine(const Image<frmt, T>& in, const LinePolar& line, const  Pixel<frmt, T>& color)
     {
         int width = in.Width();
         int height = in.Height();
@@ -123,7 +134,7 @@ namespace qlm
         int y2 = int(y0 - 1000 * (cos_angle));
 
         Line l{x1 ,y1 ,x2 ,y2};
-        DrawLine(in, l, color);
+        return DrawLine(in, l, color);
     }
 
 }
