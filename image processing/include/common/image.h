@@ -10,6 +10,20 @@
 
 namespace qlm
 {
+	enum class BorderType
+	{
+		BORDER_CONSTANT,
+		BORDER_REPLICATE,
+		BORDER_REFLECT,
+	};
+
+	template<ImageFormat frmt, pixel_t T>
+	struct BorderMode
+	{
+		BorderType border_type = BorderType::BORDER_CONSTANT;
+		Pixel<frmt, T> border_pixel{};
+	};
+
 	template<ImageFormat frmt, pixel_t T>
 	class Image
 	{
@@ -18,6 +32,20 @@ namespace qlm
 		unsigned int height;
 		unsigned int num_of_channels;
 		Pixel<frmt, T>* data;
+	private:
+		int ReflectBorderIndex(int idx, int max_idx) const
+		{
+			int reflect_idx = idx;
+			if (idx < 0)
+			{
+				reflect_idx = -idx - 1;
+			}
+			else if (idx >= max_idx)
+			{
+				reflect_idx = max_idx - (idx - max_idx) - 1;
+			}
+			return reflect_idx;
+		}
 	public:
 		Image():data(nullptr), width(0), height(0)
 		{
@@ -152,6 +180,38 @@ namespace qlm
 		Pixel<frmt, T> GetPixel(int i) const
 		{
 			return data[i];
+		}
+
+		Pixel<frmt, T> GetPixel(int x, int y, const BorderMode<frmt, T>& border_mode) const
+		{
+			if (x >= 0 && x < width && y >= 0 && y < height)
+			{
+				// not border
+				return this->GetPixel(x, y);
+			}
+			else
+			{
+				// border pixel
+				switch (border_mode.border_type)
+				{
+				case qlm::BorderType::BORDER_CONSTANT:
+				{
+					return border_mode.border_pixel;
+				}
+				case qlm::BorderType::BORDER_REPLICATE:
+				{
+					int x_idx = std::clamp(x, 0, static_cast<int>(width) - 1);
+					int y_idx = std::clamp(y, 0, static_cast<int>(height) - 1);
+					return this->GetPixel(x_idx, y_idx);
+				}
+				case qlm::BorderType::BORDER_REFLECT:
+				{
+					int x_idx = this->ReflectBorderIndex(x, width);
+					int y_idx = this->ReflectBorderIndex(y, height);
+					return this->GetPixel(x_idx, y_idx);
+				}
+				}
+			}
 		}
 
 		bool LoadFromFile(const std::string& file_name);

@@ -11,13 +11,6 @@ namespace qlm
 		BICUBIC
 	};
 
-	enum class BorderType
-	{
-		BORDER_CONSTANT,
-		BORDER_REPLICATE,
-		BORDER_REFLECT,
-	};
-
 	enum class RotateFlag
 	{
 		ROTATE_90_CLOCKWISE,
@@ -37,11 +30,6 @@ namespace qlm
 
 namespace qlm
 {
-	struct BorderMode
-	{
-		BorderType border_type = BorderType::BORDER_CONSTANT;
-		int border_value = 0;
-	};
 
 	struct Line
 	{

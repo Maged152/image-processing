@@ -47,8 +47,7 @@ namespace qlm
 
 
 ```c++
-namespace qlm
-{
+
 	qlm::Timer<qlm::msec> t{};
 	std::string file_name = "input.jpg";
 	// load the image
@@ -80,7 +79,7 @@ namespace qlm
 	{
 		std::cout << "Falied to write \n";
 	}
-}
+
 ```
 
 ### The input

@@ -192,6 +192,7 @@ namespace qlm
     public:
         Pixel() : r(0), g(0), b(0), a(std::numeric_limits<T>::max()) {}
         Pixel(T red, T green, T blue) : r(red), g(green), b(blue), a(std::numeric_limits<T>::max()) {}
+        Pixel(T v) : r(v), g(v), b(v), a(std::numeric_limits<T>::max()) {}
         Pixel(T red, T green, T blue, T alpha) : r(red), g(green), b(blue), a(alpha) {}
         // Copy constructor
         Pixel(const Pixel& other) : r(other.r), g(other.g), b(other.b), a(other.a) {}
