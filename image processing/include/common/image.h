@@ -158,7 +158,7 @@ namespace qlm
 		
 		void SetPixel(int x, int y, const Pixel<frmt, T> &pix)
 		{
-			if (x > 0 && x < width && y > 0 && y < height)
+			if (x >= 0 && x < width && y >= 0 && y < height)
 			{
 				data[y * width + x] = pix;
 			}
@@ -194,22 +194,22 @@ namespace qlm
 				// border pixel
 				switch (border_mode.border_type)
 				{
-				case qlm::BorderType::BORDER_CONSTANT:
-				{
-					return border_mode.border_pixel;
-				}
-				case qlm::BorderType::BORDER_REPLICATE:
-				{
-					int x_idx = std::clamp(x, 0, static_cast<int>(width) - 1);
-					int y_idx = std::clamp(y, 0, static_cast<int>(height) - 1);
-					return this->GetPixel(x_idx, y_idx);
-				}
-				case qlm::BorderType::BORDER_REFLECT:
-				{
-					int x_idx = this->ReflectBorderIndex(x, width);
-					int y_idx = this->ReflectBorderIndex(y, height);
-					return this->GetPixel(x_idx, y_idx);
-				}
+					case qlm::BorderType::BORDER_CONSTANT:
+					{
+						return border_mode.border_pixel;
+					}
+					case qlm::BorderType::BORDER_REPLICATE:
+					{
+						int x_idx = std::clamp(x, 0, static_cast<int>(width) - 1);
+						int y_idx = std::clamp(y, 0, static_cast<int>(height) - 1);
+						return this->GetPixel(x_idx, y_idx);
+					}
+					case qlm::BorderType::BORDER_REFLECT:
+					{
+						int x_idx = this->ReflectBorderIndex(x, width);
+						int y_idx = this->ReflectBorderIndex(y, height);
+						return this->GetPixel(x_idx, y_idx);
+					}
 				}
 			}
 		}
