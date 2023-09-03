@@ -8,6 +8,6 @@ namespace qlm
 	Image<frmt, T> Filter2D(
 		const Image<frmt, T>& in,
 		const Kernel& kernel,
-		const BorderMode& border_mode = BorderMode{}
+		const  BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{}
 	);
 }

@@ -3,7 +3,7 @@
 int main()
 {
 	qlm::Timer<qlm::msec> t{};
-	std::string file_name = "images.png";
+	std::string file_name = "input.jpg";
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
 	if (!in.LoadFromFile(file_name))
@@ -16,29 +16,20 @@ int main()
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	unsigned int filter_size = 3;
-	unsigned int block_size = 3;
-	float k = 0.04;
-	float threshold = 400;
-	
+	qlm::Kernel k{ 3, 3 };
+	// sharpen filter
+	k.Set(0, 0, 0); k.Set(0, 1, -1); k.Set(0, 2, 0);
+	k.Set(1, 0, -1); k.Set(1, 1, 5); k.Set(1, 2, -1);
+	k.Set(2, 0, 0); k.Set(2, 1, -1); k.Set(2, 2, 0);
+
 	// do the operation
 	t.start();
-	auto out = qlm::HarrisCorner(in, block_size, filter_size, k, threshold);
+	auto out = qlm::Filter2D(in, k, qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{});
 	t.end();
 
 	t.show();
 
-	qlm::Circle<int> circle = { .center = {240,240}, .radius = 2 };
-	qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0};
-
-	for (auto& i : out)
-	{
-		circle.center = i.point;
-		qlm::DrawCircle(in, circle, green);
-	}
-
-	
-	if (!in.SaveToFile("result.jpg", alpha))
+	if (!out.SaveToFile("result.jpg", alpha))
 	{
 		std::cout << "Falied to write \n";
 	}

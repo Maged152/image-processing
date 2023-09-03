@@ -10,7 +10,7 @@ namespace qlm
 	Image<frmt, T> Filter2D(
 		const Image<frmt, T>& in,
 		const Kernel& kernel,
-		const BorderMode& border_mode = BorderMode{}
+		const  BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{}
 	);
 }
 ```
@@ -24,10 +24,11 @@ namespace qlm
 		BORDER_REFLECT,
 	};
 
+	template<ImageFormat frmt, pixel_t T>
 	struct BorderMode
 	{
 		BorderType border_type = BorderType::BORDER_CONSTANT;
-		int border_value = 0;
+		Pixel<frmt, T> border_pixel{};
 	};
 }
 ```
@@ -47,7 +48,6 @@ namespace qlm
 
 
 ```c++
-
 	qlm::Timer<qlm::msec> t{};
 	std::string file_name = "input.jpg";
 	// load the image
@@ -61,7 +61,7 @@ namespace qlm
 	bool alpha{ true };
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
-	
+
 	qlm::Kernel k{ 3, 3 };
 	// sharpen filter
 	k.Set(0, 0, 0); k.Set(0, 1, -1); k.Set(0, 2, 0);
@@ -70,16 +70,15 @@ namespace qlm
 
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::Filter2D(in, k, qlm::BorderMode{});
+	auto out = qlm::Filter2D(in, k, qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{});
 	t.end();
-	
+
 	t.show();
 
 	if (!out.SaveToFile("result.jpg", alpha))
 	{
 		std::cout << "Falied to write \n";
 	}
-
 ```
 
 ### The input
