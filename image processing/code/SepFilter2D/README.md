@@ -6,12 +6,12 @@ Applies a separable linear filter of size MxN to the input image
 ```c++
 namespace qlm
 {
-	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> SepFilter2D(
-		const Image<frmt, T>& in,
+	template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
+	Image<frmt, dst_t> SepFilter2D(
+		const Image<frmt, src_t>& in,
 		const Kernel1D& x_kernel,
 		const Kernel1D& y_kernel,
-		const BorderMode& border_mode = BorderMode{}
+		const BorderMode<frmt, src_t>& border_mode = BorderMode{}
 	);
 }
 ```
@@ -25,10 +25,11 @@ namespace qlm
 		BORDER_REFLECT,
 	};
 
+	template<ImageFormat frmt, pixel_t T>
 	struct BorderMode
 	{
 		BorderType border_type = BorderType::BORDER_CONSTANT;
-		int border_value = 0;
+		Pixel<frmt, T> border_pixel{};
 	};
 }
 ```
@@ -65,22 +66,25 @@ namespace qlm
 	bool alpha{ true };
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
-	
+
 	qlm::Kernel1D ker{ 3 };
 	ker.Set(0, 1.0 / 3); ker.Set(1, 1.0 / 3); ker.Set(2, 1.0 / 3);
 
+	auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
+	border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
 
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::SepFilter2D(in, ker, ker, qlm::BorderMode{ .border_type = qlm::BorderType::BORDER_REFLECT});
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, uint8_t>(in, ker, ker, border_mode);
 	t.end();
-	
+
 	t.show();
 
 	if (!out.SaveToFile("result.jpg", alpha))
 	{
 		std::cout << "Falied to write \n";
 	}
+
 ```
 
 ### The input

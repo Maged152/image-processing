@@ -9,7 +9,7 @@ namespace qlm
 		const Image<frmt, src_t>& in,
 		const Kernel1D& x_kernel,
 		const Kernel1D& y_kernel,
-		const BorderMode& border_mode = BorderMode{}
+		const BorderMode<frmt, src_t>& border_mode = BorderMode{}
 	);
 
 }
