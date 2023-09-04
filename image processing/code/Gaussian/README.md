@@ -13,8 +13,8 @@ Applys gaussian filter of size NxN on the input image.
 		const unsigned int filter_size,
 		float sigma_x,
 		float sigma_y = 0,
-		const BorderMode& border_mode = BorderMode{}
-	);
+		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{}
+	)
 ```
 ## Parameters
 
