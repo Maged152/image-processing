@@ -13,7 +13,7 @@ Applys sobel filter of size NxN on the input image.
 	Image<ImageFormat::GRAY, out_t> SobelX(
 		const Image <ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
-		const BorderMode& border_mode = BorderMode{}
+		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
 	);
 ```
 ## Parameters
@@ -33,9 +33,9 @@ Applys sobel filter of size NxN on the input image.
 ```c++
     template<pixel_t in_t, pixel_t out_t = int16_t>
 	Image<ImageFormat::GRAY, out_t> SobelY(
-		const Image <ImageFormat::GRAY, in_t>& in,
+		const Image<ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
-		const BorderMode& border_mode = BorderMode{}
+		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
 	);
 ```
 ## Parameters
@@ -54,11 +54,11 @@ Applys sobel filter of size NxN on the input image.
  The return data type is `SobelDerivatives`
 
 ```c++
-    template<pixel_t in_t, pixel_t out_t = int16_t>
+   template<pixel_t in_t, pixel_t out_t = int16_t>
 	SobelDerivatives<in_t, out_t> Sobel(
 		const Image<ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
-		const BorderMode& border_mode = BorderMode{}
+		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
 	);
 ```
 ## Parameters

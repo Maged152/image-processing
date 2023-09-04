@@ -116,21 +116,21 @@ namespace qlm
 	}
 	// Sobel X operation
 	template<pixel_t in_t, pixel_t out_t>
-	Image<ImageFormat::GRAY, out_t> SobelX(const Image<ImageFormat::GRAY, in_t>& in, const unsigned int kernel_size, const BorderMode& border_mode)
+	Image<ImageFormat::GRAY, out_t> SobelX(const Image<ImageFormat::GRAY, in_t>& in, const unsigned int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
 	{
 		auto ker = GetDerivXKernel(kernel_size);
 		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker.x_ker, ker.y_ker, border_mode);
 	}
 	// Sobel Y operation
 	template<pixel_t in_t, pixel_t out_t>
-	Image<ImageFormat::GRAY, out_t> SobelY(const Image<ImageFormat::GRAY, in_t>& in, const unsigned int kernel_size, const BorderMode& border_mode)
+	Image<ImageFormat::GRAY, out_t> SobelY(const Image<ImageFormat::GRAY, in_t>& in, const unsigned int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
 	{
 		auto ker = GetDerivYKernel(kernel_size);
 		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker.x_ker, ker.y_ker, border_mode);
 	}
 	// Sobel operation
 	template<pixel_t in_t, pixel_t out_t>
-	SobelDerivatives<in_t, out_t> Sobel(const Image<ImageFormat::GRAY, in_t>& in, const unsigned int kernel_size, const BorderMode& border_mode)
+	SobelDerivatives<in_t, out_t> Sobel(const Image<ImageFormat::GRAY, in_t>& in, const unsigned int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
 	{
 		const in_t min_value = std::numeric_limits<in_t>::lowest();
 		const in_t max_value = std::numeric_limits<in_t>::max();
@@ -180,13 +180,13 @@ namespace qlm
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::SobelX<uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	unsigned int,
-	const BorderMode&);
+	const BorderMode<ImageFormat::GRAY, uint8_t>&);
 
 // Explicit instantiation for  uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::SobelY<uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	unsigned int,
-	const BorderMode&);
+	const BorderMode<ImageFormat::GRAY, uint8_t>&);
 
 
 // Explicit instantiation for  uint8_t, int16_t
@@ -194,4 +194,4 @@ template qlm::SobelDerivatives<uint8_t, int16_t>
    qlm::Sobel<uint8_t, int16_t>(
 	const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	const unsigned int,
-	const BorderMode&);
+	const BorderMode<qlm::ImageFormat::GRAY, uint8_t>&);
