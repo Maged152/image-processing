@@ -7,25 +7,14 @@
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	std::vector<KeyPoint<int>> HarrisCorner(const Image<frmt, T>& in, const unsigned int block_size, const unsigned int filter_size, float k, float threshold, const BorderMode& border_mode)
+	std::vector<KeyPoint<int>> HarrisCorner(const Image<frmt, T>& in, const unsigned int block_size, const unsigned int filter_size, float k, float threshold, const  BorderMode<frmt, T>& border_mode)
 	{
 		const unsigned int width = in.Width();
 		const unsigned int height = in.Height();
 
-		Image<ImageFormat::GRAY, uint8_t> gray {width, height};
-		
-		if constexpr (frmt != ImageFormat::GRAY)
-		{
-			// convert to gray
-			gray = ColorConvert<frmt, uint8_t, ImageFormat::GRAY, uint8_t>(in);
-		}
-		else
-		{
-			gray = in;
-		}
 		// call gaussian kernerl 
 		int constexpr sigma = 1;
-		Image<ImageFormat::GRAY, uint8_t> gaussian = Gaussian(gray, filter_size, sigma, sigma, border_mode);
+		Image<ImageFormat::GRAY, uint8_t> gaussian = Gaussian(in, filter_size, sigma, sigma, border_mode);
 		// call sobel x and y
 		Image<ImageFormat::GRAY, int16_t> sobel_x = SobelX<uint8_t, int16_t>(gaussian, filter_size, border_mode);
 		Image<ImageFormat::GRAY, int16_t> sobel_y = SobelY<uint8_t, int16_t>(gaussian, filter_size, border_mode);
@@ -52,9 +41,14 @@ namespace qlm
 		{
 			box.Set(i, 1.0f / block_size);
 		}
-		Image<ImageFormat::GRAY, int16_t> Ixx_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixx, box, box, border_mode);
-		Image<ImageFormat::GRAY, int16_t> Iyy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Iyy, box, box, border_mode);
-		Image<ImageFormat::GRAY, int16_t> Ixy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixy, box, box, border_mode);
+
+		BorderMode<ImageFormat::GRAY, int16_t> border_mode_16{};
+		border_mode_16.border_type = border_mode.border_type;
+		border_mode_16.border_pixel = border_mode.border_pixel;
+
+		Image<ImageFormat::GRAY, int16_t> Ixx_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixx, box, box, border_mode_16);
+		Image<ImageFormat::GRAY, int16_t> Iyy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Iyy, box, box, border_mode_16);
+		Image<ImageFormat::GRAY, int16_t> Ixy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixy, box, box, border_mode_16);
 
 		Image<ImageFormat::GRAY, float> corners_response{ width, height };
 		// compute R
@@ -209,9 +203,6 @@ namespace qlm
 	}
 
 	template std::vector<KeyPoint<int>>
-	HarrisCorner<ImageFormat::GRAY, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, const unsigned int, const unsigned int, float, float, const BorderMode&);
+	HarrisCorner<ImageFormat::GRAY, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, const unsigned int, const unsigned int, float, float, const BorderMode<ImageFormat::GRAY, uint8_t>&);
 	
-	template std::vector<KeyPoint<int>>
-	HarrisCorner<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&, const unsigned int, const unsigned int, float, float, const BorderMode&);
-
 }
