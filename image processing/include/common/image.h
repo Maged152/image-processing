@@ -166,7 +166,7 @@ namespace qlm
 
 		void SetPixel(int i, const Pixel<frmt, T>& pix)
 		{
-			if (i > 0 && i < width * height)
+			if (i >= 0 && i < width * height)
 			{
 				data[i] = pix;
 			}	
@@ -174,12 +174,21 @@ namespace qlm
 
 		Pixel<frmt, T> GetPixel(int x, int y) const
 		{
-			return data[y * width + x];
+			if (x >= 0 && x < width && y >= 0 && y < height)
+			{
+				return data[y * width + x];
+			}
+
+			return Pixel<frmt, T>{};
 		}
 
 		Pixel<frmt, T> GetPixel(int i) const
 		{
-			return data[i];
+			if (i >= 0 && i < width * height)
+			{
+				return data[i];
+			}
+			return Pixel<frmt, T>{};
 		}
 
 		Pixel<frmt, T> GetPixel(int x, int y, const BorderMode<frmt, T>& border_mode) const
