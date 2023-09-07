@@ -1,7 +1,7 @@
 #pragma once
 #include "image.h"
+#include "types/TransformationMatrix.h"
 
-/*************************************************************************/
 namespace qlm
 {
 	enum class ScaleMethod
