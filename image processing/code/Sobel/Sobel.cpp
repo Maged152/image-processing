@@ -21,7 +21,7 @@ namespace qlm
 		auto ker = GetDerivYKernel(filter_size);
 		// max-min values
 		int min{ 0 }, max{ 0 };
-		for (int i = 0; i < ker.x_ker.length; i++)
+		for (int i = 0; i < ker.x_ker.Length(); i++)
 		{
 			max += max_value * ker.x_ker.Get(i);
 		}

@@ -10,8 +10,8 @@ qlm::Image<frmt, T> qlm::Filter2D(const qlm::Image<frmt, T>& in, const qlm::Kern
 	qlm::Image<frmt, T> out;
 	out.create(img_width, img_height, qlm::Pixel<frmt, T>{});
 
-	int pad_width = kernel.width / 2;
-	int pad_height = kernel.height / 2;
+	int pad_width = kernel.Width() / 2;
+	int pad_height = kernel.Height() / 2;
 
 	qlm::Pixel<frmt, T> in_pixel;
 	qlm::Pixel<frmt, float> weight_sum;

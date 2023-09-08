@@ -12,8 +12,8 @@ qlm::Image<frmt, dst_t> qlm::SepFilter2D(const qlm::Image<frmt, src_t>& in,
 	qlm::Image<frmt, dst_t> out;
 	out.create(img_width, img_height, qlm::Pixel<frmt, dst_t>{});
 
-	int x_padding_length = x_kernel.length / 2;
-	int y_padding_length = y_kernel.length / 2;
+	int x_padding_length = x_kernel.Length() / 2;
+	int y_padding_length = y_kernel.Length() / 2;
 
 	qlm::Pixel<frmt, src_t> in_pixel;
 	qlm::Pixel<frmt, float> weight_sum;

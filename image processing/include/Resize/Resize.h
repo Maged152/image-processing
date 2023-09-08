@@ -9,5 +9,5 @@ namespace qlm
 		const Image<frmt, T>& in,
 		const unsigned int width,
 		const unsigned int height,
-		      ScaleMethod method = ScaleMethod::BILINEAR);
+		      InterpolationFlag method = InterpolationFlag::BILINEAR);
 }
