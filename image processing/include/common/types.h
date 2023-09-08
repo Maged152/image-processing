@@ -4,7 +4,7 @@
 
 namespace qlm
 {
-	enum class ScaleMethod
+	enum class InterpolationFlag
 	{
 		NEAREST_NEIGHBOR,
 		BILINEAR,

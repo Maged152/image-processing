@@ -9,7 +9,7 @@ namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> Scale(const Image<frmt, T>& in,
-		                       ScaleMethod method, 
+		                       InterpolationFlag method, 
 		                       float scale_x, 
 		                       float scale_y);
 }
@@ -17,7 +17,7 @@ namespace qlm
 ```c++
 namespace qlm
 {
-	enum class ScaleMethod
+	enum class InterpolationFlag
 	{
 		NEAREST_NEIGHBOR,
 		BILINEAR,
@@ -30,7 +30,7 @@ namespace qlm
 | Name      | Type         | Description                      |
 |-----------|--------------|----------------------------------|
 | `in`      | `Image`      | The input image.                 |
-| `method`  | `ScaleMethod`| The scale method.                |
+| `method`  | `InterpolationFlag`| The scale method.                |
 | `scale_x` | `float`      | The scale factor in x direction. |
 | `scale_y` | `float`      | The scale factor in x direction. |
 
@@ -56,7 +56,7 @@ namespace qlm
 
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_nn = std::move( qlm::Scale(in, qlm::ScaleMethod::NEAREST_NEIGHBOR, scale_x, scale_y) );
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_nn = std::move( qlm::Scale(in, qlm::InterpolationFlag::NEAREST_NEIGHBOR, scale_x, scale_y) );
 	t.end();
 
 	t.show();
@@ -68,7 +68,7 @@ namespace qlm
 	
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_bl = std::move( qlm::Scale(in, qlm::ScaleMethod::BILINEAR, scale_x, scale_y) );
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_bl = std::move( qlm::Scale(in, qlm::InterpolationFlag::BILINEAR, scale_x, scale_y) );
 	t.end();
 
 	t.show();
@@ -80,7 +80,7 @@ namespace qlm
 
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_bc = std::move( qlm::Scale(in, qlm::ScaleMethod::BICUBIC, scale_x, scale_y) );
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_bc = std::move( qlm::Scale(in, qlm::InterpolationFlag::BICUBIC, scale_x, scale_y) );
 	t.end();
 
 	t.show();

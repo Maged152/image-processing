@@ -2,7 +2,7 @@
 #include "Scale/Scale.h"
 
 template<qlm::ImageFormat frmt, qlm::pixel_t T>
-qlm::Image<frmt, T> qlm::Resize(const qlm::Image<frmt, T>& in, const unsigned int width, const unsigned int height, qlm::ScaleMethod method)
+qlm::Image<frmt, T> qlm::Resize(const qlm::Image<frmt, T>& in, const unsigned int width, const unsigned int height, qlm::InterpolationFlag method)
 {
 	unsigned int img_width = in.Width();
 	unsigned int img_height = in.Height();
@@ -18,22 +18,22 @@ template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
 qlm::Resize<qlm::ImageFormat::RGB, uint8_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>& ,
 											const unsigned int,
 											const unsigned int,
-											qlm::ScaleMethod);
+											qlm::InterpolationFlag);
 // Explicit instantiation for RGB , int16_t
 template qlm::Image<qlm::ImageFormat::RGB, int16_t>
 qlm::Resize<qlm::ImageFormat::RGB, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, int16_t>&,
 											const unsigned int,
 											const unsigned int,
-											qlm::ScaleMethod);
+											qlm::InterpolationFlag);
 // Explicit instantiation for GRAY , uint8_t
 template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
 qlm::Resize<qlm::ImageFormat::GRAY, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 											 const unsigned int,
 											 const unsigned int,
-											 qlm::ScaleMethod);
+											 qlm::InterpolationFlag);
 // Explicit instantiation for GRAY , uint8_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::Resize<qlm::ImageFormat::GRAY, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
 	                                         const unsigned int,
 	                                         const unsigned int,
-	                                         qlm::ScaleMethod);
+	                                         qlm::InterpolationFlag);

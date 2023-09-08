@@ -4,7 +4,7 @@
 #include <algorithm>
 
 template<qlm::ImageFormat frmt, qlm::pixel_t T>
-qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in, qlm::ScaleMethod method, float scale_x, float scale_y)
+qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in, qlm::InterpolationFlag method, float scale_x, float scale_y)
 {
 	unsigned int width = in.Width();
 	unsigned int height = in.Height();
@@ -15,7 +15,7 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in, qlm::ScaleMethod m
 	qlm::Image<frmt, T> out;
 	out.create(new_width, new_height, qlm::Pixel<frmt, T>{});
 	// check the scaling method
-	if (method == qlm::ScaleMethod::NEAREST_NEIGHBOR)
+	if (method == qlm::InterpolationFlag::NEAREST_NEIGHBOR)
 	{
 		qlm::Pixel<frmt, T> c;
 		for (int x = 0; x < new_width; x++)
@@ -30,7 +30,7 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in, qlm::ScaleMethod m
 			}
 		}
 	}
-	else if (method == qlm::ScaleMethod::BILINEAR)
+	else if (method == qlm::InterpolationFlag::BILINEAR)
 	{
 		for (int x = 0; x < new_width; x++)
 		{
@@ -120,24 +120,24 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in, qlm::ScaleMethod m
 // Explicit instantiation for RGB , uint8_t
 template qlm::Image<qlm::ImageFormat::RGB, uint8_t> 
 qlm::Scale<qlm::ImageFormat::RGB, uint8_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
-										   qlm::ScaleMethod,
+										   qlm::InterpolationFlag,
 										   float,
 										   float);
 // Explicit instantiation for RGB , int16_t
 template qlm::Image<qlm::ImageFormat::RGB, int16_t>
 qlm::Scale<qlm::ImageFormat::RGB, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, int16_t>&,
-	qlm::ScaleMethod,
+	qlm::InterpolationFlag,
 	float,
 	float);
 // Explicit instantiation for GRAY , uint8_t
 template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
 qlm::Scale<qlm::ImageFormat::GRAY, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
-	qlm::ScaleMethod,
+	qlm::InterpolationFlag,
 	float,
 	float);
 // Explicit instantiation for GRAY , int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::Scale<qlm::ImageFormat::GRAY, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
-	qlm::ScaleMethod,
+	qlm::InterpolationFlag,
 	float,
 	float);
