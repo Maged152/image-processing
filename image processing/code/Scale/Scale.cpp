@@ -52,10 +52,10 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in, qlm::Interpolation
 			// offsets
 			float x_offset = nearest_x - x1;
 			float y_offset = nearest_y - y1;
-			// interporate along x-axis
+			// interpolate along x-axis
 			qlm::Pixel<frmt, T> top = top_left * (1.0f - x_offset) + top_right * x_offset;
 			qlm::Pixel<frmt, T> bottom = bottom_left * (1.0f - x_offset) + bottom_right * x_offset;
-			// interporate along y-axis
+			// interpolate along y-axis
 			qlm::Pixel<frmt, T> out_pixel = top * (1.0f - y_offset) + bottom * y_offset;
 			out.SetPixel(x, y, out_pixel);
 			}

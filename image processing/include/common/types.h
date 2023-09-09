@@ -2,16 +2,10 @@
 #include "image.h"
 #include "types/TransformationMatrix.h"
 #include "types/Kernel.h"
+#include "types/Interpolation.h"
 
 namespace qlm
 {
-	enum class InterpolationFlag
-	{
-		NEAREST_NEIGHBOR,
-		BILINEAR,
-		BICUBIC
-	};
-
 	enum class RotateFlag
 	{
 		ROTATE_90_CLOCKWISE,
