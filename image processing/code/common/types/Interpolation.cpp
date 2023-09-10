@@ -6,7 +6,10 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Pixel<frmt, T> NearestNeighborInterpolation(const Image<frmt, T>& src, float x, float y, const BorderMode<frmt, T>& border_mode)
 	{
-		return Pixel<frmt, T>();
+		int x_loc = static_cast<int>(std::roundf(x));
+		int y_loc = static_cast<int>(std::roundf(y));
+
+		return src.GetPixel(x_loc, y_loc, border_mode);
 	}
 
 	// Bilinear interpolation
@@ -16,7 +19,7 @@ namespace qlm
 		return Pixel<frmt, T>();
 	}
 
-	//Quadratic interpolation
+	// Quadratic interpolation
 	template<ImageFormat frmt, pixel_t T>
 	Pixel<frmt, T> BicubicInterpolation(const Image<frmt, T>& src, float x, float y, const BorderMode<frmt, T>& border_mode)
 	{
