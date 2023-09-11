@@ -16,7 +16,26 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Pixel<frmt, T> BilinearInterpolation(const Image<frmt, T>& src, float x, float y, const BorderMode<frmt, T>& border_mode)
 	{
-		return Pixel<frmt, T>();
+		// get the four points
+		int x1 = std::floorf(x);
+		int y1 = std::floorf(y);
+		int x2 = std::ceilf(x);
+		int y2 = std::ceilf(y);
+		// get the four neighbors
+		qlm::Pixel<frmt, T> tl = src.GetPixel(x1, y1, border_mode);
+		qlm::Pixel<frmt, T> tr = src.GetPixel(x2, y1, border_mode);
+		qlm::Pixel<frmt, T> bl = src.GetPixel(x1, y2, border_mode);
+		qlm::Pixel<frmt, T> br = src.GetPixel(x2, y2, border_mode);
+		// offsets
+		float x_offset = x - x1;
+		float y_offset = y - y1;
+		// interpolate along x-axis
+		qlm::Pixel<frmt, T> top = top_left * (1.0f - x_offset) + top_right * x_offset;
+		qlm::Pixel<frmt, T> bottom = bottom_left * (1.0f - x_offset) + bottom_right * x_offset;
+		// interpolate along y-axis
+		qlm::Pixel<frmt, T> out_pixel = top * (1.0f - y_offset) + bottom * y_offset;
+		
+		return out_pixel;
 	}
 
 	// Quadratic interpolation
