@@ -11,7 +11,7 @@
 #include "ColorConvert/ColorConvert.h"
 #include "ConvertBitDepth/ConvertBitDepth.h"
 #include "Sobel/Sobel.h"
-#include "WrapRotate/WrapRotate.h"
+#include "WarpRotate/WarpRotate.h"
 #include "Rotate/Rotate.h"
 #include "Flip/Flip.h"
 #include "Transpose/Transposeh.h"
@@ -19,3 +19,4 @@
 #include "FloodFill/FloodFill.h"
 #include "Gaussian/Gaussian.h"
 #include "HarrisCorner/HarrisCorner.h"
+#include "WarpAffine/WarpAffine.h"

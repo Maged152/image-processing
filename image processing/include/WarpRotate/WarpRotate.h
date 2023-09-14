@@ -5,7 +5,7 @@
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> WrapRotate(
+	Image<frmt, T> WarpRotate(
 		const Image<frmt, T>& in,
 		      float angle,
 		const Point<int>& centre,

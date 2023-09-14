@@ -1,12 +1,12 @@
 #define _USE_MATH_DEFINES
 
-#include "WrapRotate/WrapRotate.h"
+#include "WarpRotate/WarpRotate.h"
 #include <cmath>
 
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> WrapRotate(const Image<frmt, T>& in, float angle, const Point<int>& centre, const float scale, const Pixel<frmt, T>& pix)
+	Image<frmt, T> WarpRotate(const Image<frmt, T>& in, float angle, const Point<int>& centre, const float scale, const Pixel<frmt, T>& pix)
 	{
 		unsigned int img_width = in.Width();
 		unsigned int img_height = in.Height();
@@ -42,8 +42,8 @@ namespace qlm
 	}
 
 
-	template Image<ImageFormat::RGB, uint8_t> WrapRotate(const Image<ImageFormat::RGB, uint8_t>&, float, const Point<int>&, const float, const Pixel< ImageFormat::RGB, uint8_t >&);
-	template Image<ImageFormat::GRAY, uint8_t> WrapRotate(const Image<ImageFormat::GRAY, uint8_t>&, float angle, const Point<int>&, const float, const Pixel<ImageFormat::GRAY, uint8_t>&);
-	template Image<ImageFormat::RGB, int16_t> WrapRotate(const Image<ImageFormat::RGB, int16_t>&, float angle, const Point<int>&, const float, const Pixel<ImageFormat::RGB, int16_t>&);
-	template Image<ImageFormat::GRAY, int16_t> WrapRotate(const Image<ImageFormat::GRAY, int16_t>&, float angle, const Point<int>&, const float, const Pixel<ImageFormat::GRAY, int16_t>&);
+	template Image<ImageFormat::RGB, uint8_t> WarpRotate(const Image<ImageFormat::RGB, uint8_t>&, float, const Point<int>&, const float, const Pixel< ImageFormat::RGB, uint8_t >&);
+	template Image<ImageFormat::GRAY, uint8_t> WarpRotate(const Image<ImageFormat::GRAY, uint8_t>&, float angle, const Point<int>&, const float, const Pixel<ImageFormat::GRAY, uint8_t>&);
+	template Image<ImageFormat::RGB, int16_t> WarpRotate(const Image<ImageFormat::RGB, int16_t>&, float angle, const Point<int>&, const float, const Pixel<ImageFormat::RGB, int16_t>&);
+	template Image<ImageFormat::GRAY, int16_t> WarpRotate(const Image<ImageFormat::GRAY, int16_t>&, float angle, const Point<int>&, const float, const Pixel<ImageFormat::GRAY, int16_t>&);
 }

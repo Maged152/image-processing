@@ -8,7 +8,7 @@ The function rotates an image for an angle around a centre by the transformation
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> WrapRotate(
+	Image<frmt, T> WarpRotate(
 		const Image<frmt, T>& in,
 		      float angle,
 		const Point<int>& centre,
@@ -71,7 +71,7 @@ namespace qlm
 	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> pix{ 255, 0, 0 };
 	// do the operation
 	t.start();
-	auto out = qlm::WrapRotate(in, angle, centre, scale, pix);
+	auto out = qlm::WarpRotate(in, angle, centre, scale, pix);
 	t.end();
 
 	t.show();
