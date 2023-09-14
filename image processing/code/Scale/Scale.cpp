@@ -8,7 +8,7 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in, qlm::Interpolation
 {
 	unsigned int width = in.Width();
 	unsigned int height = in.Height();
-	// creat image with the new size
+	// create image with the new size
 	unsigned int new_width = width * scale_x;
 	unsigned int new_height = height * scale_y;
 

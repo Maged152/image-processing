@@ -1,4 +1,5 @@
 #include "common/types/Interpolation.h"
+#include <cmath>
 
 namespace qlm
 {
@@ -30,8 +31,8 @@ namespace qlm
 		float x_offset = x - x1;
 		float y_offset = y - y1;
 		// interpolate along x-axis
-		qlm::Pixel<frmt, T> top = top_left * (1.0f - x_offset) + top_right * x_offset;
-		qlm::Pixel<frmt, T> bottom = bottom_left * (1.0f - x_offset) + bottom_right * x_offset;
+		qlm::Pixel<frmt, T> top = tl * (1.0f - x_offset) + tr * x_offset;
+		qlm::Pixel<frmt, T> bottom = bl * (1.0f - x_offset) + br * x_offset;
 		// interpolate along y-axis
 		qlm::Pixel<frmt, T> out_pixel = top * (1.0f - y_offset) + bottom * y_offset;
 		
@@ -49,11 +50,11 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Pixel<frmt, T> Interpolation(const Image<frmt, T>& src, float x, float y, const InterpolationFlag flag, const BorderMode<frmt, T>& border_mode)
 	{
-		if (method == qlm::InterpolationFlag::NEAREST_NEIGHBOR)
+		if (flag == qlm::InterpolationFlag::NEAREST_NEIGHBOR)
 		{
 			return NearestNeighborInterpolation(src, x, y, border_mode);
 		}
-		else if (method == qlm::InterpolationFlag::BILINEAR)
+		else if (flag == qlm::InterpolationFlag::BILINEAR)
 		{
 			return BilinearInterpolation(src, x, y, border_mode);
 		}
