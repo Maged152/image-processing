@@ -13,6 +13,10 @@ namespace qlm
 		return src.GetPixel(x_loc, y_loc, border_mode);
 	}
 
+	template  Pixel<ImageFormat::GRAY, uint8_t> NearestNeighborInterpolation<ImageFormat::GRAY, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, float, float, const BorderMode<ImageFormat::GRAY, uint8_t>&);
+	template  Pixel<ImageFormat::RGB, uint8_t> NearestNeighborInterpolation<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&, float, float, const BorderMode<ImageFormat::RGB, uint8_t>&);
+
+
 	// Bilinear interpolation
 	template<ImageFormat frmt, pixel_t T>
 	Pixel<frmt, T> BilinearInterpolation(const Image<frmt, T>& src, float x, float y, const BorderMode<frmt, T>& border_mode)
@@ -38,6 +42,9 @@ namespace qlm
 		
 		return out_pixel;
 	}
+
+	template  Pixel<ImageFormat::GRAY, uint8_t> BilinearInterpolation<ImageFormat::GRAY, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, float, float, const BorderMode<ImageFormat::GRAY, uint8_t>&);
+	template  Pixel<ImageFormat::RGB, uint8_t> BilinearInterpolation<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&, float, float, const BorderMode<ImageFormat::RGB, uint8_t>&);
 
 	// Quadratic interpolation
 	template<ImageFormat frmt, pixel_t T>
@@ -85,6 +92,9 @@ namespace qlm
 		return out_pixel;
 	}
 
+	template  Pixel<ImageFormat::GRAY, uint8_t> BicubicInterpolation<ImageFormat::GRAY, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, float, float, const BorderMode<ImageFormat::GRAY, uint8_t>&);
+	template  Pixel<ImageFormat::RGB, uint8_t> BicubicInterpolation<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&, float, float, const BorderMode<ImageFormat::RGB, uint8_t>&);
+
 	// interpolation
 	template<ImageFormat frmt, pixel_t T>
 	Pixel<frmt, T> Interpolation(const Image<frmt, T>& src, float x, float y, const InterpolationFlag flag, const BorderMode<frmt, T>& border_mode)
@@ -102,4 +112,8 @@ namespace qlm
 			return BicubicInterpolation(src, x, y, border_mode);
 		}
 	}
+
+	template  Pixel<ImageFormat::GRAY, uint8_t> Interpolation<ImageFormat::GRAY, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, float, float, const InterpolationFlag, const BorderMode<ImageFormat::GRAY, uint8_t>&);
+	template  Pixel<ImageFormat::RGB, uint8_t> Interpolation<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&, float, float, const InterpolationFlag, const BorderMode<ImageFormat::RGB, uint8_t>&);
+
 }
