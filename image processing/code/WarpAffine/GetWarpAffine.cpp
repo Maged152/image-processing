@@ -1,5 +1,6 @@
 #include "WarpAffine/WarpAffine.h"
 #include <cmath>
+#include <numbers>
 
 namespace qlm
 {
@@ -7,8 +8,11 @@ namespace qlm
 	{
 		TransformationMatrix out;
 
-		float alpha = scale * std::cosf(angle);
-		float beta = scale * std::sinf(angle);
+		// degree to radian
+		const float angle_r = angle * std::numbers::pi / 180.0f;
+
+		float alpha = scale * std::cos(angle_r);
+		float beta = scale * std::sin(angle_r);
 
 		out.SetElement(0, 0, alpha);
 		out.SetElement(0, 1, beta);
@@ -16,7 +20,7 @@ namespace qlm
 		out.SetElement(1, 1, alpha);
 
 		float m02 = (1 - alpha) * center.x - beta * center.y;
-		float m12 = beta * center.x + (1 - beta) * center.y;
+		float m12 = beta * center.x + (1 - alpha) * center.y;
 
 		out.SetElement(0, 2, m02);
 		out.SetElement(1, 2, m12);
