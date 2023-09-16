@@ -3,7 +3,7 @@
 int main()
 {
 	qlm::Timer<qlm::msec> t{};
-	std::string file_name = "input.png";
+	std::string file_name = "input.jpg";
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
 	if (!in.LoadFromFile(file_name))
@@ -16,34 +16,34 @@ int main()
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	auto gray = qlm::ColorConvert< qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 
-	unsigned int filter_size = 3;
-	unsigned int block_size = 3;
-	float k = 0.22;
-	float threshold = 9900000;
+	float scale = 0.5f;
+	float angle = 30.0f;
+	const int dst_width = in.Width();
+	const int dst_height = in.Height();
 
+	const qlm::Point<int> center{ (int)in.Width() / 2, (int)in.Height() / 2 };
+
+	qlm::TransformationMatrix mat = qlm::GetRotationMatrix(center, angle, scale);
+
+	for (int i = 0; i < 6; i++)
+	{
+		std::cout << mat.GetElement(i) << "  ";
+	}
+	auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
+	border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
+
+	
 	// do the operation
 	t.start();
-	auto out = qlm::HarrisCorner(gray, block_size, filter_size, k, threshold);
+	auto out = qlm::WarpAffine(in, mat, dst_width, dst_height, qlm::InterpolationFlag::BILINEAR, border_mode);
 	t.end();
 
 	t.show();
 
-	// draw corners
-	qlm::Circle<int> circle = { .radius = 2 };
-	qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
-
-	for (auto& i : out)
+	if (!out.SaveToFile("result.jpg", alpha))
 	{
-		circle.center = i.point;
-		in = qlm::DrawCircle(in, circle, green);
-	}
-
-
-	if (!in.SaveToFile("result.jpg", alpha))
-	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 }
 

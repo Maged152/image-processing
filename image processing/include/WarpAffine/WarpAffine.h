@@ -13,4 +13,8 @@ namespace qlm
 		const InterpolationFlag inter,
 		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{});
 
+	TransformationMatrix GetRotationMatrix(const Point<int>& center, const float angle, const float scale);
+
+	TransformationMatrix GetAffineTransform(const Point<int> src[3], const Point<int> dst[3]);
+
 }

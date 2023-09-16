@@ -1,6 +1,5 @@
 #include "WarpAffine/WarpAffine.h"
 #include <utility>
-#include <iostream>
 #include <algorithm>
 
 namespace qlm
