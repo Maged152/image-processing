@@ -10,16 +10,27 @@ namespace qlm
 		// create the output image
 		Image<frmt, T> out;
 		out.create(dst_width, dst_height,border_mode.border_pixel);
+		// transformation matrix inverse
+		TransformationMatrix mat_inv {};
+
+		float det = mat.GetElement(0, 0) * mat.GetElement(1, 1) - mat.GetElement(0, 1) * mat.GetElement(1, 0);
+
+		mat_inv.SetElement(0, 0, mat.GetElement(1, 1) / det);
+		mat_inv.SetElement(1, 1, mat.GetElement(0, 0) / det);
+
+		mat_inv.SetElement(0, 1, -1 * mat.GetElement(0, 1) / det);
+		mat_inv.SetElement(1, 0, -1 * mat.GetElement(1, 0) / det);
+		
+		float m02 = ((mat.GetElement(0, 1) * mat.GetElement(1, 2)) - (mat.GetElement(1, 1) * mat.GetElement(0, 2))) / det;
+		float m12 = ((mat.GetElement(1, 0) * mat.GetElement(0, 2)) - (mat.GetElement(0, 0) * mat.GetElement(1, 2))) / det;
+		
+		mat_inv.SetElement(0, 2, m02);
+		mat_inv.SetElement(1, 2, m12);
 		// do transformation
 		auto transform_out_in = [&](int out_x, int out_y)
 		{
-			float c = out_x - mat.GetElement(0, 2);
-			float f = out_y - mat.GetElement(1, 2);
-
-			float den = mat.GetElement(0, 0) * mat.GetElement(1, 1) - mat.GetElement(0, 1) * mat.GetElement(1, 0);
-
-			float in_x = (c * mat.GetElement(1, 1) - mat.GetElement(0, 1) * f) / den;
-			float in_y = (f * mat.GetElement(0, 0) - mat.GetElement(1, 0) * c) / den;
+			float in_x = out_x * mat_inv.GetElement(0, 0) + out_y * mat_inv.GetElement(0, 1) + mat_inv.GetElement(0, 2);
+			float in_y = out_x * mat_inv.GetElement(1, 0) + out_y * mat_inv.GetElement(1, 1) + mat_inv.GetElement(1, 2);
 
 			return std::pair<float, float>(in_x, in_y);
 		};

@@ -15,7 +15,7 @@ namespace qlm
 		out.create(img_width, img_height, pix);
 		// temp out pixel
 		Pixel<frmt, T> out_pix;
-		// convert from degree to raduis
+		// convert from degree to radius
 		angle *= M_PI / 180.0f;
 		float alpha = std::cosf(angle) * scale;
 		float beta = std::sinf(angle) * scale;
