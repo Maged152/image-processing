@@ -14,7 +14,12 @@ namespace qlm
 		TransformationMatrix mat_inv {};
 
 		float det = mat.GetElement(0, 0) * mat.GetElement(1, 1) - mat.GetElement(0, 1) * mat.GetElement(1, 0);
-
+		// check determine
+		if (det == 0)
+		{
+			// exit
+			return out;
+		}
 		mat_inv.SetElement(0, 0, mat.GetElement(1, 1) / det);
 		mat_inv.SetElement(1, 1, mat.GetElement(0, 0) / det);
 
