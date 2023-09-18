@@ -9,5 +9,6 @@ namespace qlm
 		const Image<frmt, T>& in,
 		const unsigned int width,
 		const unsigned int height,
-		      InterpolationFlag method = InterpolationFlag::BILINEAR);
+		const InterpolationFlag method = InterpolationFlag::BILINEAR,
+		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{});
 }

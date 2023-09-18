@@ -12,7 +12,8 @@ namespace qlm
 		const Image<frmt, T>& in,
 		const unsigned int width,
 		const unsigned int height,
-		      ScaleMethod method = ScaleMethod::BILINEAR);
+		const InterpolationFlag method = InterpolationFlag::BILINEAR,
+		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{});
 }
 ```
 ```c++
@@ -28,12 +29,13 @@ namespace qlm
 ```
 ## Parameters
 
-| Name    | Type           | Description                      |
-|---------|----------------|----------------------------------|
-| `in`    | `Image`        | The input image.                 |
-| `width` | `unsigned int` | The new width.                   |
-| `height`| `unsigned int` | The new height.                  |
-| `method`| `ScaleMethod`  | The scale method.                |
+| Name           | Type           | Description                      |
+|----------------|----------------|----------------------------------|
+| `in`           | `Image`        | The input image.                 |
+| `width`        | `unsigned int` | The new width.                   |
+| `height`       | `unsigned int` | The new height.                  |
+| `method`       | `ScaleMethod`  | The scale method.                |
+| `border_mode`  | `BorderMode`   | The pixel extrapolation method.  |
 
 ## Example 
 
@@ -57,14 +59,14 @@ namespace qlm
 
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = std::move( qlm::Resize(in, width, height));
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::Resize(in, width, height);
 	t.end();
 
 	t.show();
 	
 	if (!out.SaveToFile("result.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 ```
 ### The input
