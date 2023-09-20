@@ -63,15 +63,77 @@ namespace qlm
 		}
 		
 		// function to swap two rows
-		auto SwapRows = [](float** matrix, int row1, int row2)
+		auto SwapRows = [](float matrix[3][4], int row1, int row2)
 		{
-			float* temp = matrix[row1];
-			matrix[row1] = matrix[row2];
-			matrix[row2] = temp;
-			temp = nullptr;
+			for (int i = 0; i < 4; ++i) 
+			{
+				float temp = matrix[row1][i];
+				matrix[row1][i] = matrix[row2][i];
+				matrix[row2][i] = temp;
+			}
 		};
 		
 		// function to find the pivot
+		auto Pivot = [](float matrix[3][4], int row)
+		{
+			int pivot_row = row;
+
+			for (int r = row + 1; r < 4; r++)
+			{
+				if (std::abs(matrix[r][row]) > std::abs(matrix[row][row]))
+				{
+					pivot_row = r;
+				}
+			}
+			return pivot_row;
+		};
+
+		// do Gaussian elimination
+		auto DoElimination = [&SwapRows, &Pivot](float matrix[3][4])
+		{
+			for (int r = 0; r < 2; r++)
+			{
+				// find the pivot in location [r,r]
+				int pivot = Pivot(matrix, r);
+
+				if (pivot != r)
+				{
+					SwapRows(matrix, r, pivot);
+				}
+
+				// do elimination
+				float piv = matrix[r][r];
+				float lead = matrix[r + 1][r];
+
+				for (int c = r; c < 4; ++c)
+				{
+					matrix[r + 1][c] = (matrix[r][c] / piv) * lead - matrix[r + 1][c];
+				}
+			}
+		};
+		
+		// back substitution
+		auto Backsubstitution = [&out](float matrix[3][4], int index)
+		{
+			for (int r = 2; r > -1; r--)
+			{
+				float res = matrix[r][3];
+				// TODO check this condition and set/get 
+				for (int c = r; c < 2 && c > -1; c--)
+				{
+					res -= matrix[r][c + 1] * out.GetElement(index, c + 1);
+				}
+				out.SetElement(index, r, res / matrix[r][r]);
+			}
+
+		};
+		
+		DoElimination(aug_mat_x);
+		DoElimination(aug_mat_y);
+
+		Backsubstitution(aug_mat_x, 0);
+		Backsubstitution(aug_mat_y, 1);
+
 
 		return out;
 	}
