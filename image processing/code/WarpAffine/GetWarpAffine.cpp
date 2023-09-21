@@ -1,6 +1,7 @@
 #include "WarpAffine/WarpAffine.h"
 #include <cmath>
 #include <numbers>
+#include <iostream>
 
 namespace qlm
 {
@@ -28,6 +29,17 @@ namespace qlm
 		return out;
 	}
 
+	void print(float aug_mat_x[3][4])
+	{
+		for (int r = 0; r < 3; r++)
+		{
+			for (int c = 0; c < 4; c++)
+			{
+				std::cout << aug_mat_x[r][c] << " ";
+			}
+			std::cout << '\n';
+		}
+	}
 	TransformationMatrix GetAffineTransform(const Point<int> src[3], const Point<int> dst[3])
 	{
 		TransformationMatrix out;
@@ -62,15 +74,24 @@ namespace qlm
 			aug_mat_y[i][3] = dst[i].y;
 		}
 		
+		std::cout << "constructed x\n";
+		print(aug_mat_x);
+
+		std::cout << "constructed y\n";
+		print(aug_mat_x);
 		// function to swap two rows
 		auto SwapRows = [](float matrix[3][4], int row1, int row2)
 		{
+			std::cout << "before swap " << row1 << "  and  " << row2 << '\n';
+			print(matrix);
 			for (int i = 0; i < 4; ++i) 
 			{
 				float temp = matrix[row1][i];
 				matrix[row1][i] = matrix[row2][i];
 				matrix[row2][i] = temp;
 			}
+			std::cout << "after swap " << row1 << "  and  " << row2 << '\n';
+			print(matrix);
 		};
 		
 		// function to find the pivot
@@ -78,7 +99,7 @@ namespace qlm
 		{
 			int pivot_row = row;
 
-			for (int r = row + 1; r < 4; r++)
+			for (int r = row + 1; r < 3; r++)
 			{
 				if (std::abs(matrix[r][row]) > std::abs(matrix[row][row]))
 				{
@@ -91,8 +112,11 @@ namespace qlm
 		// do Gaussian elimination
 		auto DoElimination = [&SwapRows, &Pivot](float matrix[3][4])
 		{
+			
 			for (int r = 0; r < 2; r++)
 			{
+				std::cout << "start elimination "  << r << '\n';
+				print(matrix);
 				// find the pivot in location [r,r]
 				int pivot = Pivot(matrix, r);
 
@@ -103,28 +127,41 @@ namespace qlm
 
 				// do elimination
 				float piv = matrix[r][r];
-				float lead = matrix[r + 1][r];
-
-				for (int c = r; c < 4; ++c)
+				for (int e = r; e < 2; ++e)
 				{
-					matrix[r + 1][c] = (matrix[r][c] / piv) * lead - matrix[r + 1][c];
+					
+					float lead = matrix[e + 1][e];
+					for (int c = r; c < 4; ++c)
+					{
+						matrix[e + 1][c] = (matrix[r][c] / piv) * lead - matrix[e + 1][c];
+					}
 				}
+
+				std::cout << "end elimination " << r << '\n';
+				print(matrix);
 			}
+			std::cout << "after elimination " << '\n';
+			print(matrix);
 		};
 		
 		// back substitution
 		auto Backsubstitution = [&out](float matrix[3][4], int index)
 		{
-			for (int r = 2; r > -1; r--)
+			std::cout << "before Backsubstitution " << '\n';
+			print(matrix);
+			for (int r = 2; r >= 0; r--)
 			{
 				float res = matrix[r][3];
 				// TODO check this condition and set/get 
-				for (int c = r; c < 2 && c > -1; c--)
+				for (int c = r; c < 2; c++)
 				{
 					res -= matrix[r][c + 1] * out.GetElement(index, c + 1);
 				}
 				out.SetElement(index, r, res / matrix[r][r]);
 			}
+
+			std::cout << "after Backsubstitution " << '\n';
+			print(matrix);
 
 		};
 		
