@@ -15,7 +15,7 @@ Here you can find the implementation of
     * [Flip](/image%20processing/code/Flip)
     * [Transpose](/image%20processing/code/Transpose)
     * [Translate](/image%20processing/code/Translate)
-    * [Wrap Affine](/image%20processing/code/WarpAffine)
+    * [Warp Affine](/image%20processing/code/WarpAffine)
     * perspective Transformation (backlog)
 * Features Detection
     * [Hough lines](/image%20processing/code/HoughLines)
