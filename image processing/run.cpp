@@ -26,13 +26,8 @@ int main()
 
 	qlm::TransformationMatrix mat = qlm::GetRotationMatrix(center, angle, scale);
 
-	for (int i = 0; i < 6; i++)
-	{
-		std::cout << mat.GetElement(i) << "  ";
-	}
 	auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
 	border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
-
 	
 	// do the operation
 	t.start();
