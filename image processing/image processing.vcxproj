@@ -145,25 +145,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
-    <ClCompile Include="code\common\image\image.cpp" />
-    <ClCompile Include="code\common\image\LoadFromFile.cpp" />
-    <ClCompile Include="code\common\image\ReadFromFile.cpp" />
-    <ClCompile Include="code\WarpAffine\GetWarpAffine.cpp" />
-    <ClCompile Include="code\WarpAffine\WarpAffine.cpp" />
-    <ClCompile Include="include\common\pixel\pixel_GRAY.h" />
-    <ClCompile Include="include\common\pixel\pixel_HLS.h" />
-    <ClCompile Include="include\common\pixel\pixel_HSV.h" />
-    <ClCompile Include="include\common\pixel\pixel_RGB.h" />
-    <ClCompile Include="include\common\pixel\pixel_YCrCb.h" />
-    <ClCompile Include="code\common\types\Interpolation.cpp" />
-    <ClCompile Include="code\common\types\TransformationMatrix.cpp" />
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
     <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\FloodFill\FloodFill.cpp" />
     <ClCompile Include="code\Gaussian\Gaussian.cpp" />
-    <ClCompile Include="code\HarrisCorner\HarrisCorner.cpp" />
     <ClCompile Include="code\Rotate\Rotate.cpp" />
     <ClCompile Include="code\Translate\Translate.cpp" />
+    <ClCompile Include="code\WrapRotate\WrapRotate.cpp" />
     <ClCompile Include="include\common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
     <ClCompile Include="code\HoughLines\HoughLines.cpp" />
@@ -177,25 +165,18 @@
     <ClInclude Include="include\common\draw.h" />
     <ClInclude Include="include\common\image.h" />
     <ClInclude Include="include\common\pixel.h" />
-    <ClInclude Include="include\common\pixel\pixel_common.h" />
-    <ClInclude Include="include\common\types\Interpolation.h" />
-    <ClInclude Include="include\common\types\Kernel.h" />
-    <ClInclude Include="include\common\types\TransformationMatrix.h" />
     <ClInclude Include="include\Flip\Flip.h" />
     <ClInclude Include="include\FloodFill\FloodFill.h" />
     <ClInclude Include="include\Gaussian\Gaussian.h" />
-    <ClInclude Include="include\HarrisCorner\HarrisCorner.h" />
     <ClInclude Include="include\shakhbat.h" />
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />
     <ClInclude Include="include\Transpose\Transposeh.h" />
-    <ClInclude Include="include\WarpAffine\WarpAffine.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="code\HarrisCorner\README.md" />
     <None Include="code\HoughLines\README.md" />
     <None Include="code\Scale\README.md" />
-    <None Include="code\WarpAffine\README.md" />
+    <None Include="code\WrapRotate\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
