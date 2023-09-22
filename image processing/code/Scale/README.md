@@ -31,7 +31,7 @@ namespace qlm
 | Name           | Type               | Description                      |
 |----------------|--------------------|----------------------------------|
 | `in`           | `Image`            | The input image.                 |
-| `method`       | `InterpolationFlag`| The scale method.                |
+| `method`       | `InterpolationFlag`| The interpolation method.        |
 | `scale_x`      | `float`            | The scale factor in x direction. |
 | `scale_y`      | `float`            | The scale factor in x direction. |
 | `border_mode`  | `BorderMode`       | The pixel extrapolation method.  |

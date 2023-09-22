@@ -19,7 +19,7 @@ namespace qlm
 ```c++
 namespace qlm
 {
-	enum class ScaleMethod
+	enum class InterpolationFlag
 	{
 		NEAREST_NEIGHBOR,
 		BILINEAR,
@@ -29,13 +29,13 @@ namespace qlm
 ```
 ## Parameters
 
-| Name           | Type           | Description                      |
-|----------------|----------------|----------------------------------|
-| `in`           | `Image`        | The input image.                 |
-| `width`        | `unsigned int` | The new width.                   |
-| `height`       | `unsigned int` | The new height.                  |
-| `method`       | `ScaleMethod`  | The scale method.                |
-| `border_mode`  | `BorderMode`   | The pixel extrapolation method.  |
+| Name           | Type                | Description                      |
+|----------------|---------------------|----------------------------------|
+| `in`           | `Image`             | The input image.                 |
+| `width`        | `unsigned int`      | The new width.                   |
+| `height`       | `unsigned int`      | The new height.                  |
+| `method`       | `InterpolationFlag` | The interpolation method.        |
+| `border_mode`  | `BorderMode`        | The pixel extrapolation method.  |
 
 ## Example 
 
