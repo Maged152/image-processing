@@ -149,8 +149,14 @@
     <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\FloodFill\FloodFill.cpp" />
     <ClCompile Include="code\Gaussian\Gaussian.cpp" />
-    <ClCompile Include="code\Rotate\Rotate.cpp" />
+    <ClCompile Include="code\WarpAffine\WarpAffine.cpp" />
+    <ClCompile Include="code\WarpAffine\GetWarpAffine.cpp" />
     <ClCompile Include="code\Translate\Translate.cpp" />
+    <ClCompile Include="code\common\image\image.cpp" />
+    <ClCompile Include="code\common\image\LoadFromFile.cpp" />
+    <ClCompile Include="code\common\image\ReadFromFile.cpp" />
+    <ClCompile Include="code\common\types\Interpolation.cpp" />
+    <ClCompile Include="code\common\types\TransformationMatrix.cpp" />
     <ClCompile Include="include\common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
     <ClCompile Include="code\HoughLines\HoughLines.cpp" />
