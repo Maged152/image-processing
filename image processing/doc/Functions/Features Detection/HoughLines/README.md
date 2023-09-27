@@ -28,3 +28,6 @@ namespace qlm
 | `min_theta` | `double`     | The minimum angle to check for lines. Must fall between 0 and max_theta.                     |
 | `max_theta` | `double`     | The upper bound for the angle. Must fall between min_theta and PI.                         |
 
+
+* [Example](../../../Examples/HoughLines)
+* [Implementation](../../../../code/HoughLines/HoughLines.cpp)

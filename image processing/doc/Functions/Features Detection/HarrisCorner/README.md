@@ -20,13 +20,15 @@ namespace qlm
 
 ## Parameters
 
-| Name          | Type          | Description                                                                                  |
-|---------------|---------------|----------------------------------------------------------------------------------------------|
-| `in`          | `Image`       | The input image.                                                                             |
-| `block_size`  | `unsigned int`| The neighborhood size.                                                                       |
-| `filter_size` | `unsigned int`| The aperture parameter for the Sobel operator.                                               |
-| `k`           | `float`       | Harris detector free parameter.															   |
-| `threshold`   | `float`       | The threshold parameter. Only those corners are returned that have response ( >threshold ).  |
-| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
+| Name           | Type          | Description                                                                                  |
+|----------------|---------------|----------------------------------------------------------------------------------------------|
+| `in`           | `Image`       | The input image.                                                                             |
+| `block_size`   | `unsigned int`| The neighborhood size.                                                                       |
+| `filter_size`  | `unsigned int`| The aperture parameter for the Sobel operator.                                               |
+| `k`            | `float`       | Harris detector free parameter.															   |
+| `threshold`    | `float`       | The threshold parameter. Only those corners are returned that have response ( >threshold ).  |
+| `border_mode`  | `BorderMode`  | The pixel extrapolation method.                                                              |
 
 
+* [Example](../../../Examples/HarrisCorner)
+* [Implementation](../../../../code/HarrisCorner/HarrisCorner.cpp)

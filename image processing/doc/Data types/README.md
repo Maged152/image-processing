@@ -4,6 +4,6 @@
 * [Image](/Image)
 * [Timer](/Timer)
 * [Enumerations](/Enumerations)
-* [Structures](/Structures)
+* [Classes](/Classes)
 * [Concepts](/Concepts)
 * [Types](/Types)   

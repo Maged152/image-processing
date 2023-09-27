@@ -27,6 +27,9 @@ Here you can find the implementation of
     * Floyd-Steinberg (backlog)
 * Image Enhancement
     * Histogram (backlog)
+* Get Functions
+    * [Get Kernel](/Get%20functions/Get%20Kernel)
+    * [Get Transformation Matrix](/Get%20functions/Get%20Transformation%20Matrix)
 * Drawing
     
 
