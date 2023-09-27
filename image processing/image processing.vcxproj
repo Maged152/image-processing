@@ -151,7 +151,6 @@
     <ClCompile Include="code\Gaussian\Gaussian.cpp" />
     <ClCompile Include="code\Rotate\Rotate.cpp" />
     <ClCompile Include="code\Translate\Translate.cpp" />
-    <ClCompile Include="code\WrapRotate\WrapRotate.cpp" />
     <ClCompile Include="include\common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
     <ClCompile Include="code\HoughLines\HoughLines.cpp" />
@@ -176,7 +175,6 @@
   <ItemGroup>
     <None Include="code\HoughLines\README.md" />
     <None Include="code\Scale\README.md" />
-    <None Include="code\WrapRotate\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

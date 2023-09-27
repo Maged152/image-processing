@@ -5,11 +5,11 @@
 namespace qlm
 {
 	// generate derivative kernel
-	Kernel1D GetDerivKernel(unsigned int n, int order = 1);
+	Kernel1D GetDerivKernel(unsigned int filter_size, int order = 1);
 	// generate coefficients for Sobel X
-	SepKernel GetDerivXKernel(unsigned int n);
+	SepKernel GetDerivXKernel(unsigned int filter_size);
 	// generate coefficients for Sobel Y
-	SepKernel GetDerivYKernel(unsigned int n);
+	SepKernel GetDerivYKernel(unsigned int filter_size);
 	// Sobel X operation
 	template<pixel_t in_t, pixel_t out_t = int16_t>
 	Image<ImageFormat::GRAY, out_t> SobelX(

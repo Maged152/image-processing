@@ -46,19 +46,18 @@ The function returns a one-dimensional derivative kernel of type `Kernel1D`.
 ## Get Derivative X Kernel
 
 ### Description
-The `GetDerivXKernel` function is used to generate a one-dimensional sobel kernel with
+The `GetDerivXKernel` function is used to generate a sobel kernel with
 a specified filter size in X direction.
 
 ### C++ API
 ```c++
-	SepKernel GetDerivXKernel(unsigned int n);
+	SepKernel GetDerivXKernel(unsigned int filter_size);
 ```
 ### Parameters
 
 | Name          | Type           | Description                                        |
 | ------------- | ---------------|--------------------------------------------------- |
 | `filter_size` | 'unsigned int' |The size of the Gaussian kernel (odd integer).      |
-| `sigma`       | 'float'        |The standard deviation of the Gaussian distribution.|
 
 ### Return Value
 The function returns a one-dimensional Gaussian kernel of type `Kernel1D`.

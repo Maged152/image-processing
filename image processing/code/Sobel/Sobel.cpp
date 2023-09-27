@@ -45,18 +45,18 @@ namespace qlm
 		return out;
 	}
 	// generate derivative kernel
-	Kernel1D GetDerivKernel(unsigned int n, int order)
+	Kernel1D GetDerivKernel(unsigned int filter_size, int order)
 	{
-		Kernel1D out{ n };
-		std::vector<int> ker(n + 1, 0);
+		Kernel1D out{ filter_size };
+		std::vector<int> ker(filter_size + 1, 0);
 		ker[0] = 1;
 
 		int old_val, new_val;
 
-		for (int i = 0; i < n - order - 1; i++)
+		for (int i = 0; i < filter_size - order - 1; i++)
 		{
 			old_val = ker[0];
-			for (int j = 1; j <= n; j++)
+			for (int j = 1; j <= filter_size; j++)
 			{
 				new_val = ker[j] + ker[j - 1];
 				ker[j - 1] = old_val;
@@ -67,7 +67,7 @@ namespace qlm
 		for (int i = 0; i < order; i++)
 		{
 			old_val = -ker[0];
-			for (int j = 1; j <= n; j++)
+			for (int j = 1; j <= filter_size; j++)
 			{
 				new_val = ker[j - 1] - ker[j];
 				ker[j - 1] = old_val;
@@ -75,7 +75,7 @@ namespace qlm
 			}
 		}
 		// store kernel
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < filter_size; i++)
 		{
 			out.Set(i, ker[i]);
 		}
@@ -83,35 +83,35 @@ namespace qlm
 		return out;
 	}
 	// generate coefficients for Sobel X
-	SepKernel GetDerivXKernel(unsigned int n)
+	SepKernel GetDerivXKernel(unsigned int filter_size)
 	{
-		SepKernel out(n);
+		SepKernel out(filter_size);
 		// check kernel size
-		if (n % 2 == 0 || n < 3)
+		if (filter_size % 2 == 0 || filter_size < 3)
 		{
 			std::cout << "The kernel size must be odd & greater than 1\n";
 			return out;
 		}
 		// x ker
-		out.x_ker = GetDerivKernel(n, 1);
+		out.x_ker = GetDerivKernel(filter_size, 1);
 		// y ker
-		out.y_ker = GetDerivKernel(n, 0);
+		out.y_ker = GetDerivKernel(filter_size, 0);
 		return out;
 	}
 	// generate coefficients for Sobel Y
-	SepKernel GetDerivYKernel(unsigned int n)
+	SepKernel GetDerivYKernel(unsigned int filter_size)
 	{
-		SepKernel out(n);
+		SepKernel out(filter_size);
 		// check kernel size
-		if (n % 2 == 0 || n < 3)
+		if (filter_size % 2 == 0 || filter_size < 3)
 		{
 			std::cout << "The kernel size must be odd & greater than 1\n";
 			return out;
 		}
 		// x ker
-		out.x_ker = GetDerivKernel(n, 0);
+		out.x_ker = GetDerivKernel(filter_size, 0);
 		// y ker
-		out.y_ker = GetDerivKernel(n, 1);
+		out.y_ker = GetDerivKernel(filter_size, 1);
 		return out;
 	}
 	// Sobel X operation
