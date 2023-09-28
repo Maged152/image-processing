@@ -1,24 +1,24 @@
 # Examples
 
 * Filters:
-    * [Filter2D MxN](./Filter2D)
-    * [Filter2D MxN Separable](./SepFilter2D)
-    * [Sobel](./Sobel)
-    * [Gaussian](./Gaussian)
+    * [Filter2D MxN](./Filters/Filter2D)
+    * [Filter2D MxN Separable](./Filters/SepFilter2D)
+    * [Sobel](./Filters/Sobel)
+    * [Gaussian](./Filters/Gaussian)
 * Geometric Transformations:
-    * [Scale](./Scale)
-    * [Resize](./Resize)
-    * [Rotate](./Rotate)
-    * [Flip](./Flip)
-    * [Transpose](./Transpose)
-    * [Translate](./Translate)
-    * [Warp Affine](./WarpAffine)
+    * [Scale](./Geometric%20Transformations/Scale)
+    * [Resize](./Geometric%20Transformations/Resize)
+    * [Rotate](./Geometric%20Transformations/Rotate)
+    * [Flip](./Geometric%20Transformations/Flip)
+    * [Transpose](./Geometric%20Transformations/Transpose)
+    * [Translate](./Geometric%20Transformations/Translate)
+    * [Warp Affine](./Geometric%20Transformations/WarpAffine)
 * Features Detection
-    * [Hough lines](./HoughLines)
-    * [Harris Corner](./HarrisCorner)
+    * [Hough lines](./Features%20Detection/HoughLines)
+    * [Harris Corner](./Features%20Detection/HarrisCorner)
 * Color Manipulation
-    * [Color Conversion](./ColorConvert)
-    * [Convert Bit Depth](./ConvertBitDepth)
-    * [Flood Fill](./FloodFill)
+    * [Color Conversion](./Color%20Manipulation/ColorConvert)
+    * [Convert Bit Depth](./Color%20Manipulation/ConvertBitDepth)
+    * [Flood Fill](./Color%20Manipulation/FloodFill)
     
 
