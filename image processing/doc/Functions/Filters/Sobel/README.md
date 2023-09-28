@@ -16,7 +16,7 @@ Applys sobel filter of size NxN on the input image.
 		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
 	);
 ```
-## Parameters
+### Parameters
 
 | Name           | Type           | Description                                                                                  |
 |----------------|----------------|----------------------------------------------------------------------------------------------|
@@ -38,7 +38,7 @@ Applys sobel filter of size NxN on the input image.
 		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
 	);
 ```
-## Parameters
+### Parameters
 
 | Name           | Type           | Description                                                                                  |
 |----------------|----------------|----------------------------------------------------------------------------------------------|
@@ -61,7 +61,7 @@ Applys sobel filter of size NxN on the input image.
 		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
 	);
 ```
-## Parameters
+### Parameters
 
 | Name           | Type           | Description                                                                                  |
 |----------------|----------------|----------------------------------------------------------------------------------------------|
@@ -79,7 +79,7 @@ Applys sobel filter of size NxN on the input image.
   Image<ImageFormat::GRAY, uint8_t> ConvertSobelDepth(Image < ImageFormat::GRAY, int16_t>& in,
 	                                                    unsigned int filter_size);
 ```
-## Parameters
+### Parameters
 
 | Name           | Type           | Description                                 |
 |----------------|----------------|---------------------------------------------| 
