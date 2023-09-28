@@ -5,7 +5,7 @@ Here you can find the implementation of
     * [Filter2D MxN](./Filters/Filter2D)
     * [Filter2D MxN Separable](./Filters/SepFilter2D)
     * [Sobel](./Filters/Sobel)
-    * [Gaussian](./Gaussian)
+    * [Gaussian](./Filters/Gaussian)
 * Geometric Transformations:
     * [Scale](./Geometric%20Transformations/Scale)
     * [Resize](./Geometric%20Transformations/Resize)
