@@ -129,12 +129,12 @@ namespace qlm
 
 		float Get(int idx)  const
 		{
-			return Kernel::Get(idx, 0);
+			return Kernel::Get(0, idx);
 		}
 
 		void Set(int idx, float value)
 		{
-			Kernel::Set(idx, 0, value);
+			Kernel::Set(0, idx, value);
 		}
 
 		unsigned int Length() const

@@ -10,18 +10,16 @@ qlm::Image<frmt, dst_t> qlm::SepFilter2D(const qlm::Image<frmt, src_t>& in,
 
 	// create the output image
 	qlm::Image<frmt, dst_t> out;
-	out.create(img_width, img_height, qlm::Pixel<frmt, dst_t>{});
+	out.create(img_width, img_height);
 
 	int x_padding_length = x_kernel.Length() / 2;
 	int y_padding_length = y_kernel.Length() / 2;
 
-	qlm::Pixel<frmt, src_t> in_pixel;
 	qlm::Pixel<frmt, float> weight_sum;
-	qlm::Pixel<frmt, float> temp_pixel;
 
 	// temp_pixel_array to hold y_kernel values
 	qlm::Image<frmt, float> temp_y_filter;
-	temp_y_filter.create(img_width, 1, qlm::Pixel<frmt, float>{});
+	temp_y_filter.create(img_width, 1);
 
 	auto border_mode_f = qlm::BorderMode<frmt, float>{};
 	border_mode_f.border_type = border_mode.border_type;
@@ -38,9 +36,9 @@ qlm::Image<frmt, dst_t> qlm::SepFilter2D(const qlm::Image<frmt, src_t>& in,
 			for (int i = -y_padding_length; i <= y_padding_length; i++)
 			{
 				// get the pixel
-				in_pixel = in.GetPixel(x, y + i, border_mode);
-
-				weight_sum.MAC(in_pixel, y_kernel.Get(i + y_padding_length));
+				const auto in_pixel = in.GetPixel(x, y + i, border_mode);
+				auto co = y_kernel.Get(i + y_padding_length);
+				weight_sum.MAC(in_pixel, co);
 			}
 			// store the output
 			temp_y_filter.SetPixel(x, weight_sum);
@@ -54,9 +52,9 @@ qlm::Image<frmt, dst_t> qlm::SepFilter2D(const qlm::Image<frmt, src_t>& in,
 			for (int i = -x_padding_length; i <= x_padding_length; i++)
 			{
 				// get the pixel
-				temp_pixel = temp_y_filter.GetPixel(x + i, 0, border_mode_f);
-				// use temp_pixel_array array
-				weight_sum.MAC(temp_pixel, x_kernel.Get(i + x_padding_length));
+				const auto in_pixel = temp_y_filter.GetPixel(x + i, 0, border_mode_f);
+				
+				weight_sum.MAC(in_pixel, x_kernel.Get(i + x_padding_length));
 			}
 			// store the output
 			out.SetPixel(x, y, weight_sum);
