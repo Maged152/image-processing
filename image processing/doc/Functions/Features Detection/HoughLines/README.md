@@ -29,5 +29,5 @@ namespace qlm
 | `max_theta` | `double`     | The upper bound for the angle. Must fall between min_theta and PI.                         |
 
 
-* [Example](../../../Examples/HoughLines)
+* [Example](../../../Examples/Features%20Detection/HoughLines)
 * [Implementation](../../../../code/HoughLines/HoughLines.cpp)

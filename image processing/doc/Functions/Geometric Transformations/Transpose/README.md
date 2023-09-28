@@ -20,6 +20,6 @@ namespace qlm
 |-------------|------------|-------------------------------------------------------------------|
 | `in`        | `Image`    | The input image.                                                  |
 
-* [Example](../../../Examples/Transpose)
+* [Example](../../../Examples/Geometric%20Transformations/Transpose)
 * [Implementation](../../../../code/Transpose/Transpose.cpp)
 

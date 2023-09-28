@@ -23,5 +23,5 @@ namespace qlm
 | `displacement`| `Point`      | displacement                                                        |
 | `pix`         | `Pixel`      | The pixel used to fill the background                               |
 
-* [Example](../../../Examples/Translate)
+* [Example](../../../Examples/Geometric%20Transformations/Translate)
 * [Implementation](../../../../code/Translate/Translate.cpp)

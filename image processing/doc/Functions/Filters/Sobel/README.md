@@ -87,5 +87,5 @@ Applys sobel filter of size NxN on the input image.
 | `filter_size`  | `unsigned int` | The filter size used for the image.         |
 
 
-* [Example](../../../Examples/Sobel)
+* [Example](../../../Examples/Filters/Sobel)
 * [Implementation](../../../../code/Sobel/Sobel.cpp)

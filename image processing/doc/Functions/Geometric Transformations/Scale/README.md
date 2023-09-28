@@ -26,5 +26,5 @@ namespace qlm
 | `scale_y`      | `float`            | The scale factor in x direction. |
 | `border_mode`  | `BorderMode`       | The pixel extrapolation method.  |
 
-* [Example](../../../Examples/Scale)
+* [Example](../../../Examples/Geometric%20Transformations/Scale)
 * [Implementation](../../../../code/Scale/Scale.cpp)

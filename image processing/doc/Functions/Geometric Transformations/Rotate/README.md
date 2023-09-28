@@ -21,5 +21,5 @@ namespace qlm
 | `in`          | `Image`      | The input image.                                                    |
 | `rotate_code` | `RotateFlag` | An enum to specify how to rotate the image.                         |
 
-* [Example](../../../Examples/Rotate)
+* [Example](../../../Examples/Geometric%20Transformations/Rotate)
 * [Implementation](../../../../code/Rotate/Rotate.cpp)

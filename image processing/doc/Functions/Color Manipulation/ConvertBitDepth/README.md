@@ -24,5 +24,5 @@ namespace qlm
 | `in`       | `Image`        | The input image/pixel.           |
 
 
-* [Example](../../../Examples/ConvertBitDepth)
+* [Example](../../../Examples/Color%20Manipulation/ConvertBitDepth)
 * [Implementation](../../../../code/ConvertBitDepth/ConvertBitDepth.cpp)

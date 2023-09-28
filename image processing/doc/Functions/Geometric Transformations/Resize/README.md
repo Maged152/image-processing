@@ -27,5 +27,5 @@ namespace qlm
 | `method`       | `ScaleMethod`  | The scale method.                |
 | `border_mode`  | `BorderMode`   | The pixel extrapolation method.  |
 
-* [Example](../../../Examples/Resize)
+* [Example](../../../Examples/Geometric%20Transformations/Resize)
 * [Implementation](../../../../code/Resize/Resize.cpp)

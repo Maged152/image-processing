@@ -25,5 +25,5 @@ namespace qlm
 | `fill_color` | `Pixel`      | the color to fill the area.                                               |
 | `threshold`  | `Pixel`      | the threshold which determines if the point brlongs to the region or not. |
 
-* [Example](../../../Examples/FloodFill)
+* [Example](../../../Examples/Color%20Manipulation/FloodFill)
 * [Implementation](../../../../code/FloodFill/FloodFill.cpp)

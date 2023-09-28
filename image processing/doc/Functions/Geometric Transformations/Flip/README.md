@@ -22,5 +22,5 @@ namespace qlm
 | `flip_code` | `FlipFlag` | An enum to specify how to flip the image.                         |
 
 
-* [Example](../../../Examples/Flip)
+* [Example](../../../Examples/Geometric%20Transformations/Flip)
 * [Implementation](../../../../code/Flip/Flip.cpp)

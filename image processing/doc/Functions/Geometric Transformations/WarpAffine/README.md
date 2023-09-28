@@ -31,5 +31,5 @@ namespace qlm
 | `border_mode`| `BorderMode`          | The pixel extrapolation method.  |
 
 
-* [Example](../../../Examples/WarpAffine)
+* [Example](../../../Examples/Geometric%20Transformations/WarpAffine)
 * [Implementation](../../../../code/WarpAffine/WarpAffine.cpp)

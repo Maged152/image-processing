@@ -35,5 +35,5 @@ namespace qlm
 | `in`       | `Image`        | The input image.                 |
 
 
-* [Example](../../../Examples/ColorConvert)
+* [Example](../../../Examples/Color%20Manipulation/ColorConvert)
 * [Implementation](../../../../code/ColorConvert/ColorConvert.cpp)

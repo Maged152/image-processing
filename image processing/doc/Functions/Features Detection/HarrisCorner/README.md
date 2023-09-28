@@ -30,5 +30,5 @@ namespace qlm
 | `border_mode`  | `BorderMode`  | The pixel extrapolation method.                                                              |
 
 
-* [Example](../../../Examples/HarrisCorner)
+* [Example](../../../Examples/Features%20Detection/HarrisCorner)
 * [Implementation](../../../../code/HarrisCorner/HarrisCorner.cpp)

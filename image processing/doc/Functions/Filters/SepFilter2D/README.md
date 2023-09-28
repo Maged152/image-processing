@@ -26,5 +26,5 @@ namespace qlm
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 
-* [Example](../../../Examples/SepFilter2D)
+* [Example](../../../Examples/Filters/SepFilter2D)
 * [Implementation](../../../../code/SepFilter2D/SepFilter2D.cpp)

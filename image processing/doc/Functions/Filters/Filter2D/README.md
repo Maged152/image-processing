@@ -23,5 +23,5 @@ namespace qlm
 | `kernel`       | `Kernel`     | The kernel to be applied on the input image.                                                 |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
-* [Example](../../../Examples/Filter2D)
+* [Example](../../../Examples/Filters/Filter2D)
 * [Implementation](../../../../code/Filter2D/Filter2D.cpp)

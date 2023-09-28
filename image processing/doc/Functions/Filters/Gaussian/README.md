@@ -27,5 +27,5 @@ Applys gaussian filter of size NxN on the input image.
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 
-* [Example](../../../Examples/Gaussian)
+* [Example](../../../Examples/Filters/Gaussian)
 * [Implementation](../../../../code/Gaussian/Gaussian.cpp)
