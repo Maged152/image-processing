@@ -2,7 +2,7 @@
 
 Here you can find the implementation of
 * Filters:
-    * [Filter2D MxN](/Filters/Filter2D)
+    * [Filter2D MxN](./Filters/Filter2D)
     * [Filter2D MxN Separable](/Filters/SepFilter2D)
     * [Sobel](/Filters/Sobel)
     * [Gaussian](/Gaussian)
