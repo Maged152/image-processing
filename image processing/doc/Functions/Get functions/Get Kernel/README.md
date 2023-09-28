@@ -21,6 +21,7 @@ a specified filter size and standard deviation (sigma).
 ### Return Value
 The function returns a one-dimensional Gaussian kernel of type `Kernel1D`.
 
+* [Implementation](../../../../code/Gaussian/Gaussian.cpp)
 
 ## Get Derivative Kernel
 
@@ -42,7 +43,8 @@ kernel with a specified size and order.
 ### Return Value
 The function returns a one-dimensional derivative kernel of type `Kernel1D`.
 
-
+* [Implementation](../../../../code/Sobel/Sobel.cpp)
+* 
 ## Get Derivative X Kernel
 
 ### Description
@@ -60,41 +62,27 @@ a specified filter size in X direction.
 | `filter_size` | 'unsigned int' |The size of the Gaussian kernel (odd integer).      |
 
 ### Return Value
-The function returns a one-dimensional Gaussian kernel of type `Kernel1D`.
+The function returns a separable kernel of type `SepKernel`.
 
+* [Implementation](../../../../code/Sobel/Sobel.cpp)
 
-## Get Gaussian coefficients
+## Get Derivative Y Kernel
 
 ### Description
-The `GetGaussianKernel` function is used to generate a one-dimensional Gaussian kernel with
-a specified filter size and standard deviation (sigma).
+The `GetDerivYKernel` function is used to generate a sobel kernel with
+a specified filter size in Y direction.
 
 ### C++ API
 ```c++
-	Kernel1D GetGaussianKernel(const unsigned int filter_size, float sigma);
+	SepKernel GetDerivYKernel(unsigned int filter_size);
 ```
 ### Parameters
 
 | Name          | Type           | Description                                        |
 | ------------- | ---------------|--------------------------------------------------- |
 | `filter_size` | 'unsigned int' |The size of the Gaussian kernel (odd integer).      |
-| `sigma`       | 'float'        |The standard deviation of the Gaussian distribution.|
 
 ### Return Value
-The function returns a one-dimensional Gaussian kernel of type `Kernel1D`.
+The function returns a separable kernel of type `SepKernel`.
 
-
-## Get Derivative coefficients
-
-```c++
-    // generate derivative kernel
-	Kernel1D GetDerivKernel(unsigned int n, int order = 1);
-	// generate coefficients for Sobel X
-	SepKernel GetDerivXKernel(unsigned int n);
-	// generate coefficients for Sobel Y
-	SepKernel GetDerivYKernel(unsigned int n);
-	// change Bit Depth to sobel from S16 to U8
-	Image<ImageFormat::GRAY, uint8_t> ConvertSobelDepth(Image < ImageFormat::GRAY, int16_t>& in,
-	                                                    unsigned int filter_size);
-```
-
+* [Implementation](../../../../code/Sobel/Sobel.cpp)

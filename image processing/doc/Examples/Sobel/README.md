@@ -31,17 +31,17 @@
 
 	if (!x.SaveToFile("resultx.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 
 	if (!y.SaveToFile("resulty.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 
 	if (!out.magnitude.SaveToFile("result.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 ```
 

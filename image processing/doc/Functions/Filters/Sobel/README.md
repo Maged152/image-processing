@@ -71,5 +71,21 @@ Applys sobel filter of size NxN on the input image.
 | `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
+
+### `ConvertSobelDepth` Function
+ Change Bit Depth of sobel from S16 to U8
+
+```c++
+  Image<ImageFormat::GRAY, uint8_t> ConvertSobelDepth(Image < ImageFormat::GRAY, int16_t>& in,
+	                                                    unsigned int filter_size);
+```
+## Parameters
+
+| Name           | Type           | Description                                 |
+|----------------|----------------|---------------------------------------------| 
+| `in`           | `Image`        | The input image<GRAY, uint8_t>.             |
+| `filter_size`  | `unsigned int` | The filter size used for the image.         |
+
+
 * [Example](../../../Examples/Sobel)
 * [Implementation](../../../../code/Sobel/Sobel.cpp)
