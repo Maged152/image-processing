@@ -41,7 +41,11 @@ namespace qlm
 		auto ker_x = GetGaussianKernel(filter_size, sigma_x);
 		auto ker_y = GetGaussianKernel(filter_size, sigma_y);
 
-		return SepFilter2D<frmt, T, T>(in, ker_x, ker_y, border_mode);
+		SepKernel kernel { ker_x .Length(), ker_y.Length()};
+		kernel.x_ker = std::move(ker_x);
+		kernel.y_ker = std::move(ker_y);
+
+		return SepFilter2D<frmt, T, T>(in, kernel, border_mode);
 	}
 }
 

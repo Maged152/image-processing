@@ -143,14 +143,14 @@ namespace qlm
 		}
 	};
 
-	// sep kernel
+	// separable kernel
 	class SepKernel
 	{
 	public:
 		Kernel1D x_ker;
 		Kernel1D y_ker;
 	public:
-		SepKernel(unsigned int len) : x_ker(len), y_ker(len)
+		SepKernel(unsigned int len_x, unsigned int len_y) : x_ker(len_x), y_ker(len_y)
 		{}
 	};
 }

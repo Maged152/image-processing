@@ -85,7 +85,7 @@ namespace qlm
 	// generate coefficients for Sobel X
 	SepKernel GetDerivXKernel(unsigned int filter_size)
 	{
-		SepKernel out(filter_size);
+		SepKernel out(filter_size, filter_size);
 		// check kernel size
 		if (filter_size % 2 == 0 || filter_size < 3)
 		{
@@ -101,7 +101,7 @@ namespace qlm
 	// generate coefficients for Sobel Y
 	SepKernel GetDerivYKernel(unsigned int filter_size)
 	{
-		SepKernel out(filter_size);
+		SepKernel out(filter_size, filter_size);
 		// check kernel size
 		if (filter_size % 2 == 0 || filter_size < 3)
 		{
@@ -119,14 +119,15 @@ namespace qlm
 	Image<ImageFormat::GRAY, out_t> SobelX(const Image<ImageFormat::GRAY, in_t>& in, const unsigned int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
 	{
 		auto ker = GetDerivXKernel(kernel_size);
-		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker.x_ker, ker.y_ker, border_mode);
+
+		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker, border_mode);
 	}
 	// Sobel Y operation
 	template<pixel_t in_t, pixel_t out_t>
 	Image<ImageFormat::GRAY, out_t> SobelY(const Image<ImageFormat::GRAY, in_t>& in, const unsigned int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
 	{
 		auto ker = GetDerivYKernel(kernel_size);
-		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker.x_ker, ker.y_ker, border_mode);
+		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker, border_mode);
 	}
 	// Sobel operation
 	template<pixel_t in_t, pixel_t out_t>
