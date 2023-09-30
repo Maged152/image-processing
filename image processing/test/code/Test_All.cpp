@@ -8,6 +8,7 @@ namespace test
 
 		// filters
 		res &= Test_Filter2D();
+		res &= Test_SepFilter2D();
 
 		return res;
 	}

@@ -3,7 +3,7 @@
 
 namespace test
 {
-	bool Test_Filter2D()
+	bool Test_SepFilter2D()
 	{
 		HANDLE col_handle;
 		col_handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -11,8 +11,8 @@ namespace test
 		bool res = false;
 		qlm::Timer<qlm::usec> t{};
 
-		const std::string folder_path = example_folder + "Filters/Filter2D/";
-		const std::string test_name = "Test_Filter2D";
+		const std::string folder_path = example_folder + "filters/SepFilter2D/";
+		const std::string test_name = "Test_SepFilter2D";
 
 		// read input image
 		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
@@ -33,15 +33,23 @@ namespace test
 			return -1;
 		}
 
-		qlm::Kernel k{ 3, 3 };
-		// sharpen filter
-		k.Set(0, 0, 0); k.Set(0, 1, -1); k.Set(0, 2, 0);
-		k.Set(1, 0, -1); k.Set(1, 1, 5); k.Set(1, 2, -1);
-		k.Set(2, 0, 0); k.Set(2, 1, -1); k.Set(2, 2, 0);
+		const int filter_size = 3;
+
+		qlm::SepKernel box{ filter_size, filter_size };
+		// set box filter coefficients
+		for (int i = 0; i < filter_size; i++)
+		{
+			box.x_ker.Set(i, 1.0f / filter_size);
+			box.y_ker.Set(i, 1.0f / filter_size);
+		}
+
+		auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
+		border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
+
 
 		// do the operation
 		t.start();
-		auto out = qlm::Filter2D(in, k, qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{});
+		auto out = qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, uint8_t>(in, box, border_mode);
 		t.end();
 
 		// write the output and reread it
