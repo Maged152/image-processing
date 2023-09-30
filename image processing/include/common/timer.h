@@ -49,7 +49,7 @@ namespace qlm
 			end_time = std::chrono::high_resolution_clock::now();
 			duration = std::chrono::duration_cast<Duration>(end_time - start_time);
 		}
-		void show()
+		void show() const
 		{
 			std::cout << "Time taken: " << duration.count() << GetType<Duration>();
 		}

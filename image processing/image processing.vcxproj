@@ -144,6 +144,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="code\common\image\LoadFromFile.cpp" />
+    <ClCompile Include="code\common\image\SaveToFile.cpp" />
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
     <ClCompile Include="code\Flip\Flip.cpp" />
@@ -153,8 +155,6 @@
     <ClCompile Include="code\WarpAffine\GetWarpAffine.cpp" />
     <ClCompile Include="code\Translate\Translate.cpp" />
     <ClCompile Include="code\common\image\image.cpp" />
-    <ClCompile Include="code\common\image\LoadFromFile.cpp" />
-    <ClCompile Include="code\common\image\ReadFromFile.cpp" />
     <ClCompile Include="code\common\types\Interpolation.cpp" />
     <ClCompile Include="code\common\types\TransformationMatrix.cpp" />
     <ClCompile Include="include\common\stb_image_impl.cpp" />
@@ -165,6 +165,8 @@
     <ClCompile Include="code\SepFilter2D\SepFilter2D.cpp" />
     <ClCompile Include="code\Sobel\Sobel.cpp" />
     <ClCompile Include="run.cpp" />
+    <ClCompile Include="test\code\filters\Test_Filter2D.cpp" />
+    <ClCompile Include="test\code\Test_All.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common\draw.h" />
@@ -177,6 +179,9 @@
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />
     <ClInclude Include="include\Transpose\Transposeh.h" />
+    <ClInclude Include="test\include\test_common.h" />
+    <ClInclude Include="test\include\test_filters.h" />
+    <ClInclude Include="test\test.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="code\HoughLines\README.md" />
