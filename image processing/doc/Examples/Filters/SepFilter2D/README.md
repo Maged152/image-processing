@@ -16,22 +16,29 @@
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	qlm::Kernel1D ker{ 3 };
-	ker.Set(0, 1.0 / 3); ker.Set(1, 1.0 / 3); ker.Set(2, 1.0 / 3);
+	const int filter_size = 3;
+
+	qlm::SepKernel box{ filter_size, filter_size };
+	// set box filter coefficients
+	for (int i = 0; i < filter_size; i++)
+	{
+		box.x_ker.Set(i, 1.0f / filter_size);
+		box.y_ker.Set(i, 1.0f / filter_size);
+	}
 
 	auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
 	border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
 
 	// do the operation
 	t.start();
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, uint8_t>(in, ker, ker, border_mode);
+	auto out = qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, uint8_t>(in, box, border_mode);
 	t.end();
 
 	t.show();
 
 	if (!out.SaveToFile("result.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 
 ```
