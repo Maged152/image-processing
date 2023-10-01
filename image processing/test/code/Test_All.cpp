@@ -9,6 +9,8 @@ namespace test
 		// filters
 		res &= Test_Filter2D();
 		res &= Test_SepFilter2D();
+		res &= Test_Gaussian();
+		res &= Test_Sobel();
 
 		return res;
 	}
