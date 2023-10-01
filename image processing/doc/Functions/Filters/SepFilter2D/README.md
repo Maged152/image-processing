@@ -23,6 +23,8 @@ namespace qlm
 | `kernel`       | `SepKernel`  | The kernel for filtering.                                                |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
+## Return Value
+The function returns an image of type `Image<frmt, dst_t>`.
 
 * [Example](../../../Examples/Filters/SepFilter2D)
 * [Implementation](../../../../code/SepFilter2D/SepFilter2D.cpp)

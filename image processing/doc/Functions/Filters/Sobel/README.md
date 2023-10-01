@@ -26,6 +26,8 @@ Applys sobel filter of size NxN on the input image.
 | `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
+### Return Value
+The function returns an image of type `Image<ImageFormat::GRAY, out_t>`.
 
 ### `SobelY` Function
  Performs Sobel Y derivative on the input image. input image must be in GRAY format
@@ -48,6 +50,8 @@ Applys sobel filter of size NxN on the input image.
 | `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
+### Return Value
+The function returns an image of type `<ImageFormat::GRAY, out_t>`.
 
 ### `Sobel` Function
  Performs Sobel derivative on the input image. input image must be in GRAY format
@@ -69,7 +73,10 @@ Applys sobel filter of size NxN on the input image.
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
 | `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
-| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
+| `border_mode`  | `BorderMode`   | The pixel extrapolation method.                                                              |
+
+### Return Value
+The function returns an structure of type `SobelDerivatives<in_t, out_t>`.
 
 
 ### `ConvertSobelDepth` Function
@@ -85,6 +92,9 @@ Applys sobel filter of size NxN on the input image.
 |----------------|----------------|---------------------------------------------| 
 | `in`           | `Image`        | The input image<GRAY, uint8_t>.             |
 | `filter_size`  | `unsigned int` | The filter size used for the image.         |
+
+### Return Value
+The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 
 
 * [Example](../../../Examples/Filters/Sobel)

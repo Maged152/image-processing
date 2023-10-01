@@ -44,7 +44,7 @@ kernel with a specified size and order.
 The function returns a one-dimensional derivative kernel of type `Kernel1D`.
 
 * [Implementation](../../../../code/Sobel/Sobel.cpp)
-* 
+
 ## Get Derivative X Kernel
 
 ### Description

@@ -26,6 +26,8 @@ Applys gaussian filter of size NxN on the input image.
 | `sigma_y`      | `float`        | Gaussian kernel standard deviation in Y direction, if sigmaY is zero, it is set to be equal to sigmaX    |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
+## Return Value
+The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Filters/Gaussian)
 * [Implementation](../../../../code/Gaussian/Gaussian.cpp)

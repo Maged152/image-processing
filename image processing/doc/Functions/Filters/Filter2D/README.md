@@ -23,5 +23,9 @@ namespace qlm
 | `kernel`       | `Kernel`     | The kernel to be applied on the input image.                                                 |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
+
+## Return Value
+The function returns an image of type `Image<frmt, T>`.
+
 * [Example](../../../Examples/Filters/Filter2D)
 * [Implementation](../../../../code/Filter2D/Filter2D.cpp)

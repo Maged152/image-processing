@@ -27,7 +27,7 @@
 
 	if (!out.SaveToFile("result.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 ```
 
@@ -36,5 +36,5 @@
 ### The output
 ![Input Image](result.jpg)
 
-Time = 12 ms
+Time = 13 ms
 
