@@ -41,20 +41,20 @@ namespace qlm
 
 		if constexpr (frmt == ImageFormat::GRAY)
 		{
-			if (n == 1)
+			if (n == 1 || n == 3)
 			{
-				for (unsigned int i = 0; i < width * height * n; i += n)
+				for (unsigned int i = 0, idx = 0; i < width * height * n; i += n, idx++)
 				{
 					T v = img_data[i];
-					data[i].Set(v);
+					data[idx].Set(v);
 				}
 			}
-			else if (n == 2)
+			else if (n == 2 || n == 4)
 			{
 				for (unsigned int i = 0, idx = 0; i < width * height * n; i += n, idx++)
 				{
 					T v1 = img_data[i];
-					T v2 = img_data[i + 1];
+					T v2 = img_data[i + n - 1];
 					data[idx].Set(v1, v2);
 				}
 			}
