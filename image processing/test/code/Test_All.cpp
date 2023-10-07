@@ -11,7 +11,10 @@ namespace test
 		res &= Test_SepFilter2D();
 		res &= Test_Gaussian();
 		res &= Test_Sobel();
+
+		// feature detection
 		res &= Test_HoughLines();
+		res &= Test_HarrisCorner();
 
 		return res;
 	}

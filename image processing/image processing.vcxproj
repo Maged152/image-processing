@@ -160,6 +160,7 @@
     <ClCompile Include="include\common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
     <ClCompile Include="code\HoughLines\HoughLines.cpp" />
+    <ClCompile Include="code\HarrisCorner\HarrisCorner.cpp" />
     <ClCompile Include="code\Resize\Resize.cpp" />
     <ClCompile Include="code\Scale\Scale.cpp" />
     <ClCompile Include="code\SepFilter2D\SepFilter2D.cpp" />
