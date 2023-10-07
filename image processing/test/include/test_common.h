@@ -68,12 +68,19 @@ namespace test
         }
         else if constexpr (frmt == qlm::ImageFormat::RGB)
         {
+            
             if (abs_diff.r <= threshold.r &&
                 abs_diff.g <= threshold.g &&
                 abs_diff.b <= threshold.b)
             {
+                
                 return true;
             }
+            /*else
+            {
+                std::cout << (int)abs_diff.r << "  " << (int)abs_diff.g << " "
+                    << (int)abs_diff.b << "  " << "\n";
+            }*/
         }
         else if constexpr (frmt == qlm::ImageFormat::HLS)
         {

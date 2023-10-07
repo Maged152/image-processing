@@ -72,7 +72,7 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const qlm::Image<frmt, T>& in, float
 			// neighboring elements
 			int idx_l = std::max(idx - 1, 0);                          // left
 			int idx_r = std::min(idx + 1, numangle * numrho - 1);      // right
-			int idx_a = std::max(idx - numrho, 0);                     // upove
+			int idx_a = std::max(idx - numrho, 0);                     // above
 			int idx_b = std::min(idx + numrho, numangle * numrho - 1); // below
 			if (acc[idx] > threshold && 
 				acc[idx] > acc[idx_l] && acc[idx] >= acc[idx_r] &&

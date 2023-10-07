@@ -5,3 +5,4 @@
 
 #include "include/test_common.h"
 #include "include/test_filters.h"
+#include "include/test_features_detection.h"
