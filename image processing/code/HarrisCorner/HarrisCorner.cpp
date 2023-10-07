@@ -11,8 +11,14 @@ namespace qlm
 	{
 		const unsigned int width = in.Width();
 		const unsigned int height = in.Height();
+		// normalization factor
+		float scale = (1 << (filter_size - 1)) * block_size;
+		if constexpr (std::is_same<T, uint8_t>::value)
+			scale *= 255.0f;
+		scale = 1.0 / scale;
+		float normalization = scale * scale * scale * scale;
 
-		// call gaussian kernerl 
+		// call Gaussian kernel 
 		int constexpr sigma = 1;
 		Image<ImageFormat::GRAY, uint8_t> gaussian = Gaussian(in, filter_size, sigma, sigma, border_mode);
 		// call sobel x and y
@@ -36,19 +42,20 @@ namespace qlm
 			}
 		}
 		// sum on block size
-		Kernel1D box{ block_size };
+		SepKernel box{ block_size , block_size };
 		for (int i = 0; i < block_size; i++)
 		{
-			box.Set(i, 1.0f / block_size);
+			box.x_ker.Set(i, 1.0f / block_size);
+			box.y_ker.Set(i, 1.0f / block_size);
 		}
 
 		BorderMode<ImageFormat::GRAY, int16_t> border_mode_16{};
 		border_mode_16.border_type = border_mode.border_type;
 		border_mode_16.border_pixel = border_mode.border_pixel;
 
-		Image<ImageFormat::GRAY, int16_t> Ixx_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixx, box, box, border_mode_16);
-		Image<ImageFormat::GRAY, int16_t> Iyy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Iyy, box, box, border_mode_16);
-		Image<ImageFormat::GRAY, int16_t> Ixy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixy, box, box, border_mode_16);
+		Image<ImageFormat::GRAY, int16_t> Ixx_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixx, box, border_mode_16);
+		Image<ImageFormat::GRAY, int16_t> Iyy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Iyy, box, border_mode_16);
+		Image<ImageFormat::GRAY, int16_t> Ixy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixy, box, border_mode_16);
 
 		Image<ImageFormat::GRAY, float> corners_response{ width, height };
 		// compute R
@@ -63,7 +70,7 @@ namespace qlm
 				float det = Ixx * Iyy - Ixy * Ixy;
 				float tr = Ixx + Iyy;
 
-				float response = det - k * tr * tr;
+				float response = (det - k * tr * tr) * normalization;
 				// check if it is a corner
 				if (response > threshold)
 				{
@@ -90,104 +97,104 @@ namespace qlm
 					const int x_offset[3] = { x - 1 , x, x + 1 };
 					const int y_offset[3] = { y - 1 , y, y + 1 };
 					
-					// top left neighbour
+					// top left neighbor
 					if (x_offset[0] > 0 && y_offset[0] > 0)
 					{
 						float neighbour_response = corners_response.GetPixel(x_offset[0], y_offset[0]).v;
 						if (cur_response <= neighbour_response)
 						{
-							// supress this response
+							// suppress this response
 							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
 
 							continue;
 						}
 					}
 
-					// top neighbour
+					// top neighbor
 					if (y_offset[0] > 0)
 					{
 						float neighbour_response = corners_response.GetPixel(x_offset[1], y_offset[0]).v;
 						if (cur_response <= neighbour_response)
 						{
-							// supress this response
+							// suppress this response
 							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
 
 							continue;
 						}
 					}
 
-					// top right neighbour
+					// top right neighbor
 					if (x_offset[2] < width && y_offset[0] > 0)
 					{
 						float neighbour_response = corners_response.GetPixel(x_offset[2], y_offset[0]).v;
 						if (cur_response <= neighbour_response)
 						{
-							// supress this response
+							// suppress this response
 							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
 
 							continue;
 						}
 					}
 
-					// left neighbour
+					// left neighbor
 					if (x_offset[0] > 0)
 					{
 						float neighbour_response = corners_response.GetPixel(x_offset[0], y_offset[1]).v;
 						if (cur_response <= neighbour_response)
 						{
-							// supress this response
+							// suppress this response
 							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
 
 							continue;
 						}
 					}
 
-					// right neighbour
+					// right neighbor
 					if (x_offset[2] < width)
 					{
 						float neighbour_response = corners_response.GetPixel(x_offset[2], y_offset[1]).v;
 						if (cur_response <= neighbour_response)
 						{
-							// supress this response
+							// suppress this response
 							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
 
 							continue;
 						}
 					}
 
-					// bottom left neighbour
+					// bottom left neighbor
 					if (x_offset[0] > 0 && y_offset[2] < height)
 					{
 						float neighbour_response = corners_response.GetPixel(x_offset[0], y_offset[2]).v;
 						if (cur_response <= neighbour_response)
 						{
-							// supress this response
+							// suppress this response
 							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
 
 							continue;
 						}
 					}
 
-					// bottom neighbour
+					// bottom neighbor
 					if (y_offset[2] < height)
 					{
 						float neighbour_response = corners_response.GetPixel(x_offset[1], y_offset[2]).v;
 						if (cur_response <= neighbour_response)
 						{
-							// supress this response
+							// suppress this response
 							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
 
 							continue;
 						}
 					}
 
-					// bottom right neighbour
+					// bottom right neighbor
 					if (x_offset[2] < width && y_offset[2] < height)
 					{
 						float neighbour_response = corners_response.GetPixel(x_offset[2], y_offset[2]).v;
 						if (cur_response <= neighbour_response)
 						{
-							// supress this response
+							// suppress this response
 							corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
 
 							continue;

@@ -21,7 +21,7 @@
 	unsigned int filter_size = 3;
 	unsigned int block_size = 3;
 	float k = 0.22;
-	float threshold = 9900000;
+	float threshold = 0.0000001;
 
 	// do the operation
 	t.start();
@@ -43,7 +43,7 @@
 
 	if (!in.SaveToFile("result.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 ```
 
