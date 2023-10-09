@@ -29,7 +29,7 @@
 
 	if (!out.SaveToFile("result.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 ```
 ### The input

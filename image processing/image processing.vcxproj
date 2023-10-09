@@ -166,6 +166,8 @@
     <ClCompile Include="code\SepFilter2D\SepFilter2D.cpp" />
     <ClCompile Include="code\Sobel\Sobel.cpp" />
     <ClCompile Include="run.cpp" />
+    <ClCompile Include="test\code\color manipulation\Test_ColorConvert.cpp" />
+    <ClCompile Include="test\code\color manipulation\Test_FloodFill.cpp" />
     <ClCompile Include="test\code\features detection\Test_HarrisCorner.cpp" />
     <ClCompile Include="test\code\features detection\Test_HoughLines.cpp" />
     <ClCompile Include="test\code\filters\Test_Filter2D.cpp" />
@@ -185,6 +187,7 @@
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />
     <ClInclude Include="include\Transpose\Transposeh.h" />
+    <ClInclude Include="test\include\test_color_manipulation.h" />
     <ClInclude Include="test\include\test_common.h" />
     <ClInclude Include="test\include\test_features_detection.h" />
     <ClInclude Include="test\include\test_filters.h" />

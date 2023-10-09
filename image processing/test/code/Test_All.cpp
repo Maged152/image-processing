@@ -16,6 +16,10 @@ namespace test
 		res &= Test_HoughLines();
 		res &= Test_HarrisCorner();
 
+		// color manipulation
+		res &= Test_ColorConvert();
+		res &= Test_FloodFill();
+
 		return res;
 	}
 }
