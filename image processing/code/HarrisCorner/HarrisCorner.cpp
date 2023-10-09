@@ -12,9 +12,7 @@ namespace qlm
 		const unsigned int width = in.Width();
 		const unsigned int height = in.Height();
 		// normalization factor
-		float scale = (1 << (filter_size - 1)) * block_size;
-		if constexpr (std::is_same<T, uint8_t>::value)
-			scale *= 255.0f;
+		float scale = (1 << (filter_size - 1)) * block_size * std::numeric_limits<T>::max();
 		scale = 1.0 / scale;
 		float normalization = scale * scale * scale * scale;
 
