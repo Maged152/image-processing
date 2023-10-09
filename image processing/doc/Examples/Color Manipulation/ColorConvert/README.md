@@ -53,7 +53,7 @@
 								  qlm::ImageFormat::RGB, uint8_t>(out);
 	if (!out2.SaveToFile("result.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 ```
 ### The input
