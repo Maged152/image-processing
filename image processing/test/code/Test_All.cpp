@@ -19,6 +19,7 @@ namespace test
 		// color manipulation
 		res &= Test_ColorConvert();
 		res &= Test_FloodFill();
+		res &= Test_ConvertBitDepth();
 
 		return res;
 	}

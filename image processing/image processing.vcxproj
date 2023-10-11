@@ -167,6 +167,7 @@
     <ClCompile Include="code\Sobel\Sobel.cpp" />
     <ClCompile Include="run.cpp" />
     <ClCompile Include="test\code\color manipulation\Test_ColorConvert.cpp" />
+    <ClCompile Include="test\code\color manipulation\Test_ConvertBitDepth.cpp" />
     <ClCompile Include="test\code\color manipulation\Test_FloodFill.cpp" />
     <ClCompile Include="test\code\features detection\Test_HarrisCorner.cpp" />
     <ClCompile Include="test\code\features detection\Test_HoughLines.cpp" />
@@ -194,7 +195,6 @@
     <ClInclude Include="test\test.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="code\HoughLines\README.md" />
     <None Include="code\Scale\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
