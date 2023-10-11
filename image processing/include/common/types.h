@@ -93,15 +93,15 @@ namespace qlm
 	struct KeyPoint {
 		// Member variables
 		Point<T> point;
-		float size;
+		float scale;
 		float angle;
 		float response;
-		int octave;
+		int level;
 		int class_id;
 
 		// Constructor
-		KeyPoint(Point<T> _pt, float _response = 0, float _size = 0, float _angle = -1, int _octave = 0, int _class_id = -1)
-			: point(_pt), size(_size), angle(_angle), response(_response), octave(_octave), class_id(_class_id) 
+		KeyPoint(Point<T> _pt, float _response = 0, float _scale = 0, float _angle = -1, int _level = 0, int _class_id = -1)
+			: point(_pt), scale(_scale), angle(_angle), response(_response), level(_level), class_id(_class_id)
 		{}
 	};
 
