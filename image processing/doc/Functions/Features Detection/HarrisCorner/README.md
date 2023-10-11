@@ -29,6 +29,8 @@ namespace qlm
 | `threshold`    | `float`       | The threshold parameter. Only those corners are returned that have response ( >threshold ).  |
 | `border_mode`  | `BorderMode`  | The pixel extrapolation method.                                                              |
 
+## Return Value
+The function returns a vector of key-points(corners) of type `std::vector<KeyPoint<int>>`.
 
 * [Example](../../../Examples/Features%20Detection/HarrisCorner)
 * [Implementation](../../../../code/HarrisCorner/HarrisCorner.cpp)

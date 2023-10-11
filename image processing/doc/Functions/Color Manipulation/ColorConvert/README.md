@@ -34,6 +34,8 @@ namespace qlm
 | `dst_t`    | `pixel_t`      | The output image type.           |
 | `in`       | `Image`        | The input image.                 |
 
+## Return Value
+The function returns an image of type `Image<dst_frmt, dst_t>`.
 
 * [Example](../../../Examples/Color%20Manipulation/ColorConvert)
 * [Implementation](../../../../code/ColorConvert/ColorConvert.cpp)

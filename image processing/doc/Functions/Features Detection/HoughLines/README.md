@@ -28,6 +28,8 @@ namespace qlm
 | `min_theta` | `double`     | The minimum angle to check for lines. Must fall between 0 and max_theta.                     |
 | `max_theta` | `double`     | The upper bound for the angle. Must fall between min_theta and PI.                         |
 
+## Return Value
+The function returns a vector of lines of type `std::vector<LinePolar>`.
 
 * [Example](../../../Examples/Features%20Detection/HoughLines)
 * [Implementation](../../../../code/HoughLines/HoughLines.cpp)

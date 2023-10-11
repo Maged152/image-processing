@@ -23,6 +23,9 @@ namespace qlm
 | `dst_t`    | `pixel_t`      | The output image/pixel type.     |
 | `in`       | `Image`        | The input image/pixel.           |
 
+## Return Value
+The function returns an image of type `Image<dst_frmt, dst_t>`.
+The function returns an image of type `Pixel<dst_frmt, dst_t>`.
 
 * [Example](../../../Examples/Color%20Manipulation/ConvertBitDepth)
 * [Implementation](../../../../code/ConvertBitDepth/ConvertBitDepth.cpp)
