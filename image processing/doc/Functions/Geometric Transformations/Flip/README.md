@@ -21,6 +21,8 @@ namespace qlm
 | `in`        | `Image`    | The input image.                                                  |
 | `flip_code` | `FlipFlag` | An enum to specify how to flip the image.                         |
 
+## Return Value
+The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Geometric%20Transformations/Flip)
 * [Implementation](../../../../code/Flip/Flip.cpp)

@@ -27,5 +27,8 @@ namespace qlm
 | `method`       | `ScaleMethod`  | The scale method.                |
 | `border_mode`  | `BorderMode`   | The pixel extrapolation method.  |
 
+## Return Value
+The function returns an image of type `Image<frmt, T>`.
+
 * [Example](../../../Examples/Geometric%20Transformations/Resize)
 * [Implementation](../../../../code/Resize/Resize.cpp)

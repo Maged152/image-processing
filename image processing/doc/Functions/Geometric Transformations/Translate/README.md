@@ -23,5 +23,8 @@ namespace qlm
 | `displacement`| `Point`      | displacement                                                        |
 | `pix`         | `Pixel`      | The pixel used to fill the background                               |
 
+## Return Value
+The function returns an image of type `Image<frmt, T>`.
+
 * [Example](../../../Examples/Geometric%20Transformations/Translate)
 * [Implementation](../../../../code/Translate/Translate.cpp)

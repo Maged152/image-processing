@@ -21,5 +21,8 @@ namespace qlm
 | `in`          | `Image`      | The input image.                                                    |
 | `rotate_code` | `RotateFlag` | An enum to specify how to rotate the image.                         |
 
+## Return Value
+The function returns an image of type `Image<frmt, T>`.
+
 * [Example](../../../Examples/Geometric%20Transformations/Rotate)
 * [Implementation](../../../../code/Rotate/Rotate.cpp)

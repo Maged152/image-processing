@@ -30,6 +30,8 @@ namespace qlm
 | `inter`      | `InterpolationFlag`   | The interpolation method.        |
 | `border_mode`| `BorderMode`          | The pixel extrapolation method.  |
 
+## Return Value
+The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Geometric%20Transformations/WarpAffine)
 * [Implementation](../../../../code/WarpAffine/WarpAffine.cpp)
