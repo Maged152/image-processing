@@ -1,4 +1,4 @@
-#include "../test/test.h"
+#include "../test.h"
 
 namespace test
 {
@@ -20,6 +20,9 @@ namespace test
 		res &= Test_ColorConvert();
 		res &= Test_FloodFill();
 		res &= Test_ConvertBitDepth();
+
+		// geometric transformations
+		res &= Test_Flip();
 
 		return res;
 	}

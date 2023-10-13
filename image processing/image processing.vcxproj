@@ -175,6 +175,7 @@
     <ClCompile Include="test\code\filters\Test_Gaussian.cpp" />
     <ClCompile Include="test\code\filters\Test_SepFilter2D.cpp" />
     <ClCompile Include="test\code\filters\Test_Sobel.cpp" />
+    <ClCompile Include="test\code\geometric transformations\Test_Flip.cpp" />
     <ClCompile Include="test\code\Test_All.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +193,7 @@
     <ClInclude Include="test\include\test_common.h" />
     <ClInclude Include="test\include\test_features_detection.h" />
     <ClInclude Include="test\include\test_filters.h" />
+    <ClInclude Include="test\include\test_geometric_transformations.h" />
     <ClInclude Include="test\test.h" />
   </ItemGroup>
   <ItemGroup>

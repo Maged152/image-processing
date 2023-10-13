@@ -7,3 +7,4 @@
 #include "include/test_color_manipulation.h"
 #include "include/test_filters.h"
 #include "include/test_features_detection.h"
+#include "include/test_geometric_transformations.h"
