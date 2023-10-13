@@ -162,6 +162,7 @@
     <ClCompile Include="code\HoughLines\HoughLines.cpp" />
     <ClCompile Include="code\HarrisCorner\HarrisCorner.cpp" />
     <ClCompile Include="code\Resize\Resize.cpp" />
+    <ClCompile Include="code\Rotate\Rotate.cpp" />
     <ClCompile Include="code\Scale\Scale.cpp" />
     <ClCompile Include="code\SepFilter2D\SepFilter2D.cpp" />
     <ClCompile Include="code\Sobel\Sobel.cpp" />
@@ -176,6 +177,8 @@
     <ClCompile Include="test\code\filters\Test_SepFilter2D.cpp" />
     <ClCompile Include="test\code\filters\Test_Sobel.cpp" />
     <ClCompile Include="test\code\geometric transformations\Test_Flip.cpp" />
+    <ClCompile Include="test\code\geometric transformations\Test_Resize.cpp" />
+    <ClCompile Include="test\code\geometric transformations\Test_Rotate.cpp" />
     <ClCompile Include="test\code\Test_All.cpp" />
   </ItemGroup>
   <ItemGroup>

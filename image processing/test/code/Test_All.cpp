@@ -23,6 +23,8 @@ namespace test
 
 		// geometric transformations
 		res &= Test_Flip();
+		res &= Test_Resize();
+		res &= Test_Rotate();
 
 		return res;
 	}
