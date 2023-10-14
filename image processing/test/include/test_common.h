@@ -3,6 +3,7 @@
 #include "shakhbat.h"
 #include <string>
 #include <windows.h>
+#include <array>
 
 #define CONSOLE_COLOR_BLACK 0
 #define CONSOLE_COLOR_BLUE 1
@@ -48,6 +49,44 @@ namespace test
         SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
     }
 
+
+    template <int size>
+    inline void PrintTestResults(const std::string& name, const std::array<bool, size>& res, const std::array<qlm::Timer<qlm::usec>, size>& time, const HANDLE& col_handle)
+    {
+        // test name
+        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_BLUE);
+        std::cout << name << " : ";
+        // time taken
+        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_YELLOW);
+        std::cout << "[";
+        for (auto& t : time)
+        {
+            std::cout << t.duration.count() << ", ";
+        }
+        std::cout << "\b\b]usec : ";
+
+        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_GREEN);
+        std::cout << "[";
+
+        for (auto& r : res)
+        {
+            if (r)
+            {
+                SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_GREEN);
+                std::cout << "PASSED, ";
+            }
+            else
+            {
+                SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
+                std::cout << "FAILED, ";
+            }
+        }
+
+        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_GREEN);
+        std::cout << "\b\b]\n";
+
+        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
+    }
     // run all tests
     bool Test_All();
 
