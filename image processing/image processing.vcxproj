@@ -154,6 +154,7 @@
     <ClCompile Include="code\WarpAffine\WarpAffine.cpp" />
     <ClCompile Include="code\WarpAffine\GetWarpAffine.cpp" />
     <ClCompile Include="code\Translate\Translate.cpp" />
+    <ClCompile Include="code\Transpose\Transpose.cpp" />
     <ClCompile Include="code\common\image\image.cpp" />
     <ClCompile Include="code\common\types\Interpolation.cpp" />
     <ClCompile Include="code\common\types\TransformationMatrix.cpp" />
@@ -179,6 +180,10 @@
     <ClCompile Include="test\code\geometric transformations\Test_Flip.cpp" />
     <ClCompile Include="test\code\geometric transformations\Test_Resize.cpp" />
     <ClCompile Include="test\code\geometric transformations\Test_Rotate.cpp" />
+    <ClCompile Include="test\code\geometric transformations\Test_Scale.cpp" />
+    <ClCompile Include="test\code\geometric transformations\Test_Translate.cpp" />
+    <ClCompile Include="test\code\geometric transformations\Test_Transpose.cpp" />
+    <ClCompile Include="test\code\geometric transformations\Test_WarpAffine.cpp" />
     <ClCompile Include="test\code\Test_All.cpp" />
   </ItemGroup>
   <ItemGroup>

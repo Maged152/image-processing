@@ -25,6 +25,10 @@ namespace test
 		res &= Test_Flip();
 		res &= Test_Resize();
 		res &= Test_Rotate();
+		res &= Test_Translate();
+		res &= Test_Transpose();
+		res &= Test_WarpAffine();
+		res &= Test_Scale();
 
 		return res;
 	}
