@@ -4,29 +4,28 @@ namespace qlm
 {
 
     // Default constructor
-    TransformationMatrix::TransformationMatrix() {
+    template<int num_rows, int num_cols>
+    TransformationMatrix<num_rows, num_cols>::TransformationMatrix() {
         // Initialize the matrix to an identity matrix
-        data[0] = 1.0f;
-        data[1] = 0.0f;
-        data[2] = 0.0f;
-        data[3] = 0.0f;
-        data[4] = 1.0f;
-        data[5] = 0.0f;
-    }
-
-    // Parameterized constructor
-    TransformationMatrix::TransformationMatrix(float m00, float m01, float m02,
-        float m10, float m11, float m12) {
-        data[0] = m00;
-        data[1] = m01;
-        data[2] = m02;
-        data[3] = m10;
-        data[4] = m11;
-        data[5] = m12;
+        for (int r = 0; r < rows; r++)
+        {
+            for (int c = 0; c < cols; c++)
+            {
+                if (r == c)
+                {
+                    this->SetElement(r, c, 1.0f);
+                }
+                else
+                {
+                    this->SetElement(r, c, 0.0f);
+                }
+            }
+        }
     }
 
     // Getter
-    float TransformationMatrix::GetElement(int r, int c) const 
+    template<int num_rows, int num_cols>
+    float TransformationMatrix<num_rows, num_cols>::GetElement(int r, int c) const
     {
         if (r >= 0 && r < rows && c >= 0 && c < cols) 
         {
@@ -38,7 +37,8 @@ namespace qlm
         }
     }
     
-    float TransformationMatrix::GetElement(int i) const 
+    template<int num_rows, int num_cols>
+    float TransformationMatrix<num_rows, num_cols>::GetElement(int i) const
     {
         if (i >= 0 && i < rows * cols) 
         {
@@ -51,7 +51,8 @@ namespace qlm
     }
 
     // Setter
-    void TransformationMatrix::SetElement(int r, int c, float value) 
+    template<int num_rows, int num_cols>
+    void TransformationMatrix<num_rows, num_cols>::SetElement(int r, int c, float value)
     {
         if (r >= 0 && r < rows && c >= 0 && c < cols)
         {
@@ -59,7 +60,8 @@ namespace qlm
         }
     }
 
-    void TransformationMatrix::SetElement(int i, float value) 
+    template<int num_rows, int num_cols>
+    void TransformationMatrix<num_rows, num_cols>::SetElement(int i, float value)
     {
         if (i >= 0 && i < rows * cols)
         {
@@ -67,20 +69,10 @@ namespace qlm
         }
     }
 
-   // matrix dimensions
-    int  TransformationMatrix::NumberRows() const
-    {
-        return rows;
-    }
-
-    int  TransformationMatrix::NumberColumns() const
-    {
-        return cols;
-    }
-
     // operators
-    // // Overloaded equality operator
-    bool TransformationMatrix::operator==(const TransformationMatrix& other) const
+    // Overloaded equality operator
+    template<int num_rows, int num_cols>
+    bool TransformationMatrix<num_rows, num_cols>::operator==(const TransformationMatrix<num_rows, num_cols>& other) const
     {
         for (int r = 0; r < rows; r++)
         {
@@ -96,13 +88,14 @@ namespace qlm
     }
 
     // Assignment operator
-    TransformationMatrix& TransformationMatrix::operator=(const TransformationMatrix& rhs) {
+    template<int num_rows, int num_cols>
+    TransformationMatrix<num_rows, num_cols>& TransformationMatrix<num_rows, num_cols>::operator=(const TransformationMatrix<num_rows, num_cols>& rhs) {
         if (this == &rhs) {
             // Self-assignment, do nothing
             return *this;
         }
 
-        // Copy the elements from rhs to lhs
+        // Copy the elements from rhs to this
         for (int i = 0; i < rows * cols; i++) {
             data[i] = rhs.data[i];
         }
@@ -111,4 +104,7 @@ namespace qlm
         return *this;
     }
 
+
+    template class TransformationMatrix<2, 3>;
+    template class TransformationMatrix<3, 3>;
 }

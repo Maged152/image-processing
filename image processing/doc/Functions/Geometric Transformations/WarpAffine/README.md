@@ -11,7 +11,7 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> WarpAffine(
 		const Image<frmt, T>& in,
-		const TransformationMatrix& mat,
+		const AffineMatrix& mat,
 		const int dst_width,
 		const int dst_height,
 		const InterpolationFlag inter,
@@ -24,7 +24,7 @@ namespace qlm
 | Name         | Type                  | Description                      |
 |--------------|-----------------------|----------------------------------|
 | `in`         | `Image`               | The input image.                 |
-| `mat`        | `TransformationMatrix`| 2×3 transformation matrix.       |
+| `mat`        | `AffineMatrix`        | 2×3 transformation matrix.       |
 | `dst_width`  | `int`                 | Output image width.              |
 | `dst_height` | `int`                 | Output image height.             |
 | `inter`      | `InterpolationFlag`   | The interpolation method.        |

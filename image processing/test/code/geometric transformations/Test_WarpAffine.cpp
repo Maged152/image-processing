@@ -35,7 +35,7 @@ namespace test
 
 		const qlm::Point<int> center{ (int)in.Width() / 2, (int)in.Height() / 2 };
 
-		qlm::TransformationMatrix mat = qlm::GetRotationMatrix(center, angle, scale);
+		qlm::AffineMatrix mat = qlm::GetRotationMatrix(center, angle, scale);
 
 		auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
 		border_mode.border_type = qlm::BorderType::BORDER_REFLECT;

@@ -5,13 +5,13 @@
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> WarpAffine(const Image<frmt, T>& in, const TransformationMatrix& mat, const int dst_width, const int dst_height, const InterpolationFlag inter, const BorderMode<frmt, T>& border_mode)
+	Image<frmt, T> WarpAffine(const Image<frmt, T>& in, const AffineMatrix& mat, const int dst_width, const int dst_height, const InterpolationFlag inter, const BorderMode<frmt, T>& border_mode)
 	{
 		// create the output image
 		Image<frmt, T> out;
 		out.create(dst_width, dst_height,border_mode.border_pixel);
 		// transformation matrix inverse
-		TransformationMatrix mat_inv {};
+		AffineMatrix mat_inv {};
 
 		float det = mat.GetElement(0, 0) * mat.GetElement(1, 1) - mat.GetElement(0, 1) * mat.GetElement(1, 0);
 		// check determine
@@ -80,12 +80,12 @@ namespace qlm
 	}
 
 	template Image<ImageFormat::RGB, uint8_t> WarpAffine(const Image<ImageFormat::RGB, uint8_t >&,
-				const TransformationMatrix&, const int, const int, 
+				const AffineMatrix&, const int, const int,
 				const InterpolationFlag, const BorderMode<ImageFormat::RGB, uint8_t>&);
 
 
 	template Image<ImageFormat::GRAY, uint8_t> WarpAffine(const Image<ImageFormat::GRAY, uint8_t >&,
-		const TransformationMatrix&, const int, const int,
+		const AffineMatrix&, const int, const int,
 		const InterpolationFlag, const BorderMode<ImageFormat::GRAY, uint8_t>&);
 
 }

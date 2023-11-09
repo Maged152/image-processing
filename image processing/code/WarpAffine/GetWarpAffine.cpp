@@ -4,9 +4,9 @@
 
 namespace qlm
 {
-	TransformationMatrix GetRotationMatrix(const Point<int>& center, const float angle, const float scale)
+	AffineMatrix GetRotationMatrix(const Point<int>& center, const float angle, const float scale)
 	{
-		TransformationMatrix out;
+		AffineMatrix out;
 
 		// degree to radian
 		const float angle_r = angle * std::numbers::pi / 180.0f;
@@ -28,9 +28,9 @@ namespace qlm
 		return out;
 	}
 
-	TransformationMatrix GetAffineTransform(const Point<int> src[3], const Point<int> dst[3])
+	AffineMatrix GetAffineTransform(const Point<int> src[3], const Point<int> dst[3])
 	{
-		TransformationMatrix out;
+		AffineMatrix out;
 
 		// Gaussian elimination
 		float aug_mat_x[3][4]{};
