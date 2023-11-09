@@ -19,3 +19,4 @@
 #include "Gaussian/Gaussian.h"
 #include "HarrisCorner/HarrisCorner.h"
 #include "WarpAffine/WarpAffine.h"
+#include "WarpPerspective/WarpPerspective.h"
