@@ -1,6 +1,5 @@
 #include "WarpPerspective/WarpPerspective.h"
 #include <utility>
-#include <algorithm>
 
 namespace qlm
 {
@@ -24,25 +23,26 @@ namespace qlm
 				float adj = mat.GetElement((r + 1) % 3, (c + 1) % 3) * mat.GetElement((r + 2) % 3, (c + 2) % 3) -
 					        mat.GetElement((r + 1) % 3, (c + 2) % 3) * mat.GetElement((r + 2) % 3, (c + 1) % 3);
 
-				mat_inv.SetElement(r, c, adj);
+				mat_inv.SetElement(c, r, adj);
 			}
 		}
 
 		float det = mat.GetElement(0, 0) * mat_inv.GetElement(0, 0) +
-			        mat.GetElement(0, 1) * mat_inv.GetElement(0, 1) +
-			        mat.GetElement(0, 2) * mat_inv.GetElement(0, 2);
+			        mat.GetElement(0, 1) * mat_inv.GetElement(1, 0) +
+			        mat.GetElement(0, 2) * mat_inv.GetElement(2, 0);
 		// check determine
 		if (det == 0)
 		{
 			// exit
 			return out;
 		}
-
+	
 		// matrix inverse
 		for (int i = 0; i < 9; i++)
 		{
 			mat_inv.SetElement(i, mat_inv.GetElement(i) / det);
 		}
+
 
 		// do transformation
 		auto transform_out_in = [&](int out_x, int out_y)
