@@ -1,4 +1,7 @@
 #include "common/types/TransformationMatrix.h"
+#include <iostream>
+#include <iomanip>
+#include <cmath>
 
 namespace qlm
 {
@@ -20,6 +23,29 @@ namespace qlm
                     this->SetElement(r, c, 0.0f);
                 }
             }
+        }
+    }
+
+    // print the matrix
+    template<int num_rows, int num_cols>
+    void TransformationMatrix<num_rows, num_cols>::Print(int digits) const
+    {
+        for (int r = 0; r < rows; r++)
+        {
+            for (int c = 0; c < cols; c++)
+            {
+                int print_digits = digits;
+                float element = this->GetElement(r, c);
+
+                if (element != 0)
+                {
+                    int fixed_digits = static_cast<int>(std::log10(std::abs(element))) + 1;
+                    print_digits = fixed_digits >= digits ? 0 : fixed_digits - digits;
+                }
+
+                std::cout << std::fixed << std::setprecision(print_digits) << element << " ";
+            }
+            std::cout << std::endl;
         }
     }
 
