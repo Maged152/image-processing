@@ -18,6 +18,9 @@ namespace qlm
 
         TransformationMatrix& operator=(const TransformationMatrix& rhs);
     public:
+        // print the matrix
+        void Print(int digits = 5) const;
+
         // Getter and setter methods for x and y inputs
         float GetElement(int r, int c) const;
         void SetElement(int r, int c, float value);

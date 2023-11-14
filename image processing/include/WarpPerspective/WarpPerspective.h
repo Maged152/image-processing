@@ -12,4 +12,6 @@ namespace qlm
 		const int dst_height,
 		const InterpolationFlag inter,
 		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{});
+
+	PerspectiveMatrix GetPerspectiveTransform(const Point<int> src[4], const Point<int> dst[4]);
 }
