@@ -22,6 +22,9 @@ namespace qlm
         {
             data = new float[columns * rows];
         }
+        
+        Matrix(float * data, int r, int c) : data(data), columns(c), rows(r)
+        {}
         // Copy constructor
         Matrix(const Matrix& other) : columns(other.columns), rows(other.rows)
         {

@@ -3,6 +3,7 @@
 #include "types/TransformationMatrix.h"
 #include "types/Kernel.h"
 #include "types/Interpolation.h"
+#include "types/matrix.h"
 
 namespace qlm
 {
