@@ -2,7 +2,6 @@
 
 #include <limits>
 
-
 namespace qlm
 {
     class Matrix 
@@ -83,10 +82,16 @@ namespace qlm
         {
             return rows;
         }
+
+        void SetToNull()
+        {
+            data = nullptr;
+        }
     public:
         // print matrix
         void Print(int digits = 5) const;
         // random initialization
         void RandomInit(const float min_value, const float max_value);
+
     };
 }
