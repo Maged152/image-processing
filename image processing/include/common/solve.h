@@ -8,12 +8,13 @@
 namespace qlm
 {
 	// Gaussian elimination 
-	void Solve(const Matrix& aug_mat, Matrix& sol)
+	inline void Solve(Matrix& aug_mat, Matrix& sol)
 	{
 		// check the dimensions
 		if ((aug_mat.Rows() + 1) != aug_mat.Columns() &&
 			sol.Rows() != sol.Columns() &&
-			sol.Rows() != aug_mat.Rows())
+			sol.Rows() != aug_mat.Rows() &&
+			sol.Columns() != 1)
 		{
 			return;
 		}
@@ -74,5 +75,23 @@ namespace qlm
 				}
 			}
 		};
+
+		// back substitution
+		auto Backsubstitution = [](const Matrix& aug_mat, Matrix& sol)
+		{
+			for (int r = aug_mat.Rows() - 1; r >= 0; r--)
+			{
+				float res = aug_mat.Get(r, aug_mat.Columns() - 1);
+				
+				for (int c = aug_mat.Columns() - 2; c != r; c--)
+				{
+					res -= aug_mat.Get(r, c) * sol.Get(c, 0);
+				}
+				sol.Set(r, 0, res / aug_mat.Get(r, r));
+			}
+		};
+
+		DoElimination(aug_mat);
+		Backsubstitution(aug_mat, sol);
 	}
 }
