@@ -29,6 +29,7 @@ namespace test
 		res &= Test_Transpose();
 		res &= Test_WarpAffine();
 		res &= Test_Scale();
+		res &= Test_WarpPerspective();
 
 		return res;
 	}

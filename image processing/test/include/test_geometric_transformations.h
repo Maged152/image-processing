@@ -22,4 +22,7 @@ namespace test
 
 	// WarpAffine
 	bool Test_WarpAffine();
+
+	// WarpPerspective
+	bool Test_WarpPerspective();
 }
