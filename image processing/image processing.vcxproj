@@ -147,6 +147,7 @@
     <ClCompile Include="code\common\image\LoadFromFile.cpp" />
     <ClCompile Include="code\common\image\SaveToFile.cpp" />
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
+    <ClCompile Include="code\common\types\matrix.cpp" />
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
     <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\FloodFill\FloodFill.cpp" />
@@ -158,15 +159,17 @@
     <ClCompile Include="code\common\image\image.cpp" />
     <ClCompile Include="code\common\types\Interpolation.cpp" />
     <ClCompile Include="code\common\types\TransformationMatrix.cpp" />
+    <ClCompile Include="code\WarpPerspective\GetPerspectiveTransform.cpp" />
+    <ClCompile Include="code\WarpPerspective\WarpPerspective.cpp" />
     <ClCompile Include="include\common\stb_image_impl.cpp" />
     <ClCompile Include="code\Filter2D\Filter2D.cpp" />
     <ClCompile Include="code\HoughLines\HoughLines.cpp" />
     <ClCompile Include="code\HarrisCorner\HarrisCorner.cpp" />
     <ClCompile Include="code\Resize\Resize.cpp" />
-    <ClCompile Include="code\Rotate\Rotate.cpp" />
     <ClCompile Include="code\Scale\Scale.cpp" />
     <ClCompile Include="code\SepFilter2D\SepFilter2D.cpp" />
     <ClCompile Include="code\Sobel\Sobel.cpp" />
+    <ClCompile Include="code\Rotate\Rotate.cpp" />
     <ClCompile Include="run.cpp" />
     <ClCompile Include="test\code\color manipulation\Test_ColorConvert.cpp" />
     <ClCompile Include="test\code\color manipulation\Test_ConvertBitDepth.cpp" />
@@ -190,6 +193,8 @@
     <ClInclude Include="include\common\draw.h" />
     <ClInclude Include="include\common\image.h" />
     <ClInclude Include="include\common\pixel.h" />
+    <ClInclude Include="include\common\solve.h" />
+    <ClInclude Include="include\common\types\matrix.h" />
     <ClInclude Include="include\Flip\Flip.h" />
     <ClInclude Include="include\FloodFill\FloodFill.h" />
     <ClInclude Include="include\Gaussian\Gaussian.h" />
@@ -197,15 +202,13 @@
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />
     <ClInclude Include="include\Transpose\Transposeh.h" />
+    <ClInclude Include="include\WarpPerspective\WarpPerspective.h" />
     <ClInclude Include="test\include\test_color_manipulation.h" />
     <ClInclude Include="test\include\test_common.h" />
     <ClInclude Include="test\include\test_features_detection.h" />
     <ClInclude Include="test\include\test_filters.h" />
     <ClInclude Include="test\include\test_geometric_transformations.h" />
     <ClInclude Include="test\test.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="code\Scale\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
