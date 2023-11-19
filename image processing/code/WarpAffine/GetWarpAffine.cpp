@@ -1,4 +1,5 @@
 #include "WarpAffine/WarpAffine.h"
+#include "common/solve.h"
 #include <cmath>
 #include <numbers>
 
@@ -34,7 +35,10 @@ namespace qlm
 
 		// Gaussian elimination
 		float aug_mat_x[3][4]{};
+		float sol_mat_x[3][1]{};
+
 		float aug_mat_y[3][4]{};
+		float sol_mat_y[3][1]{};
 		// construct the augmented matrix with the input points
 		/*
 			x_n = m00 * x + m01 * y + m02
@@ -61,81 +65,29 @@ namespace qlm
 			aug_mat_y[i][2] = 1.0f;
 			aug_mat_y[i][3] = dst[i].y;
 		}
-		
-		// function to swap two rows
-		auto SwapRows = [](float matrix[3][4], int row1, int row2)
-		{
-			for (int i = 0; i < 4; ++i) 
-			{
-				float temp = matrix[row1][i];
-				matrix[row1][i] = matrix[row2][i];
-				matrix[row2][i] = temp;
-			}
-		};
-		
-		// function to find the pivot
-		auto Pivot = [](float matrix[3][4], int row)
-		{
-			int pivot_row = row;
 
-			for (int r = row + 1; r < 3; r++)
-			{
-				if (std::abs(matrix[r][row]) > std::abs(matrix[row][row]))
-				{
-					pivot_row = r;
-				}
-			}
-			return pivot_row;
-		};
+		qlm::Matrix augmented_matrix_x{ (float*)aug_mat_x, 3, 4 };
+		qlm::Matrix solution_matrix_x{ (float*)sol_mat_x, 3, 1 };
 
-		// do Gaussian elimination
-		auto DoElimination = [&SwapRows, &Pivot](float matrix[3][4])
-		{
-			
-			for (int r = 0; r < 2; r++)
-			{
-				// find the pivot in location [r,r]
-				int pivot = Pivot(matrix, r);
+		qlm::Matrix augmented_matrix_y{ (float*)aug_mat_x, 3, 4 };
+		qlm::Matrix solution_matrix_y{ (float*)sol_mat_x, 3, 1 };
 
-				if (pivot != r)
-				{
-					SwapRows(matrix, r, pivot);
-				}
+		Solve(augmented_matrix_x, solution_matrix_x);
+		Solve(augmented_matrix_y, solution_matrix_y);
 
-				// do elimination
-				float piv = matrix[r][r];
-				for (int e = r; e < 2; ++e)
-				{
-					
-					float lead = matrix[e + 1][r];
-					for (int c = r; c < 4; ++c)
-					{
-						matrix[e + 1][c] = (matrix[r][c] / piv) * lead - matrix[e + 1][c];
-					}
-				}
-			}
-		};
-		
-		// back substitution
-		auto Backsubstitution = [&out](float matrix[3][4], int index)
-		{
-			for (int r = 2; r >= 0; r--)
-			{
-				float res = matrix[r][3];
-				// TODO check this condition and set/get 
-				for (int c = r; c < 2; c++)
-				{
-					res -= matrix[r][c + 1] * out.GetElement(index, c + 1);
-				}
-				out.SetElement(index, r, res / matrix[r][r]);
-			}
-		};
-		
-		DoElimination(aug_mat_x);
-		DoElimination(aug_mat_y);
+		out.SetElement(0, solution_matrix_x.Get(0));
+		out.SetElement(1, solution_matrix_x.Get(1));
+		out.SetElement(2, solution_matrix_x.Get(2));
 
-		Backsubstitution(aug_mat_x, 0);
-		Backsubstitution(aug_mat_y, 1);
+		out.SetElement(3, solution_matrix_y.Get(0));
+		out.SetElement(4, solution_matrix_y.Get(1));
+		out.SetElement(5, solution_matrix_y.Get(2));
+
+		augmented_matrix_x.SetToNull();
+		solution_matrix_x.SetToNull();
+
+		augmented_matrix_y.SetToNull();
+		solution_matrix_y.SetToNull();
 
 
 		return out;
