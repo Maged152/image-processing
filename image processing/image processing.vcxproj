@@ -196,6 +196,7 @@
     <ClInclude Include="include\common\pixel.h" />
     <ClInclude Include="include\common\solve.h" />
     <ClInclude Include="include\common\types\matrix.h" />
+    <ClInclude Include="include\FAST\FAST.h" />
     <ClInclude Include="include\Flip\Flip.h" />
     <ClInclude Include="include\FloodFill\FloodFill.h" />
     <ClInclude Include="include\Gaussian\Gaussian.h" />
