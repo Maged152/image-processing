@@ -21,3 +21,4 @@
 #include "HarrisCorner/HarrisCorner.h"
 #include "WarpAffine/WarpAffine.h"
 #include "WarpPerspective/WarpPerspective.h"
+#include "FAST/FAST.h"

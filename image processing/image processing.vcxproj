@@ -149,6 +149,7 @@
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
     <ClCompile Include="code\common\types\matrix.cpp" />
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
+    <ClCompile Include="code\Fast.cpp" />
     <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\FloodFill\FloodFill.cpp" />
     <ClCompile Include="code\Gaussian\Gaussian.cpp" />

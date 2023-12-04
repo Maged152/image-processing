@@ -6,10 +6,10 @@
 
 namespace qlm
 {
-	template<ImageFormat frmt, pixel_t T>
+	template<pixel_t T>
 	std::vector<KeyPoint<int>> FAST(
-		const Image<frmt, T>& in,
-		int arc_length = 9,
-		int threshold = 10,
-		bool non_max_suppression = true);
+		const Image<ImageFormat::GRAY, T>& in,
+		const int arc_length = 9,
+		const int threshold = 10,
+		const bool non_max_suppression = true);
 }
