@@ -1,11 +1,12 @@
 #include "FAST/FAST.h"
-
+#include <cmath>
+#include<iostream>
 namespace qlm
 {
 	template<pixel_t T>
 	std::vector<KeyPoint<int>> FAST(const Image<ImageFormat::GRAY, T>& in, 
 								    const int arc_length,
-		                            const int threshold, 
+		                            const int threshold,
 		                            const bool non_max_suppression)
 	{
 		std::vector<KeyPoint<int>> key_points;
@@ -20,8 +21,8 @@ namespace qlm
 		// offsets for non-max suppression
 		int x_nonmax_off[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 		int y_nonmax_off[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
-		// quick check
-		// TODO
+		// TODO :quick check
+		// TODO : calculate response
 		// check for n consecutive bits
 		auto has_n_consecutive_set_bits = [](auto num, int n, int num_bits)
 		{
@@ -41,9 +42,9 @@ namespace qlm
 			return false;
 		};
 		// check valid key-points
-		for (int y = 0; y < in.Height(); y++)
+		for (int y = 3; y < in.Height() - 3; y++)
 		{
-			for (int x = 0; x < in.Width(); x++)
+			for (int x = 3; x < in.Width() - 3; x++)
 			{
 				if (buff[y * in.Width() + x])
 				{
@@ -74,43 +75,90 @@ namespace qlm
 					// check for n consecutive pixels
 					bool is_corner = has_n_consecutive_set_bits(brighter, arc_length, 16);
 
-					if (!is_corner)
+					if (non_max_suppression)
 					{
-						buff[y * in.Width() + x] = 0;
+						if (is_corner)
+						{
+							// calculate the response
+							// TODO
+							// store key-response
+							//buff[y * in.Width() + x] = response;
+						}
+						else
+						{
+							// check for darker 
+							is_corner = has_n_consecutive_set_bits(darker, arc_length, 16);
+
+							if (is_corner)
+							{
+								// calculate the response
+								// TODO
+								// store key-response
+								//buff[y * in.Width() + x] = response;
+							}
+							else
+							{
+								buff[y * in.Width() + x] = 0;
+							}
+						}
 					}
 					else
 					{
-						// check for darker 
-						is_corner = has_n_consecutive_set_bits(darker, arc_length, 16);
-
-						if (!is_corner)
-						{
-							buff[y * in.Width() + x] = 0;
-						}
-						else if (!non_max_suppression)
+						if (is_corner)
 						{
 							// store key-point
-							Point<int> kp{x, y};
-							key_points.emplace_back(KeyPoint<int>{kp});
+							Point<int> kp{ x, y };
+							key_points.emplace_back(KeyPoint<int>{kp});	
+						}
+						else
+						{
+							// check for darker 
+							is_corner = has_n_consecutive_set_bits(darker, arc_length, 16);
+
+							if (is_corner)
+							{
+								// store key-point
+								Point<int> kp{ x, y };
+								key_points.emplace_back(KeyPoint<int>{kp});
+							}
 						}
 					}
+
+					
 				}
 			}
 		}
 
 		if (non_max_suppression)
 		{
-			for (int y = 0; y < in.Height(); y++)
+			for (int y = 4; y < in.Height() - 4; y++)
 			{
-				for (int x = 0; x < in.Width(); x++)
+				for (int x = 4; x < in.Width() - 4; x++)
 				{
-					if (buff[y * in.Width() + x])
+					T response = buff[y * in.Width() + x];
+
+					if (response)
 					{
-						// TODO
+						T max_res = buff[(y + y_nonmax_off[0]) * in.Width() + (x + x_nonmax_off[0])];
+						for (int i = 1; i < 8; i++)
+						{
+							max_res = std::max(max_res, buff[(y + y_nonmax_off[i]) * in.Width() + (x + x_nonmax_off[i])]);
+						}
+
+						if (response > max_res)
+						{
+							// store key-point
+							Point<int> kp{ x, y };
+							key_points.emplace_back(KeyPoint<int>{kp, (float)response});
+
+						}
 					}
 				}
 			}
 		}
+
+
+		delete[] buff;
 
 		return key_points;
 	}

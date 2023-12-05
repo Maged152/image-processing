@@ -4,8 +4,9 @@
 int main()
 {
     //test::Test_All();
+
     qlm::Timer<qlm::msec> t{};
-    std::string file_name = "cards.jpg";
+    std::string file_name = "input.jpg";
     // load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
     if (!in.LoadFromFile(file_name))
@@ -18,35 +19,37 @@ int main()
     if (in.NumerOfChannels() == 3)
         alpha = false;
 
-    const int dst_width = 254;
-    const int dst_height = 356;
+    auto gray = qlm::ColorConvert< qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 
-    const qlm::Point<int> src[4] =
-    {
-        {224, 93}, {430, 137}, {164, 378}, {370, 424}
-    };
-
-    const qlm::Point<int> dst[4] =
-    {
-        {0, 0}, {dst_width, 0}, {0, dst_height}, {dst_width, dst_height}
-    };
-
-    qlm::PerspectiveMatrix mat = qlm::GetPerspectiveTransform(src, dst);
-
-    auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
-    border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
+    const uint8_t threshold = 100;
+    const int arc_len = 9;
+    const bool nonmax_suppression = false;
 
     // do the operation
     t.start();
-    auto out = qlm::WarpPerspective(in, mat, dst_width, dst_height, qlm::InterpolationFlag::BILINEAR, border_mode);
+    auto out = qlm::FAST(gray, arc_len, threshold, nonmax_suppression);
     t.end();
 
     t.show();
 
-    if (!out.SaveToFile("result.jpg", alpha))
+    // draw corners
+    qlm::Circle<int> circle = { .radius = 2 };
+    qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
+
+    std::cout << "num kp = " << out.capacity() << "\n";
+
+    for (auto& i : out)
+    {
+        circle.center = i.point;
+        in = qlm::DrawCircle(in, circle, green);
+    }
+
+
+    if (!in.SaveToFile("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }
+   
 
 }
 
