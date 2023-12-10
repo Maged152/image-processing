@@ -23,7 +23,7 @@ int main()
 
     const uint8_t threshold = 100;
     const int arc_len = 9;
-    const bool nonmax_suppression = false;
+    const bool nonmax_suppression = true;
 
     // do the operation
     t.start();
@@ -36,12 +36,16 @@ int main()
     qlm::Circle<int> circle = { .radius = 2 };
     qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
 
-    std::cout << "num kp = " << out.capacity() << "\n";
 
     for (auto& i : out)
     {
         circle.center = i.point;
         in = qlm::DrawCircle(in, circle, green);
+
+        std::cout << "x = " << i.point.x
+                  << " ,y = " << i.point.y
+                  << " , res = " << i.response
+                  << "\n";
     }
 
 
@@ -50,6 +54,5 @@ int main()
         std::cout << "Failed to write \n";
     }
    
-
 }
 

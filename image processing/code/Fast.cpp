@@ -102,20 +102,35 @@ namespace qlm
 		};
 
 		// calculate response
-		auto fast_response = [&in, &x_off, &y_off](int x, int y)
+		auto fast_response = [&in, arc_length, threshold](int x, int y)
 		{
+			constexpr int x_off[16] = { 0, 1, 2, 3, 3, 3, 2, 1, 0, -1, -2, -3, -3, -3, -2, -1 };
+			constexpr int y_off[16] = { -3, -3, -2, -1, 0, 1, 2, 3, 3, 3, 2, 1, 0, -1, -2, -3 };
+
 			int curr_pixel = in.GetPixel(x, y).v;
 
-			int response{ 0 };
-
-			// sum of the abs difference between key-point and the 16 neighbors
-			for (int i = 0; i < 16; i++)
+			int response{0};
+			
+			// loop over the 16-neighbor pixels
+			for (int p = 0; p < 16; p++)
 			{
-				int pix = in.GetPixel(x + x_off[i], y + y_off[i]).v;
+				int p_th { 255 };
 
-				response += std::abs(pix - curr_pixel);
+				// loop over the arc length
+				for (int i = 0; i < arc_length; i++)
+				{
+					int x_idx = x_off[(i + p) % 16] + x;
+					int y_idx = y_off[(i + p) % 16] + y;
+
+					int pix = in.GetPixel(x_idx, y_idx).v;
+
+					p_th = std::min(p_th, std::abs(pix - curr_pixel));
+					
+				}
+
+				response = std::max(response, p_th);
 			}
-
+			
 			return response;
 		};
 
@@ -152,26 +167,14 @@ namespace qlm
 						if (is_corner)
 						{
 							// calculate the response
-							int response = fast_response(x, y);
-							// store key-response
-							buff[y * in.Width() + x] = response;
+							buff[y * in.Width() + x] = fast_response(x, y);
 						}
 						else
 						{
 							// check for darker 
 							is_corner = has_n_consecutive_set_bits(darker, arc_length, 16);
 
-							if (is_corner)
-							{
-								// calculate the response
-								int response = fast_response(x, y);
-								// store key-response
-								buff[y * in.Width() + x] = response;
-							}
-							else
-							{
-								buff[y * in.Width() + x] = 0;
-							}
+							buff[y * in.Width() + x] = is_corner ? fast_response(x, y) : 0;
 						}
 					}
 					else
