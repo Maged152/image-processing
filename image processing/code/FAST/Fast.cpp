@@ -1,12 +1,12 @@
 #include "FAST/FAST.h"
 #include <cmath>
-#include<iostream>
+
 namespace qlm
 {
 	template<pixel_t T>
 	std::vector<KeyPoint<int>> FAST(const Image<ImageFormat::GRAY, T>& in, 
-								    const int arc_length,
-		                            const int threshold,
+								    const unsigned int arc_length,
+		                            const T threshold,
 		                            const bool non_max_suppression)
 	{
 		std::vector<KeyPoint<int>> key_points;
@@ -14,7 +14,7 @@ namespace qlm
 		T* buff = new T[in.Width() * in.Height()];
 		std::memset(buff, 1, in.Width() * in.Height() * sizeof(T));
 
-		// offsets of the 16-point
+		// offsets of the 16-point (circle)
 		constexpr int x_off[16] = { 0, 1, 2, 3, 3, 3, 2, 1, 0, -1, -2, -3, -3, -3, -2, -1 };
 		constexpr int y_off[16] = { -3, -3, -2, -1, 0, 1, 2, 3, 3, 3, 2, 1, 0, -1, -2, -3 };
 		
@@ -23,7 +23,7 @@ namespace qlm
 		constexpr int y_nonmax_off[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 
 		// check for n consecutive bits
-		auto has_n_consecutive_set_bits = [](auto num, int n, int num_bits)
+		auto has_n_consecutive_set_bits = [](const auto num, const int n, const int num_bits)
 		{
 			int mask = (1 << n) - 1;
 			long shifted_buffer = num | (num << num_bits);
@@ -68,7 +68,7 @@ namespace qlm
 		};
 		
 		// quick check
-		auto quick_check = [&](int n_consecutive)
+		auto quick_check = [&](const int n_consecutive)
 		{
 			constexpr int x_qc_off[16] = { 0, 3, 0, -3};
 			constexpr int y_qc_off[16] = { -3, 0, 3, 0};
@@ -102,11 +102,8 @@ namespace qlm
 		};
 
 		// calculate response
-		auto fast_response = [&in, arc_length, threshold](int x, int y)
+		auto fast_response = [&, x_off, y_off](const int x, const int y)
 		{
-			constexpr int x_off[16] = { 0, 1, 2, 3, 3, 3, 2, 1, 0, -1, -2, -3, -3, -3, -2, -1 };
-			constexpr int y_off[16] = { -3, -3, -2, -1, 0, 1, 2, 3, 3, 3, 2, 1, 0, -1, -2, -3 };
-
 			int curr_pixel = in.GetPixel(x, y).v;
 
 			int response{0};
@@ -238,6 +235,6 @@ namespace qlm
 		return key_points;
 	}
 
-	template std::vector<KeyPoint<int>> FAST(const Image<ImageFormat::GRAY, uint8_t>&, const int, const int, const bool);
+	template std::vector<KeyPoint<int>> FAST(const Image<ImageFormat::GRAY, uint8_t>&, const unsigned int, const uint8_t, const bool);
 
 }
