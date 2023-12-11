@@ -149,7 +149,7 @@
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
     <ClCompile Include="code\common\types\matrix.cpp" />
     <ClCompile Include="code\ConvertBitDepth\ConvertBitDepth.cpp" />
-    <ClCompile Include="code\Fast.cpp" />
+    <ClCompile Include="code\FAST\FAST.cpp" />
     <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\FloodFill\FloodFill.cpp" />
     <ClCompile Include="code\Gaussian\Gaussian.cpp" />
@@ -175,6 +175,7 @@
     <ClCompile Include="test\code\color manipulation\Test_ColorConvert.cpp" />
     <ClCompile Include="test\code\color manipulation\Test_ConvertBitDepth.cpp" />
     <ClCompile Include="test\code\color manipulation\Test_FloodFill.cpp" />
+    <ClCompile Include="test\code\features detection\Test_FAST.cpp" />
     <ClCompile Include="test\code\features detection\Test_HarrisCorner.cpp" />
     <ClCompile Include="test\code\features detection\Test_HoughLines.cpp" />
     <ClCompile Include="test\code\filters\Test_Filter2D.cpp" />
