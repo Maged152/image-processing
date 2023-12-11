@@ -18,6 +18,7 @@ Here you can find the implementation of
 * Features Detection
     * [Hough lines](./Features%20Detection/HoughLines)
     * [Harris Corner](./Features%20Detection/HarrisCorner)
+    * [FAST](./Features%20Detection/FAST)
     * Canny (backlog)
     * Hough circle (backlog)
 * Color Manipulation
