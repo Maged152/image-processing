@@ -15,6 +15,7 @@ namespace test
 		// feature detection
 		res &= Test_HoughLines();
 		res &= Test_HarrisCorner();
+		res &= Test_FAST();
 
 		// color manipulation
 		res &= Test_ColorConvert();

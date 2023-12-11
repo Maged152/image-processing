@@ -7,5 +7,8 @@ namespace test
 
 	// HoughLines
 	bool Test_HoughLines();
+
+	// FAST 
+	bool Test_FAST();
 ;
 }
