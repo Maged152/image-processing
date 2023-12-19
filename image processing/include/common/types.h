@@ -4,6 +4,7 @@
 #include "types/Kernel.h"
 #include "types/Interpolation.h"
 #include "types/matrix.h"
+#include <vector>
 
 namespace qlm
 {
@@ -174,5 +175,12 @@ namespace qlm
 		{
 			delete[] angle;
 		}
+	};
+
+	template<ImageFormat frmt, pixel_t T>
+	struct Cluster
+	{
+		std::vector<Point<int>> pixels;
+		Pixel<frmt, T> color;
 	};
 }
