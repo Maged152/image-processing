@@ -117,5 +117,15 @@ namespace qlm
             cb = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(cb + other.cb * coeff, min_value, max_value));
             a = static_cast<T>(std::clamp<qlm::cast_t<T, T2>>(a + other.a * coeff, min_value, max_value));
         }
+
+        uint64_t SquaredEuclideanDistance(const Pixel& other)
+        {
+            int64_t diff_y = (int64_t)y - (int64_t)other.y;
+            int64_t diff_cr = (int64_t)cr - (int64_t)other.cr;
+            int64_t diff_cb = (int64_t)cb - (int64_t)other.cb;
+
+            return static_cast<uint64_t>(diff_y * diff_y + diff_cr * diff_cr + diff_cb * diff_cb);
+
+        }
     };
 }

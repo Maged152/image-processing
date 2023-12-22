@@ -153,6 +153,7 @@
     <ClCompile Include="code\Flip\Flip.cpp" />
     <ClCompile Include="code\FloodFill\FloodFill.cpp" />
     <ClCompile Include="code\Gaussian\Gaussian.cpp" />
+    <ClCompile Include="code\KMeans\KMeans.cpp" />
     <ClCompile Include="code\WarpAffine\WarpAffine.cpp" />
     <ClCompile Include="code\WarpAffine\GetWarpAffine.cpp" />
     <ClCompile Include="code\Translate\Translate.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="include\Flip\Flip.h" />
     <ClInclude Include="include\FloodFill\FloodFill.h" />
     <ClInclude Include="include\Gaussian\Gaussian.h" />
+    <ClInclude Include="include\KMeans\KMeans.h" />
     <ClInclude Include="include\shakhbat.h" />
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />
