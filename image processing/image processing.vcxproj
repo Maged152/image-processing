@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="code\BoxFilter\BoxFilter.cpp" />
     <ClCompile Include="code\common\image\LoadFromFile.cpp" />
     <ClCompile Include="code\common\image\SaveToFile.cpp" />
     <ClCompile Include="code\ColorConvert\ColorConvert.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="test\code\Test_All.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\BoxFilter\BoxFilter.h" />
     <ClInclude Include="include\common\draw.h" />
     <ClInclude Include="include\common\image.h" />
     <ClInclude Include="include\common\pixel.h" />

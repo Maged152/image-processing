@@ -22,4 +22,5 @@
 #include "WarpAffine/WarpAffine.h"
 #include "WarpPerspective/WarpPerspective.h"
 #include "FAST/FAST.h"
-#include "KMeans/KMeans.h"
+//#include "KMeans/KMeans.h"
+#include "BoxFilter/BoxFilter.h"
