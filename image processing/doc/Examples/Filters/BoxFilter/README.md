@@ -26,7 +26,7 @@
 
     // do the operation
     t.start();
-    auto out = qlm::BoxFilter(in, filter_x_size, filter_y_size, normalize, border_mode);
+    auto out = qlm::BoxFilter<qlm::ImageFormat::RGB, uint8_t, uint8_t>(in, filter_x_size, filter_y_size, normalize, border_mode);
     t.end();
 
     t.show();

@@ -5,6 +5,7 @@
     * [Filter2D MxN Separable](./Filters/SepFilter2D)
     * [Sobel](./Filters/Sobel)
     * [Gaussian](./Filters/Gaussian)
+    * [Box Filter](./Filters/BoxFilter)
 * Geometric Transformations:
     * [Scale](./Geometric%20Transformations/Scale)
     * [Resize](./Geometric%20Transformations/Resize)
