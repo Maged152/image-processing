@@ -26,14 +26,18 @@ namespace test
 {
     const std::string example_folder = "doc/Examples/";
 
-    inline void PrintTestResults(const std::string& name, bool res, const qlm::Timer<qlm::usec>& time, const HANDLE& col_handle)
+    inline void PrintTestResults(const std::string& name,
+                                 const bool res, 
+                                 const qlm::Timer<qlm::usec>& time,
+                                 const float normalization_factor,
+                                 const HANDLE& col_handle)
     {
         // test name
         SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_BLUE);
         std::cout << name << " : ";
         // time taken
         SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_YELLOW);
-        std::cout << time.duration.count() << " usec : ";
+        std::cout << time.duration.count() / normalization_factor << " usec : ";
 
         if (res)
         {
@@ -51,7 +55,11 @@ namespace test
 
 
     template <int size>
-    inline void PrintTestResults(const std::string& name, const std::array<bool, size>& res, const std::array<qlm::Timer<qlm::usec>, size>& time, const HANDLE& col_handle)
+    inline void PrintTestResults(const std::string& name,
+        const std::array<bool, size>& res,
+        const std::array<qlm::Timer<qlm::usec>, size>& time,
+        const std::array<float, size>& normalization_factor,
+        const HANDLE& col_handle)
     {
         // test name
         SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_BLUE);
@@ -59,9 +67,9 @@ namespace test
         // time taken
         SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_YELLOW);
         std::cout << "[";
-        for (auto& t : time)
+        for (int i = 0; i < time.size(); i++)
         {
-            std::cout << t.duration.count() << ", ";
+            std::cout << time[i].duration.count() / normalization_factor[i] << ", ";
         }
         std::cout << "\b\b]usec : ";
 
@@ -87,16 +95,17 @@ namespace test
 
         SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
     }
+
     // run all tests
     bool Test_All();
 
-	// compare two pixels
-	template<qlm::ImageFormat frmt, qlm::pixel_t T>
-	bool Test_ComparePixels(const qlm::Pixel<frmt, T>& in1,
-							const qlm::Pixel<frmt, T>& in2,
-							const qlm::Pixel<frmt, T>& threshold = qlm::Pixel<frmt, T> {})
-	{
-		auto abs_diff = qlm::AbsDiff(in1, in2);
+    // compare two pixels
+    template<qlm::ImageFormat frmt, qlm::pixel_t T>
+    bool Test_ComparePixels(const qlm::Pixel<frmt, T>& in1,
+                            const qlm::Pixel<frmt, T>& in2,
+                            const qlm::Pixel<frmt, T>& threshold = qlm::Pixel<frmt, T> {})
+    {
+        auto abs_diff = qlm::AbsDiff(in1, in2);
 
         if constexpr (frmt == qlm::ImageFormat::GRAY)
         {
@@ -141,14 +150,14 @@ namespace test
         }
 
         return false;
-	}
+    }
 
-	// compare two images
-	template<qlm::ImageFormat frmt, qlm::pixel_t T>
-	bool Test_CompareImages(const qlm::Image<frmt, T>& in1,
+    // compare two images
+    template<qlm::ImageFormat frmt, qlm::pixel_t T>
+    bool Test_CompareImages(const qlm::Image<frmt, T>& in1,
                             const qlm::Image<frmt, T>& in2,
                             const qlm::Pixel<frmt, T>& threshold = qlm::Pixel<frmt, T>{})
-	{
+    {
         // check the dimensions
         if (in1.Width() != in2.Width() || in1.Height() != in2.Height())
         {
@@ -170,5 +179,5 @@ namespace test
         }
 
         return true;
-	}
+    }
 }

@@ -9,6 +9,7 @@ namespace test
 		col_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 		std::array<bool, 3> res_bool;
+		std::array<float, 3> normalization;
 		std::array<qlm::Timer<qlm::usec>, 3> res_time;
 
 		const std::string folder_path = example_folder + "Geometric Transformations/Scale/";
@@ -124,13 +125,15 @@ namespace test
 			return -1;
 		}
 
-
 		res_bool[0] = Test_CompareImages(ref_nn, cur_nn);
 		res_bool[1] = Test_CompareImages(ref_bi, cur_bi);
 		res_bool[2] = Test_CompareImages(ref_ci, cur_ci);
 
-	
-		PrintTestResults(test_name, res_bool, res_time, col_handle);
+		normalization[0] = in.Width() * in.Height();
+		normalization[1] = in.Width() * in.Height();
+		normalization[2] = in.Width() * in.Height();
+
+		PrintTestResults(test_name, res_bool, res_time, normalization, col_handle);
 
 		// delete output image
 		if (!std::filesystem::remove("out_nn.jpg"))

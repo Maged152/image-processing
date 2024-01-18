@@ -73,7 +73,8 @@ namespace test
 
 		res = Test_CompareImages(ref, cur);
 
-		PrintTestResults(test_name, res, t, col_handle);
+		const float normalization = in.Width() * in.Height();
+		PrintTestResults(test_name, res, t, normalization, col_handle);
 
 		// delete output image
 		if (!std::filesystem::remove("out.jpg"))
