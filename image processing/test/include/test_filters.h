@@ -14,4 +14,7 @@ namespace test
 
 	// Sobel
 	bool Test_Sobel();
+
+	// box filter
+	bool Test_BoxFilter();
 }
