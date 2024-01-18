@@ -3,6 +3,7 @@
 #include "Gaussian/Gaussian.h"
 #include "SepFilter2D/SepFilter2D.h"
 #include "Sobel/Sobel.h"
+#include "BoxFilter/BoxFilter.h"
 
 namespace qlm
 {
@@ -39,21 +40,15 @@ namespace qlm
 				Iyy.SetPixel(x, y, Iy * Iy);
 			}
 		}
-		// sum on block size
-		SepKernel box{ block_size , block_size };
-		for (int i = 0; i < block_size; i++)
-		{
-			box.x_ker.Set(i, 1.0f / block_size);
-			box.y_ker.Set(i, 1.0f / block_size);
-		}
 
+		// sum on block size
 		BorderMode<ImageFormat::GRAY, int16_t> border_mode_16{};
 		border_mode_16.border_type = border_mode.border_type;
 		border_mode_16.border_pixel = border_mode.border_pixel;
 
-		Image<ImageFormat::GRAY, int16_t> Ixx_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixx, box, border_mode_16);
-		Image<ImageFormat::GRAY, int16_t> Iyy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Iyy, box, border_mode_16);
-		Image<ImageFormat::GRAY, int16_t> Ixy_sum = SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(Ixy, box, border_mode_16);
+		Image<ImageFormat::GRAY, int16_t> Ixx_sum = BoxFilter<ImageFormat::GRAY, int16_t, int16_t>(Ixx, block_size, block_size, false, border_mode_16);
+		Image<ImageFormat::GRAY, int16_t> Iyy_sum = BoxFilter<ImageFormat::GRAY, int16_t, int16_t>(Iyy, block_size, block_size, false, border_mode_16);
+		Image<ImageFormat::GRAY, int16_t> Ixy_sum = BoxFilter<ImageFormat::GRAY, int16_t, int16_t>(Ixy, block_size, block_size, false, border_mode_16);
 
 		Image<ImageFormat::GRAY, float> corners_response{ width, height };
 		// compute R
