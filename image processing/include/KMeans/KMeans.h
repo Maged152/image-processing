@@ -9,6 +9,7 @@ namespace qlm
 	std::vector<Cluster<frmt, T>> KMeans(
 		const Image<frmt, T>& in,
 		const int k = 8,
+		const KMeansInit init = KMeansInit::RANDOM,
 		const int max_iter = 300,
-		const Pixel<frmt, T> tol = Pixel<frmt, T>{}); // flag to include distance
+		const Pixel<frmt, T> tol = Pixel<frmt, T>{});
 }

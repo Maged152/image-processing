@@ -21,6 +21,12 @@ namespace qlm
 		FLIP_HORIZONTAL_AXIS,
 		FLIP_VERTICAL_HORIZONTAL_AXIS,
 	};
+
+	enum class KMeansInit
+	{
+		RANDOM,
+		KMEANS_PLUS_PLUS
+	};
 }
 
 /***************************************************************************/

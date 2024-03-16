@@ -148,4 +148,40 @@ namespace qlm
     {
         return color1 * weight + color2 * (1 - weight);
     }
+
+    // l2 norm
+    template<qlm::ImageFormat frmt, qlm::pixel_t T>
+    uint64_t L2Norm(const qlm::Pixel<frmt, T>& in1, const qlm::Pixel<frmt, T>& in2)
+    {
+        uint64_t result {0};
+
+        using type_t = qlm::wider_t<qlm::signed_t<T>>;
+
+
+        if constexpr (frmt == qlm::ImageFormat::GRAY)
+        {
+            result = std::pow(((type_t)in1.v - in2.v), 2);
+           
+        }
+        else if constexpr (frmt == qlm::ImageFormat::RGB)
+        {
+            result = std::pow(((type_t)in1.r - in2.r), 2);
+            result += std::pow(((type_t)in1.g - in2.g), 2);
+            result += std::pow(((type_t)in1.b - in2.b), 2);
+        }
+        else if constexpr (frmt == qlm::ImageFormat::HLS)
+        {
+            result = std::pow(((type_t)in1.h - in2.h), 2);
+            result += std::pow(((type_t)in1.l - in2.l), 2));
+            result += std::pow(((type_t)in1.s - in2.s), 2));
+        }
+        else
+        {
+            result = std::pow(((type_t)in1.h - in2.h), 2);
+            result += std::pow(((type_t)in1.v - in2.v), 2));
+            result += std::pow(((type_t)in1.s - in2.s), 2));
+        }
+
+        return std::sqrt(result);
+    }
 }
