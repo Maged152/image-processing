@@ -1,6 +1,7 @@
 #pragma once
 #include <concepts>
 #include <algorithm>
+#include <cmath>
 
 namespace qlm
 {
@@ -172,14 +173,14 @@ namespace qlm
         else if constexpr (frmt == qlm::ImageFormat::HLS)
         {
             result = std::pow(((type_t)in1.h - in2.h), 2);
-            result += std::pow(((type_t)in1.l - in2.l), 2));
-            result += std::pow(((type_t)in1.s - in2.s), 2));
+            result += std::pow(((type_t)in1.l - in2.l), 2);
+            result += std::pow(((type_t)in1.s - in2.s), 2);
         }
         else
         {
             result = std::pow(((type_t)in1.h - in2.h), 2);
-            result += std::pow(((type_t)in1.v - in2.v), 2));
-            result += std::pow(((type_t)in1.s - in2.s), 2));
+            result += std::pow(((type_t)in1.v - in2.v), 2);
+            result += std::pow(((type_t)in1.s - in2.s), 2);
         }
 
         return std::sqrt(result);

@@ -76,6 +76,16 @@ namespace qlm
             result.a = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(a * other.a, min_value, max_value));
             return result;
         }
+        // div operator
+        Pixel operator/(const Pixel& other) const
+        {
+            Pixel result;
+            result.r = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(r / other.r, min_value, max_value));
+            result.g = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(g / other.g, min_value, max_value));
+            result.b = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(b / other.b, min_value, max_value));
+            result.a = static_cast<T>(std::clamp<qlm::cast_t<T, T>>(a / other.a, min_value, max_value));
+            return result;
+        }
         // < comparison operator
         bool operator<(const Pixel& other) const
         {

@@ -4,9 +4,8 @@
 int main()
 {
     //test::Test_All();
-
     qlm::Timer<qlm::msec> t{};
-    std::string file_name = "input.jpg";
+    std::string file_name = "input.png"; 
     // load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
     if (!in.LoadFromFile(file_name))
@@ -16,43 +15,38 @@ int main()
     }
     // check alpha component
     bool alpha{ true };
-    if (in.NumerOfChannels() == 3)
+    if (in.NumerOfChannels() == 1)
         alpha = false;
 
-    auto gray = qlm::ColorConvert< qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
-
-    const uint8_t threshold = 100;
-    const int arc_len = 9;
-    const bool nonmax_suppression = true;
 
     // do the operation
     t.start();
-    auto out = qlm::FAST(gray, arc_len, threshold, nonmax_suppression);
+    auto clusters = qlm::KMeans(in);
     t.end();
 
     t.show();
 
-    // draw corners
-    qlm::Circle<int> circle = { .radius = 2 };
-    qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
+    // out image to draw on
+    qlm::Image<qlm::ImageFormat::RGB, uint8_t> out;
+    out.create(in.Width(), in.Height());
 
-
-    for (auto& i : out)
+    for (int c = 0; c < clusters.size(); c++)
     {
-        circle.center = i.point;
-        in = qlm::DrawCircle(in, circle, green);
+        auto& color = clusters[c].color;
 
-        std::cout << "x = " << i.point.x
-                  << " ,y = " << i.point.y
-                  << " , res = " << i.response
-                  << "\n";
+        for (auto& idx : clusters[c].pixels)
+        {
+            out.SetPixel(idx.x, idx.y, color);
+        }
     }
 
+   
 
-    if (!in.SaveToFile("result.jpg", alpha))
+    if (!out.SaveToFile("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }
-   
+
+    
 }
 
