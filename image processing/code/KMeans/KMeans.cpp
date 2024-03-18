@@ -38,59 +38,72 @@ namespace qlm
 
 		}
 		
+		// temp memory to hold cluster information relater to each pixel
+		int* pix_cluser = new int[in.Width() * in.Height()];
+		int* num_pix_cluster = new int[k];
+		Pixel<frmt, float>* pix_avg = new Pixel<frmt, float>[k];
 	
 
 		for (int t = 0; t < max_iter; t++)
 		{
-			// Assign points to the one of the K centroids
-			for (int y = 0; y < in.Height(); y++)
+			// reset buffers
+			for (int i = 0; i < k; i++)
 			{
-				for (int x = 0; x < in.Width(); x++)
+				num_pix_cluster[i] = 0;
+				pix_avg[i].Set(0.0f);
+			}
+
+			// Assign points to the one of the K centroids
+			for (int i = 0; i < in.Height() * in.Width(); i++)
+			{
+				auto in_pix = in.GetPixel(i);
+
+				int cluster_idx{ 0 };
+				uint64_t distance{ std::numeric_limits<uint64_t>::max()};
+
+				// loop over all clusters and choose the closest
+				for (int c = 0; c < k; c++)
 				{
-					auto in_pix = in.GetPixel(x, y);
-
-					int cluster_idx{ 0 };
-					uint64_t distance{ std::numeric_limits<uint64_t>::max()};
-
-					// loop over all clusters and choose the closest
-					for (int c = 0; c < k; c++)
+					// calculate distance
+					auto cur_dist = L2Norm(clusters[c].color, in_pix);
+					if (cur_dist < distance)
 					{
-						// calculate distance
-						auto cur_dist = L2Norm(clusters[c].color, in_pix);
-						if (cur_dist < distance)
-						{
-							distance = cur_dist;
-							cluster_idx = c;
-						}
+						distance = cur_dist;
+						cluster_idx = c;
 					}
-
-					// assign pixel to the cluster
-					clusters[cluster_idx].pixels.push_back({ x, y });
-
 				}
+
+				// assign pixel to the cluster
+				pix_cluser[i] = cluster_idx;
+				num_pix_cluster[cluster_idx]++;
 			}
 
 			// Recompute the centroids
+			for (int i = 0; i < in.Height() * in.Width(); i++)
+			{
+				auto pix = in.GetPixel(i);
+				auto cluster_idx = pix_cluser[i];
+				pix_avg[cluster_idx] = pix_avg[cluster_idx] + pix;
+			}
+
 			for (int c = 0; c < k; c++)
 			{
-				Pixel<frmt, float> avg{0};
-				Pixel<frmt, float> num_pix{ (float)clusters[c].pixels.size() };
-
-				for (int i = 0; i < clusters[c].pixels.size(); i++)
-				{
-					auto idx = clusters[c].pixels[i];
-					avg = avg + in.GetPixel(idx.x, idx.y);
-				}
-
-				clusters[c].color = avg / num_pix;
-
-				if (t != max_iter - 1)
-				{
-					clusters[c].pixels.clear();
-				}
+				Pixel<frmt, float> num_pix{ (float)num_pix_cluster[c]};
+				clusters[c].color = pix_avg[c] / num_pix;
 			}
- 
 		}
+
+		const int image_width = (int)in.Width();
+		// populate output clusters
+		for (int i = 0; i < in.Height() * in.Width(); i++)
+		{
+			auto cluster_idx = pix_cluser[i];
+			clusters[cluster_idx].pixels.push_back({ i % image_width, i / image_width });
+		}
+
+		delete[] pix_cluser;
+		delete[] num_pix_cluster;
+		delete[] pix_avg;
 
 		return clusters;
 	}
