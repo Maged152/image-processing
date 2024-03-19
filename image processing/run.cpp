@@ -5,7 +5,7 @@ int main()
 {
     //test::Test_All();
     qlm::Timer<qlm::msec> t{};
-    std::string file_name = "input.png"; 
+    std::string file_name = "input.jpg"; 
     // load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
     if (!in.LoadFromFile(file_name))
@@ -18,10 +18,10 @@ int main()
     if (in.NumerOfChannels() == 1)
         alpha = false;
 
-
+    const unsigned int k = 4;
     // do the operation
     t.start();
-    auto clusters = qlm::KMeans(in);
+    auto clusters = qlm::KMeans(in, k);
     t.end();
 
     t.show();

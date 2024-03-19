@@ -25,6 +25,7 @@ namespace qlm
 		}
 		else
 		{
+			// TODO : kmeans++ initialization
 			// initialize centroids using KMeans++
 			//for (int i = 1; i < k; i++)
 			//{
@@ -39,9 +40,9 @@ namespace qlm
 		}
 		
 		// temp memory to hold cluster information relater to each pixel
-		int* pix_cluser = new int[in.Width() * in.Height()];
-		int* num_pix_cluster = new int[k];
-		Pixel<frmt, float>* pix_avg = new Pixel<frmt, float>[k];
+		std::vector<int> pix_cluser(in.Width() * in.Height());
+		std::vector<int> num_pix_cluster (k);
+		std::vector<Pixel<frmt, float>> pix_avg (k);
 	
 
 		for (int t = 0; t < max_iter; t++)
@@ -91,6 +92,8 @@ namespace qlm
 				Pixel<frmt, float> num_pix{ (float)num_pix_cluster[c]};
 				clusters[c].color = pix_avg[c] / num_pix;
 			}
+
+			// TODO : early stopping
 		}
 
 		const int image_width = (int)in.Width();
@@ -100,10 +103,6 @@ namespace qlm
 			auto cluster_idx = pix_cluser[i];
 			clusters[cluster_idx].pixels.push_back({ i % image_width, i / image_width });
 		}
-
-		delete[] pix_cluser;
-		delete[] num_pix_cluster;
-		delete[] pix_avg;
 
 		return clusters;
 	}
