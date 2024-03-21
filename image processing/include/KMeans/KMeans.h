@@ -11,5 +11,5 @@ namespace qlm
 		const unsigned int k = 8,
 		const KMeansInit init = KMeansInit::RANDOM,
 		const int max_iter = 300,
-		const Pixel<frmt, T> tol = Pixel<frmt, T>{});
+		const T tol = 1 );
 }

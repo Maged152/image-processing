@@ -152,12 +152,11 @@ namespace qlm
 
     // l2 norm
     template<qlm::ImageFormat frmt, qlm::pixel_t T>
-    uint64_t L2Norm(const qlm::Pixel<frmt, T>& in1, const qlm::Pixel<frmt, T>& in2)
+    qlm::wider_t<qlm::signed_t<T>> L2Norm(const qlm::Pixel<frmt, T>& in1, const qlm::Pixel<frmt, T>& in2)
     {
-        uint64_t result {0};
-
         using type_t = qlm::wider_t<qlm::signed_t<T>>;
 
+        type_t result{ 0 };
 
         if constexpr (frmt == qlm::ImageFormat::GRAY)
         {

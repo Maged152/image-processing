@@ -4,7 +4,7 @@
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	std::vector<Cluster<frmt, T>> KMeans(const Image<frmt, T>& in, const unsigned int k, const KMeansInit init, const int max_iter, const Pixel<frmt, T> tol)
+	std::vector<Cluster<frmt, T>> KMeans(const Image<frmt, T>& in, const unsigned int k, const KMeansInit init, const int max_iter, const T tol)
 	{
 		std::vector<Cluster<frmt, T>> clusters{ k };
 
@@ -87,13 +87,22 @@ namespace qlm
 				pix_avg[cluster_idx] = pix_avg[cluster_idx] + pix;
 			}
 
+			 T centers_squared_diff {0};
+		
 			for (int c = 0; c < k; c++)
 			{
-				Pixel<frmt, float> num_pix{ (float)num_pix_cluster[c]};
-				clusters[c].color = pix_avg[c] / num_pix;
+				Pixel<frmt, float> num_pix{ (float)num_pix_cluster[c] };
+				Pixel<frmt, T> new_centroid = pix_avg[c] / num_pix;
+
+				centers_squared_diff += L2Norm(new_centroid, clusters[c].color);
+				clusters[c].color = new_centroid;
 			}
 
-			// TODO : early stopping
+			// early stopping
+			if (centers_squared_diff < tol)
+			{
+				break;
+			}
 		}
 
 		const int image_width = (int)in.Width();
@@ -109,7 +118,7 @@ namespace qlm
 
 	template std::vector<Cluster<ImageFormat::RGB, uint8_t>>
 	KMeans<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&,
-		const unsigned int, const KMeansInit, const int, const Pixel<ImageFormat::RGB, uint8_t>);
+		const unsigned int, const KMeansInit, const int, const uint8_t);
 
 
 }
