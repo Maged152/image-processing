@@ -1,16 +1,19 @@
 #include "KMeans\KMeans.h"
 #include <random>
+#include <numeric>
+#include <cmath>
 
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	std::vector<Cluster<frmt, T>> KMeans(const Image<frmt, T>& in, const unsigned int k, const KMeansInit init, const int max_iter, const T tol)
+	std::vector<Cluster<frmt, T>> KMeans(const Image<frmt, T>& in, const unsigned int k, const KMeansInit init, const int seed, const int max_iter, const T tol)
 	{
+		using dist_t = qlm::wider_t<qlm::signed_t<T>>;
+
 		std::vector<Cluster<frmt, T>> clusters{ k };
 
 		// choose first centroid random
-		std::random_device rd;
-		std::mt19937 eng(rd());
+		std::mt19937 eng(seed);
 		std::uniform_int_distribution<> distribution(0, in.Width() * in.Height() - 1);
 
 		clusters[0].color = in.GetPixel(distribution(eng));
@@ -25,22 +28,38 @@ namespace qlm
 		}
 		else
 		{
-			// TODO : kmeans++ initialization
-			// initialize centroids using KMeans++
-			//for (int i = 1; i < k; i++)
-			//{
-			//	Pixel<frmt, T> max_distance{};
-			//	for (int p = 0; p < in.Width() * in.Height; p++)
-			//	{
-			//		// distance = || x - c||^2
-			//		//auto distance =
-			//	}
-			//}
+			// KMeans++ initialization
+			// Calculate distances to nearest centroids for remaining iterations
+			const unsigned int num_points{ in.Width() * in.Height() };
+			std::vector<dist_t> distances(num_points);
 
+			for (int i = 1; i < k; i++)
+			{
+				dist_t total_weight{ 0 };
+				// Update distances to nearest centroids
+				for (int j = 0; j < num_points; j++)
+				{
+					dist_t min_dist{ std::numeric_limits<dist_t>::max() };
+					for (int c = 0; c < i; c++)
+					{
+						auto dist = L2Norm(in.GetPixel(j), clusters[c].color);
+						min_dist = std::min(min_dist, dist);
+					}
+					distances[j] = min_dist;
+					total_weight += min_dist;
+				}
+
+				// Sample a data point based on probability distribution
+				std::uniform_real_distribution<dist_t> dis_prob(0, total_weight);
+				dist_t random_value = dis_prob(eng);
+				int next_centroid_index = std::lower_bound(distances.begin(), distances.end(), random_value) - distances.begin();
+
+				clusters[i].color = in.GetPixel(next_centroid_index);
+			}
 		}
 		
 		// temp memory to hold cluster information relater to each pixel
-		std::vector<int> pix_cluser(in.Width() * in.Height());
+		std::vector<int> pix_cluster(in.Width() * in.Height());
 		std::vector<int> num_pix_cluster (k);
 		std::vector<Pixel<frmt, float>> pix_avg (k);
 	
@@ -60,7 +79,7 @@ namespace qlm
 				auto in_pix = in.GetPixel(i);
 
 				int cluster_idx{ 0 };
-				uint64_t distance{ std::numeric_limits<uint64_t>::max()};
+				dist_t distance{ std::numeric_limits<dist_t>::max()};
 
 				// loop over all clusters and choose the closest
 				for (int c = 0; c < k; c++)
@@ -75,7 +94,7 @@ namespace qlm
 				}
 
 				// assign pixel to the cluster
-				pix_cluser[i] = cluster_idx;
+				pix_cluster[i] = cluster_idx;
 				num_pix_cluster[cluster_idx]++;
 			}
 
@@ -83,7 +102,7 @@ namespace qlm
 			for (int i = 0; i < in.Height() * in.Width(); i++)
 			{
 				auto pix = in.GetPixel(i);
-				auto cluster_idx = pix_cluser[i];
+				auto cluster_idx = pix_cluster[i];
 				pix_avg[cluster_idx] = pix_avg[cluster_idx] + pix;
 			}
 
@@ -99,7 +118,7 @@ namespace qlm
 			}
 
 			// early stopping
-			if (centers_squared_diff < tol)
+			if (centers_squared_diff <= tol)
 			{
 				break;
 			}
@@ -109,7 +128,7 @@ namespace qlm
 		// populate output clusters
 		for (int i = 0; i < in.Height() * in.Width(); i++)
 		{
-			auto cluster_idx = pix_cluser[i];
+			auto cluster_idx = pix_cluster[i];
 			clusters[cluster_idx].pixels.push_back({ i % image_width, i / image_width });
 		}
 
@@ -118,7 +137,7 @@ namespace qlm
 
 	template std::vector<Cluster<ImageFormat::RGB, uint8_t>>
 	KMeans<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&,
-		const unsigned int, const KMeansInit, const int, const uint8_t);
+		const unsigned int, const KMeansInit, const int, const int, const uint8_t);
 
 
 }
