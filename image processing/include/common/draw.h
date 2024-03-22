@@ -137,4 +137,23 @@ namespace qlm
         return DrawLine(in, l, color);
     }
 
+    template<ImageFormat frmt, pixel_t T>
+    Image<frmt, T> DrawCluster(const Image<frmt, T>& in, const std::vector<Cluster<frmt, T>>& clusters)
+    {
+        Image<frmt, T> out;
+        out.create(in.Width(), in.Height());
+
+        for (int c = 0; c < clusters.size(); c++)
+        {
+            auto& color = clusters[c].color;
+
+            for (auto& idx : clusters[c].pixels)
+            {
+                out.SetPixel(idx.x, idx.y, color);
+            }
+        }
+
+        return out;
+    }
+
 }

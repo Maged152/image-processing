@@ -20,6 +20,7 @@ Here you can find the implementation of
     * [Hough lines](./Features%20Detection/HoughLines)
     * [Harris Corner](./Features%20Detection/HarrisCorner)
     * [FAST](./Features%20Detection/FAST)
+    * [KMeans](./Features%20Detection/KMeans)
     * Canny (backlog)
     * Hough circle (backlog)
 * Color Manipulation

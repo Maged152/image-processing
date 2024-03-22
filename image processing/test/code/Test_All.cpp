@@ -17,6 +17,7 @@ namespace test
 		res &= Test_HoughLines();
 		res &= Test_HarrisCorner();
 		res &= Test_FAST();
+		res &= Test_KMeans();
 
 		// color manipulation
 		res &= Test_ColorConvert();

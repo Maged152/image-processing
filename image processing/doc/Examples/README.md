@@ -19,6 +19,7 @@
     * [Hough lines](./Features%20Detection/HoughLines)
     * [Harris Corner](./Features%20Detection/HarrisCorner)
     * [FAST](./Features%20Detection/FAST)
+    * [KMeans](./Features%20Detection/KMeans)
 * Color Manipulation
     * [Color Conversion](./Color%20Manipulation/ColorConvert)
     * [Convert Bit Depth](./Color%20Manipulation/ConvertBitDepth)

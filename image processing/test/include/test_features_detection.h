@@ -10,5 +10,8 @@ namespace test
 
 	// FAST 
 	bool Test_FAST();
+
+	// k-means 
+	bool Test_KMeans();
 ;
 }
