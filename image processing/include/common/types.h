@@ -27,6 +27,16 @@ namespace qlm
 		RANDOM,
 		KMEANS_PLUS_PLUS
 	};
+
+	enum class TemplateMatchFlag
+	{
+		SQDIFF,
+		SQDIFF_NORMED,
+		CCORR,
+		CCORR_NORMED,
+		CCOEFF,
+		CCOEFF_NORMED
+	};
 }
 
 /***************************************************************************/

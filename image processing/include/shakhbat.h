@@ -24,3 +24,4 @@
 #include "FAST/FAST.h"
 #include "KMeans/KMeans.h"
 #include "BoxFilter/BoxFilter.h"
+#include "MatchTemplate/MatchTemplate.h"
