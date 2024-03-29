@@ -8,5 +8,5 @@ namespace qlm
 		const Image<frmt, T>& in,
 		const Image<frmt, T>& templ,
 		const TemplateMatchFlag mode,
-		const Image<ImageFormat::GRAY, uint8_t>& mask = Image<ImageFormat::GRAY, uint8_t> {1});
+		const Image<ImageFormat::GRAY, uint8_t>& mask);
 }
