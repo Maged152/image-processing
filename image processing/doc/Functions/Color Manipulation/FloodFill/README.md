@@ -29,4 +29,4 @@ namespace qlm
 The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Color%20Manipulation/FloodFill)
-* [Implementation](../../../../code/FloodFill/FloodFill.cpp)
+* [Implementation](../../../../code/FloodFill.cpp)

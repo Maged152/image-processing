@@ -30,4 +30,4 @@ namespace qlm
 The function returns a vector of key-points(corners) of type `std::vector<KeyPoint<int>>`.
 
 * [Example](../../../Examples/Features%20Detection/FAST)
-* [Implementation](../../../../code/FAST/FAST.cpp)
+* [Implementation](../../../../code/FAST.cpp)

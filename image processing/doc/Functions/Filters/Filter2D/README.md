@@ -28,4 +28,4 @@ namespace qlm
 The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Filters/Filter2D)
-* [Implementation](../../../../code/Filter2D/Filter2D.cpp)
+* [Implementation](../../../../code/Filter2D.cpp)

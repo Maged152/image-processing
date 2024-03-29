@@ -27,4 +27,4 @@ namespace qlm
 The function returns an image of type `Image<frmt, dst_t>`.
 
 * [Example](../../../Examples/Filters/SepFilter2D)
-* [Implementation](../../../../code/SepFilter2D/SepFilter2D.cpp)
+* [Implementation](../../../../code/SepFilter2D.cpp)

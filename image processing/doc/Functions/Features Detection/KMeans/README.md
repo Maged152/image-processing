@@ -48,4 +48,4 @@ namespace qlm
 ```
 
 * [Example](../../../Examples/Features%20Detection/KMeans)
-* [Implementation](../../../../code/KMeans/KMeans.cpp)
+* [Implementation](../../../../code/KMeans.cpp)

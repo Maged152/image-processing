@@ -24,5 +24,5 @@ namespace qlm
 The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Geometric%20Transformations/Transpose)
-* [Implementation](../../../../code/Transpose/Transpose.cpp)
+* [Implementation](../../../../code/Transpose.cpp)
 

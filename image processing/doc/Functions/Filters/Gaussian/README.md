@@ -30,4 +30,4 @@ Applys gaussian filter of size NxN on the input image.
 The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Filters/Gaussian)
-* [Implementation](../../../../code/Gaussian/Gaussian.cpp)
+* [Implementation](../../../../code/Gaussian.cpp)

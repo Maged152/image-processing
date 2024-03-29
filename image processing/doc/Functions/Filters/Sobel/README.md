@@ -9,7 +9,7 @@ Applys sobel filter of size NxN on the input image.
  Performs Sobel X derivative on the input image. input image must be in GRAY format
 
 ```c++
-    template<pixel_t in_t, pixel_t out_t = int16_t>
+	template<pixel_t in_t, pixel_t out_t = int16_t>
 	Image<ImageFormat::GRAY, out_t> SobelX(
 		const Image <ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
@@ -33,7 +33,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, out_t>`.
  Performs Sobel Y derivative on the input image. input image must be in GRAY format
 
 ```c++
-    template<pixel_t in_t, pixel_t out_t = int16_t>
+	template<pixel_t in_t, pixel_t out_t = int16_t>
 	Image<ImageFormat::GRAY, out_t> SobelY(
 		const Image<ImageFormat::GRAY, in_t>& in,
 		const unsigned int kernel_size,
@@ -84,7 +84,7 @@ The function returns an structure of type `SobelDerivatives<in_t, out_t>`.
 
 ```c++
   Image<ImageFormat::GRAY, uint8_t> ConvertSobelDepth(Image < ImageFormat::GRAY, int16_t>& in,
-	                                                    unsigned int filter_size);
+														unsigned int filter_size);
 ```
 ### Parameters
 
@@ -98,4 +98,4 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 
 
 * [Example](../../../Examples/Filters/Sobel)
-* [Implementation](../../../../code/Sobel/Sobel.cpp)
+* [Implementation](../../../../code/Sobel.cpp)

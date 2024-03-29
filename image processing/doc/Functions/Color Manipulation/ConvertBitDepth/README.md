@@ -28,4 +28,4 @@ The function returns an image of type `Image<dst_frmt, dst_t>`.
 The function returns an image of type `Pixel<dst_frmt, dst_t>`.
 
 * [Example](../../../Examples/Color%20Manipulation/ConvertBitDepth)
-* [Implementation](../../../../code/ConvertBitDepth/ConvertBitDepth.cpp)
+* [Implementation](../../../../code/ConvertBitDepth.cpp)

@@ -30,4 +30,4 @@ namespace qlm
 The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Geometric%20Transformations/Scale)
-* [Implementation](../../../../code/Scale/Scale.cpp)
+* [Implementation](../../../../code/Scale.cpp)

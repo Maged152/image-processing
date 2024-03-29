@@ -33,4 +33,4 @@ namespace qlm
 The function returns a vector of key-points(corners) of type `std::vector<KeyPoint<int>>`.
 
 * [Example](../../../Examples/Features%20Detection/HarrisCorner)
-* [Implementation](../../../../code/HarrisCorner/HarrisCorner.cpp)
+* [Implementation](../../../../code/HarrisCorner.cpp)

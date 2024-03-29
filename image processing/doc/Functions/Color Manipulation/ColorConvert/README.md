@@ -38,4 +38,4 @@ namespace qlm
 The function returns an image of type `Image<dst_frmt, dst_t>`.
 
 * [Example](../../../Examples/Color%20Manipulation/ColorConvert)
-* [Implementation](../../../../code/ColorConvert/ColorConvert.cpp)
+* [Implementation](../../../../code/ColorConvert.cpp)

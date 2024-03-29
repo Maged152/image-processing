@@ -43,7 +43,7 @@ kernel with a specified size and order.
 ### Return Value
 The function returns a one-dimensional derivative kernel of type `Kernel1D`.
 
-* [Implementation](../../../../code/Sobel/Sobel.cpp)
+* [Implementation](../../../../code/Sobel.cpp)
 
 ## Get Derivative X Kernel
 
@@ -64,7 +64,7 @@ a specified filter size in X direction.
 ### Return Value
 The function returns a separable kernel of type `SepKernel`.
 
-* [Implementation](../../../../code/Sobel/Sobel.cpp)
+* [Implementation](../../../../code/Sobel.cpp)
 
 ## Get Derivative Y Kernel
 
@@ -85,4 +85,4 @@ a specified filter size in Y direction.
 ### Return Value
 The function returns a separable kernel of type `SepKernel`.
 
-* [Implementation](../../../../code/Sobel/Sobel.cpp)
+* [Implementation](../../../../code/Sobel.cpp)
