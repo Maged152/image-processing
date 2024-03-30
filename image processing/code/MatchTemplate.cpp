@@ -1,5 +1,7 @@
 #include "MatchTemplate.h"
 #include <functional>
+#include <iostream>
+#include <cmath>
 
 namespace qlm
 {
@@ -14,9 +16,23 @@ namespace qlm
 
 		std::function<float(Pixel<frmt, T>, Pixel<frmt, T>)> mt_metric;
 
-		auto mt_sqdiff = [](Pixel<frmt, T> in1, Pixel<frmt, T> in2)
+		auto mt_sqdiff = [](const Pixel<frmt, T>& in1, const Pixel<frmt, T>& in2)
 		{
-			return static_cast<float>(L2Norm(in1, in2));
+			float ret{ 0 };
+			if constexpr (frmt == ImageFormat::GRAY)
+			{
+				float diff = static_cast<float>(in1.v) - in2.v;
+				ret = diff * diff;
+			}
+			else if constexpr (frmt == ImageFormat::RGB)
+			{
+				float diff_r = static_cast<float>(in1.r) - in2.r;
+				float diff_g = static_cast<float>(in1.g) - in2.g;
+				float diff_b = static_cast<float>(in1.b) - in2.b;
+
+				ret = diff_r * diff_r + diff_g * diff_g + diff_b * diff_b;
+			}
+			return ret;
 		};
 
 		switch (mode)
@@ -26,6 +42,7 @@ namespace qlm
 			break;
 		}
 
+		
 		for (int y = 0; y < out.Height(); y++)
 		{
 			for (int x = 0; x < out.Width(); x++)
@@ -58,6 +75,12 @@ namespace qlm
 	template Image<ImageFormat::GRAY, float> MatchTemplate(
 		const Image<ImageFormat::RGB, uint8_t>&,
 		const Image<ImageFormat::RGB, uint8_t>&,
+		const TemplateMatchFlag,
+		const Image<ImageFormat::GRAY, uint8_t>&);
+
+	template Image<ImageFormat::GRAY, float> MatchTemplate(
+		const Image<ImageFormat::GRAY, uint8_t>&,
+		const Image<ImageFormat::GRAY, uint8_t>&,
 		const TemplateMatchFlag,
 		const Image<ImageFormat::GRAY, uint8_t>&);
 }
