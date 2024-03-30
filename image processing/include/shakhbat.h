@@ -25,3 +25,4 @@
 #include "KMeans.h"
 #include "BoxFilter.h"
 #include "MatchTemplate.h"
+#include "MinMaxLoc.h"

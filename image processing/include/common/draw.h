@@ -138,6 +138,22 @@ namespace qlm
     }
 
     template<ImageFormat frmt, pixel_t T>
+    Image<frmt, T> DrawRectangle(const Image<frmt, T>& in, const Rectangle& rec, const Pixel<frmt, T>& c) 
+    {
+        // Copy the input image to avoid modifying it
+        Image<frmt, T> out = in;
+
+        // Use DrawLine to draw all four sides of the rectangle
+        out = DrawLine(out, Line(rec.top_left.x, rec.top_left.y, rec.top_left.x + rec.width, rec.top_left.y), c);  // Top line
+        out = DrawLine(out, Line(rec.top_left.x, rec.top_left.y + rec.height, rec.top_left.x + rec.width, rec.top_left.y + rec.height), c);  // Bottom line
+        out = DrawLine(out, Line(rec.top_left.x + rec.width, rec.top_left.y, rec.top_left.x + rec.width, rec.top_left.y + rec.height), c);  // Right line
+        out = DrawLine(out, Line(rec.top_left.x, rec.top_left.y, rec.top_left.x, rec.top_left.y + rec.height), c);  // Left line
+
+        return out;
+    }
+
+
+    template<ImageFormat frmt, pixel_t T>
     Image<frmt, T> DrawCluster(const Image<frmt, T>& in, const std::vector<Cluster<frmt, T>>& clusters)
     {
         Image<frmt, T> out;

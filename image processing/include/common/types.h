@@ -58,6 +58,7 @@ namespace qlm
 		float angle;
 	};
 
+
 	template<class T = int>
 	class Point
 	{
@@ -98,6 +99,13 @@ namespace qlm
 		{
 			return Point<T>(x - other.x, y - other.y);
 		}
+	};
+
+	struct Rectangle
+	{
+		Point<int> top_left;
+		int width;
+		int height;
 	};
 
 	template<class T>

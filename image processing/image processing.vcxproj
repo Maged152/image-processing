@@ -155,6 +155,8 @@
     <ClCompile Include="code\FloodFill.cpp" />
     <ClCompile Include="code\Gaussian.cpp" />
     <ClCompile Include="code\KMeans.cpp" />
+    <ClCompile Include="code\MatchTemplate.cpp" />
+    <ClCompile Include="code\MinMaxLoc.cpp" />
     <ClCompile Include="code\WarpAffine\WarpAffine.cpp" />
     <ClCompile Include="code\WarpAffine\GetWarpAffine.cpp" />
     <ClCompile Include="code\Translate.cpp" />
@@ -209,6 +211,7 @@
     <ClInclude Include="include\Gaussian.h" />
     <ClInclude Include="include\KMeans.h" />
     <ClInclude Include="include\MatchTemplate.h" />
+    <ClInclude Include="include\MinMaxLoc.h" />
     <ClInclude Include="include\shakhbat.h" />
     <ClInclude Include="include\common\types.h" />
     <ClInclude Include="include\common\timer.h" />
