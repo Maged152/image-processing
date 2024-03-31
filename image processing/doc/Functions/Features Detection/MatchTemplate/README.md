@@ -49,5 +49,5 @@ where each pixel represents the degree of match (similarity)
 between the template and the corresponding region in the input image.
 
 
-* [Example](../../../Examples/Features%20Detection/KMeans)
+* [Example](../../../Examples/Features%20Detection/MatchTemplate)
 * [Implementation](../../../../code/MatchTemplate.cpp)
