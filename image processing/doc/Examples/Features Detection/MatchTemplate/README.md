@@ -12,6 +12,11 @@
         return -1;
     }
 
+    // check alpha component
+        bool alpha{ true };
+        if (in.NumerOfChannels() == 1)
+            alpha = false;
+
     std::string template_name = "template.jpg";
     // load the template image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> templ;
@@ -42,7 +47,7 @@
         in = qlm::DrawRectangle(in, rec, green);
     }
 
-    if (!in.SaveToFile("result.jpg", false))
+    if (!in.SaveToFile("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }

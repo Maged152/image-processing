@@ -13,5 +13,8 @@ namespace test
 
 	// k-means 
 	bool Test_KMeans();
+
+	// Match Template 
+	bool Test_MatchTemplate();
 ;
 }

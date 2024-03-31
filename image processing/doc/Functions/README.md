@@ -21,6 +21,7 @@ Here you can find the implementation of
     * [Harris Corner](./Features%20Detection/HarrisCorner)
     * [FAST](./Features%20Detection/FAST)
     * [KMeans](./Features%20Detection/KMeans)
+    * [Match Template](./Features%20Detection/MatchTemplate)
     * Canny (backlog)
     * Hough circle (backlog)
 * Color Manipulation

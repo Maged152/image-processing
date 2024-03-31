@@ -18,6 +18,7 @@ namespace test
 		res &= Test_HarrisCorner();
 		res &= Test_FAST();
 		res &= Test_KMeans();
+		res &= Test_MatchTemplate();
 
 		// color manipulation
 		res &= Test_ColorConvert();

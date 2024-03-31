@@ -183,6 +183,7 @@
     <ClCompile Include="test\code\features detection\Test_HarrisCorner.cpp" />
     <ClCompile Include="test\code\features detection\Test_HoughLines.cpp" />
     <ClCompile Include="test\code\features detection\Test_KMeans.cpp" />
+    <ClCompile Include="test\code\features detection\Test_MatchTemplate.cpp" />
     <ClCompile Include="test\code\filters\Test_BoxFilter.cpp" />
     <ClCompile Include="test\code\filters\Test_Filter2D.cpp" />
     <ClCompile Include="test\code\filters\Test_Gaussian.cpp" />
