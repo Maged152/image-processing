@@ -35,40 +35,114 @@ namespace qlm
 			return ret;
 		};
 
+		auto mt_ccorr = [](const Pixel<frmt, T>& in1, const Pixel<frmt, T>& in2)
+		{
+			float ret{ 0 };
+			if constexpr (frmt == ImageFormat::GRAY)
+			{
+				ret = static_cast<float>(in1.v) * in2.v;
+			}
+			else if constexpr (frmt == ImageFormat::RGB)
+			{
+				ret += static_cast<float>(in1.r) * in2.r;
+				ret += static_cast<float>(in1.g) * in2.g;
+				ret += static_cast<float>(in1.b) * in2.b;
+
+			}
+			return ret;
+		};
+
+		bool do_normlization{ false };
 		switch (mode)
 		{
 		case TemplateMatchFlag::SQDIFF:
 			mt_metric = mt_sqdiff;
 			break;
+
+		case TemplateMatchFlag::CCORR:
+			mt_metric = mt_ccorr;
+			break;
+
+		case TemplateMatchFlag::SQDIFF_NORMED:
+			mt_metric = mt_sqdiff;
+			do_normlization = true;
+			break;
+
+		case TemplateMatchFlag::CCORR_NORMED:
+			mt_metric = mt_ccorr;
+			do_normlization = true;
+			break;
 		}
 
-		
-		for (int y = 0; y < out.Height(); y++)
+		if (do_normlization)
 		{
-			for (int x = 0; x < out.Width(); x++)
+			float temple_deno{ 0.0f };
+			for (int j = 0; j < templ.Height(); j++)
 			{
-				// Reset the sum array for each pixel
-				float sum{ 0.0f };
-
-				for (int j = 0; j < templ.Height(); j++)
+				for (int i = 0; i < templ.Width(); i++)
 				{
-					for (int i = 0; i < templ.Width(); i++)
-					{
-						if (mask.GetPixel(i, j).v)
-						{
-							// get the pixel
-							auto src_pix = in.GetPixel(x + i, y + j);
-							auto templ_pix = templ.GetPixel(i, j);
+					auto templ_pix = templ.GetPixel(i, j);
+					temple_deno += mt_ccorr(templ_pix, templ_pix);
+				}
+			}
 
-							sum += mt_metric(src_pix, templ_pix);
+			for (int y = 0; y < out.Height(); y++)
+			{
+				for (int x = 0; x < out.Width(); x++)
+				{
+					// Reset the sum array for each pixel
+					float sum{ 0.0f };
+					float src_deno{ 0.0f };
+
+					for (int j = 0; j < templ.Height(); j++)
+					{
+						for (int i = 0; i < templ.Width(); i++)
+						{
+							if (mask.GetPixel(i, j).v)
+							{
+								// get the pixel
+								auto src_pix = in.GetPixel(x + i, y + j);
+								auto templ_pix = templ.GetPixel(i, j);
+
+								sum += mt_metric(src_pix, templ_pix);
+								src_deno += mt_ccorr(src_pix, src_pix);
+							}
 						}
 					}
+					// store the output
+					out.SetPixel(x, y, sum / std::sqrt(src_deno * temple_deno));
 				}
-				// store the output
-				out.SetPixel(x, y, sum);
 			}
 		}
+		else
+		{
+			for (int y = 0; y < out.Height(); y++)
+			{
+				for (int x = 0; x < out.Width(); x++)
+				{
+					// Reset the sum array for each pixel
+					float sum{ 0.0f };
 
+					for (int j = 0; j < templ.Height(); j++)
+					{
+						for (int i = 0; i < templ.Width(); i++)
+						{
+							if (mask.GetPixel(i, j).v)
+							{
+								// get the pixel
+								auto src_pix = in.GetPixel(x + i, y + j);
+								auto templ_pix = templ.GetPixel(i, j);
+
+								sum += mt_metric(src_pix, templ_pix);
+							}
+						}
+					}
+					// store the output
+					out.SetPixel(x, y, sum);
+				}
+			}
+		}
+		
 		return out;
 	}
 

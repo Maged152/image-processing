@@ -33,9 +33,9 @@ namespace qlm
 		SQDIFF,
 		SQDIFF_NORMED,
 		CCORR,
-		CCORR_NORMED,
-		CCOEFF,
-		CCOEFF_NORMED
+		CCORR_NORMED
+		//CCOEFF,
+		//CCOEFF_NORMED
 	};
 }
 
