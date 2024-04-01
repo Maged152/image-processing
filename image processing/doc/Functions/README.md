@@ -29,7 +29,8 @@ Here you can find the implementation of
     * [Convert Bit Depth](./Color%20Manipulation/ConvertBitDepth)
     * [Flood Fill](./Color%20Manipulation/FloodFill)
     * Floyd-Steinberg (backlog)
-* Image Enhancement
+* Pixel-Wise
+    * [MinMax Location](./Pixel-Wise/MinMaxLoc)
     * Histogram (backlog)
 * Get Functions
     * [Get Kernel](./Get%20functions/Get%20Kernel)

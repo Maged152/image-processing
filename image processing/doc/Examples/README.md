@@ -25,5 +25,7 @@
     * [Color Conversion](./Color%20Manipulation/ColorConvert)
     * [Convert Bit Depth](./Color%20Manipulation/ConvertBitDepth)
     * [Flood Fill](./Color%20Manipulation/FloodFill)
+* Pixel-Wise
+    * [MinMax Location](./Pixel-Wise/MinMaxLoc)
     
 
