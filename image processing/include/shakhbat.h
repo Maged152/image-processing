@@ -26,3 +26,4 @@
 #include "BoxFilter.h"
 #include "MatchTemplate.h"
 #include "MinMaxLoc.h"
+#include "SeamCarving.h"
