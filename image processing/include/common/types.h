@@ -37,6 +37,18 @@ namespace qlm
 		//CCOEFF,
 		//CCOEFF_NORMED
 	};
+
+	enum class OrderFlag
+	{
+		WIDTH_FIRST,
+		HEIGHT_FIRST
+	};
+
+	enum class EnergyFlag
+	{
+		FORWARD,
+		BACKWARD
+	};
 }
 
 /***************************************************************************/
