@@ -8,7 +8,7 @@ namespace qlm
 		const Image<frmt, T>& in,
 		const size_t width,
 		const size_t height,
-		const EnergyFlag energy_fun = EnergyFlag::FORWARD,
+		const EnergyFlag energy = EnergyFlag::BACKWARD,
 		const OrderFlag order = OrderFlag::WIDTH_FIRST);
 
 }
