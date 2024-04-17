@@ -30,8 +30,8 @@ namespace test
 
 		auto gray = qlm::ColorConvert< qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 
-		unsigned int filter_size = 3;
-		unsigned int block_size = 3;
+		size_t filter_size = 3;
+		size_t block_size = 3;
 		float k = 0.22;
 		float threshold = 0.0000001;
 

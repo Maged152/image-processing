@@ -5,8 +5,8 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> Transpose(const Image<frmt, T>& in)
 	{
-		const unsigned int img_width = in.Width();
-		const unsigned int img_height = in.Height();
+		const size_t img_width = in.Width();
+		const size_t img_height = in.Height();
 		// output image
 		Image<frmt, T> out = Image<frmt, T>{};
 		out.create(img_height, img_width);

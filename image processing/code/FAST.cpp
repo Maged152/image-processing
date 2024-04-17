@@ -5,7 +5,7 @@ namespace qlm
 {
 	template<pixel_t T>
 	std::vector<KeyPoint<int>> FAST(const Image<ImageFormat::GRAY, T>& in, 
-								    const unsigned int arc_length,
+								    const size_t arc_length,
 		                            const T threshold,
 		                            const bool non_max_suppression)
 	{
@@ -235,6 +235,6 @@ namespace qlm
 		return key_points;
 	}
 
-	template std::vector<KeyPoint<int>> FAST(const Image<ImageFormat::GRAY, uint8_t>&, const unsigned int, const uint8_t, const bool);
+	template std::vector<KeyPoint<int>> FAST(const Image<ImageFormat::GRAY, uint8_t>&, const size_t, const uint8_t, const bool);
 
 }

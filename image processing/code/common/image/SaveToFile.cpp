@@ -32,7 +32,7 @@ namespace qlm
 			// copy the data 
 			if constexpr (frmt == ImageFormat::GRAY)
 			{
-				for (unsigned int i = 0, idx = 0; i < width * height * comp; i += comp, idx++)
+				for (size_t i = 0, idx = 0; i < width * height * comp; i += comp, idx++)
 				{
 					img_data[i] = data[idx].v;
 					img_data[i + 1] = data[idx].a;
@@ -40,7 +40,7 @@ namespace qlm
 			}
 			else
 			{
-				for (unsigned int i = 0, idx = 0; i < width * height * comp; i += comp, idx++)
+				for (size_t i = 0, idx = 0; i < width * height * comp; i += comp, idx++)
 				{
 					if constexpr (frmt == ImageFormat::RGB)
 					{
@@ -80,14 +80,14 @@ namespace qlm
 			// copy the data 
 			if constexpr (frmt == ImageFormat::GRAY)
 			{
-				for (unsigned int i = 0; i < width * height; i++)
+				for (size_t i = 0; i < width * height; i++)
 				{
 					img_data[i] = data[i].v;
 				}
 			}
 			else
 			{
-				for (unsigned int i = 0, idx = 0; i < width * height * comp; i += comp, idx++)
+				for (size_t i = 0, idx = 0; i < width * height * comp; i += comp, idx++)
 				{
 					if constexpr (frmt == ImageFormat::RGB)
 					{

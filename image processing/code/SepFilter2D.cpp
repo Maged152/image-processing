@@ -7,8 +7,8 @@ namespace qlm
 		const SepKernel& kernel,
 		const BorderMode<frmt, src_t>& border_mode)
 	{
-		unsigned int img_width = in.Width();
-		unsigned int img_height = in.Height();
+		size_t img_width = in.Width();
+		size_t img_height = in.Height();
 
 		// create the output image
 		Image<frmt, dst_t> out;

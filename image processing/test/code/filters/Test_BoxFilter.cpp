@@ -33,8 +33,8 @@ namespace test
 			return -1;
 		}
 
-		const unsigned int filter_x_size = 5;
-		const unsigned int filter_y_size = 5;
+		const size_t filter_x_size = 5;
+		const size_t filter_y_size = 5;
 
 		const bool normalize = true;
 

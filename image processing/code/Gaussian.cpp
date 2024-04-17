@@ -3,7 +3,7 @@
 #include <cmath>
 namespace qlm
 {
-	Kernel1D GetGaussianKernel(const unsigned int filter_size, float sigma)
+	Kernel1D GetGaussianKernel(const size_t filter_size, float sigma)
 	{
 		Kernel1D out{ filter_size };
 
@@ -34,7 +34,7 @@ namespace qlm
 	}
 
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> Gaussian(const Image<frmt, T>& in, const unsigned int filter_size, float sigma_x, float sigma_y, const  BorderMode<frmt, T>& border_mode)
+	Image<frmt, T> Gaussian(const Image<frmt, T>& in, const size_t filter_size, float sigma_x, float sigma_y, const  BorderMode<frmt, T>& border_mode)
 	{
 		sigma_y = sigma_y == 0 ? sigma_x : sigma_y;
 
@@ -52,28 +52,28 @@ namespace qlm
 // Explicit instantiation for RGB , uint8_t
 template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
 qlm::Gaussian<qlm::ImageFormat::RGB, uint8_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
-	const unsigned int,
+	const size_t,
 	float,
 	float,
 	const BorderMode<qlm::ImageFormat::RGB, uint8_t>&);
 // Explicit instantiation for RGB , int16_t
 template qlm::Image<qlm::ImageFormat::RGB, int16_t>
 qlm::Gaussian<qlm::ImageFormat::RGB, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, int16_t>&,
-	const unsigned int,
+	const size_t,
 	float,
 	float,
 	const BorderMode<qlm::ImageFormat::RGB, int16_t>&);
 // Explicit instantiation for GRAY , uint8_t
 template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
 qlm::Gaussian<qlm::ImageFormat::GRAY, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
-	const unsigned int,
+	const size_t,
 	float,
 	float,
 	const BorderMode<qlm::ImageFormat::GRAY, uint8_t>&);
 // Explicit instantiation for GRAY , int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::Gaussian<qlm::ImageFormat::GRAY, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
-	const unsigned int,
+	const size_t,
 	float,
 	float,
 	const BorderMode<qlm::ImageFormat::GRAY, int16_t>&);

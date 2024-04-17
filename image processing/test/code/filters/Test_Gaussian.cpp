@@ -33,7 +33,7 @@ namespace test
 			return -1;
 		}
 
-		unsigned int filter_size = 3;
+		size_t filter_size = 3;
 		float sigma = 1.0f;
 		// do the operation
 		t.start();

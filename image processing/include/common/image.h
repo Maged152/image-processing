@@ -24,9 +24,9 @@ namespace qlm
 	class Image
 	{
 	private:
-		unsigned int width;
-		unsigned int height;
-		unsigned int num_of_channels;
+		size_t width;
+		size_t height;
+		size_t num_of_channels;
 		Pixel<frmt, T>* data;
 	private:
 		int ReflectBorderIndex(int idx, int max_idx) const
@@ -55,7 +55,7 @@ namespace qlm
 			}
 		}
 
-		Image(unsigned int width, unsigned int height) : width(width), height(height)
+		Image(size_t width, size_t height) : width(width), height(height)
 		{
 			data = new Pixel<frmt, T>[width * height];
 			if constexpr (frmt == ImageFormat::GRAY)
@@ -133,9 +133,9 @@ namespace qlm
 		}
 
 	public:
-		void create(unsigned int img_width, unsigned int img_height);
+		void create(size_t img_width, size_t img_height);
 
-		void create(unsigned int img_width, unsigned int img_height, Pixel<frmt, T> pix);
+		void create(size_t img_width, size_t img_height, Pixel<frmt, T> pix);
 		
 		void SetPixel(int x, int y, const Pixel<frmt, T> &pix)
 		{
@@ -178,17 +178,17 @@ namespace qlm
 
 		bool SaveToFile(const std::string& file_name, bool alpha = true,int quality = 100);
 
-		unsigned int Width() const
+		size_t Width() const
 		{
 			return width;
 		}
 
-		unsigned int Height() const
+		size_t Height() const
 		{
 			return height;
 		}
 
-		unsigned int NumerOfChannels() const
+		size_t NumerOfChannels() const
 		{
 			return num_of_channels;
 		}

@@ -9,8 +9,8 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> Rotate(const Image<frmt, T>& in, const RotateFlag rotate_code)
 	{
-		unsigned int img_width = in.Width();
-		unsigned int img_height = in.Height();
+		size_t img_width = in.Width();
+		size_t img_height = in.Height();
 		// output image
 		Image<frmt, T> out = Image<frmt, T>{};
 		// temp out pixel

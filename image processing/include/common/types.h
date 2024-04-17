@@ -154,7 +154,7 @@ namespace qlm
 	public:
 		SobelDerivatives() : angle(nullptr), sobel_x(), sobel_y(), magnitude()
 		{}
-		SobelDerivatives(unsigned int width, unsigned int height) : sobel_x(width, height), sobel_y(width, height), magnitude(width, height)
+		SobelDerivatives(size_t width, size_t height) : sobel_x(width, height), sobel_y(width, height), magnitude(width, height)
 		{
 			angle = new float[width * height];
 		}

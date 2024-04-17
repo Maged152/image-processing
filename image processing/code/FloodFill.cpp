@@ -7,8 +7,8 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> FloodFill(const Image<frmt, T>& in, const Point<int>& seed_point, const Pixel<frmt, T>& fill_color, const Pixel<frmt, T>& threshold)
 	{
-		const unsigned int img_width = in.Width();
-		const unsigned int img_height = in.Height();
+		const size_t img_width = in.Width();
+		const size_t img_height = in.Height();
 
 		Image<frmt, T> out{ in };
 		std::queue<Point<int>> q;

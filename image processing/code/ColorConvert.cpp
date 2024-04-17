@@ -7,8 +7,8 @@ namespace qlm
     template<ImageFormat src_frmt, pixel_t src_t, ImageFormat dst_frmt, pixel_t dst_t>
     Image<dst_frmt, dst_t> ColorConvert(const Image<src_frmt, src_t>& in)
     {
-        unsigned int width = in.Width();
-        unsigned int height = in.Height();
+        size_t width = in.Width();
+        size_t height = in.Height();
         // create the output image
         Image<dst_frmt, dst_t> out;
         out.create(width, height);

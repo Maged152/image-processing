@@ -31,7 +31,7 @@ namespace test
 		// RGB to GRAY
 		auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 
-		unsigned int filter_size = 3;
+		size_t filter_size = 3;
 		t.start();
 		auto out = qlm::Sobel<uint8_t, int16_t>(gray, filter_size);
 		t.end();

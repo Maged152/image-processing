@@ -6,8 +6,8 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const qlm::Image<frmt, T>& in, float
 {
 	// TODO: check if not gray convert to gray
 
-	unsigned int width = in.Width();
-	unsigned int height = in.Height();
+	size_t width = in.Width();
+	size_t height = in.Height();
 
 	int max_rho = std::floor(std::sqrt(width * width + height * height));
 	int min_rho = 0; //-max_rho

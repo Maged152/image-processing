@@ -43,7 +43,7 @@ namespace qlm
 		{
 			if (n == 1 || n == 3)
 			{
-				for (unsigned int i = 0, idx = 0; i < width * height * n; i += n, idx++)
+				for (size_t i = 0, idx = 0; i < width * height * n; i += n, idx++)
 				{
 					T v = img_data[i];
 					data[idx].Set(v);
@@ -51,7 +51,7 @@ namespace qlm
 			}
 			else if (n == 2 || n == 4)
 			{
-				for (unsigned int i = 0, idx = 0; i < width * height * n; i += n, idx++)
+				for (size_t i = 0, idx = 0; i < width * height * n; i += n, idx++)
 				{
 					T v1 = img_data[i];
 					T v2 = img_data[i + n - 1];
@@ -67,7 +67,7 @@ namespace qlm
 		{
 			if (n == 1)
 			{
-				for (unsigned int i = 0; i < width * height * n; i += n)
+				for (size_t i = 0; i < width * height * n; i += n)
 				{
 					T v = img_data[i];
 					data[i].Set(v, v, v);
@@ -75,7 +75,7 @@ namespace qlm
 			}
 			else if (n == 2)
 			{
-				for (unsigned int i = 0, idx = 0; i < width * height * n; i += n, idx++)
+				for (size_t i = 0, idx = 0; i < width * height * n; i += n, idx++)
 				{
 					T v1 = img_data[i]; // value
 					T v2 = img_data[i + 1]; // alpha
@@ -84,7 +84,7 @@ namespace qlm
 			}
 			else if (n == 3)
 			{
-				for (unsigned int i = 0, idx = 0; i < width * height * n; i += n, idx++)
+				for (size_t i = 0, idx = 0; i < width * height * n; i += n, idx++)
 				{
 					T v1 = img_data[i];
 					T v2 = img_data[i + 1];
@@ -94,7 +94,7 @@ namespace qlm
 			}
 			else if (n == 4)
 			{
-				for (unsigned int i = 0, idx = 0; i < width * height * n; i += n, idx++)
+				for (size_t i = 0, idx = 0; i < width * height * n; i += n, idx++)
 				{
 					T v1 = img_data[i];
 					T v2 = img_data[i + 1];

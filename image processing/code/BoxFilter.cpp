@@ -6,8 +6,8 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
 	Image<frmt, dst_t> BoxFilter(
 				const Image<frmt, src_t>& in,
-		        const unsigned int filter_x_size,
-		        const unsigned int filter_y_size,
+		        const size_t filter_x_size,
+		        const size_t filter_y_size,
 		        const bool normalize, 
 		        const  BorderMode<frmt, src_t>& border_mode)
 	{
@@ -34,35 +34,35 @@ namespace qlm
 // Explicit instantiation for RGB , uint8_t, uint8_t
 template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
 qlm::BoxFilter<qlm::ImageFormat::RGB, uint8_t, uint8_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
-	const unsigned int filter_x_size,
-	const unsigned int filter_y_size,
+	const size_t filter_x_size,
+	const size_t filter_y_size,
 	const bool normalize,
 	const BorderMode<qlm::ImageFormat::RGB, uint8_t>&);
 // Explicit instantiation for RGB , uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::RGB, int16_t>
 qlm::BoxFilter<qlm::ImageFormat::RGB, uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&,
-	const unsigned int filter_x_size,
-	const unsigned int filter_y_size,
+	const size_t filter_x_size,
+	const size_t filter_y_size,
 	const bool normalize,
 	const BorderMode<qlm::ImageFormat::RGB, uint8_t>&);
 // Explicit instantiation for GRAY, uint8_t , uint8_t
 template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
 qlm::BoxFilter<qlm::ImageFormat::GRAY, uint8_t, uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
-	const unsigned int filter_x_size,
-	const unsigned int filter_y_size,
+	const size_t filter_x_size,
+	const size_t filter_y_size,
 	const bool normalize,
 	const BorderMode<qlm::ImageFormat::GRAY, uint8_t>&);
 // Explicit instantiation for GRAY, uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::BoxFilter<qlm::ImageFormat::GRAY, uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
-	const unsigned int filter_x_size,
-	const unsigned int filter_y_size,
+	const size_t filter_x_size,
+	const size_t filter_y_size,
 	const bool normalize,
 	const BorderMode<qlm::ImageFormat::GRAY, uint8_t>&);
 // Explicit instantiation for GRAY, int16_t, int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::BoxFilter<qlm::ImageFormat::GRAY, int16_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, int16_t>&,
-	const unsigned int filter_x_size,
-	const unsigned int filter_y_size,
+	const size_t filter_x_size,
+	const size_t filter_y_size,
 	const bool normalize,
 	const BorderMode<qlm::ImageFormat::GRAY, int16_t>&);

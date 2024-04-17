@@ -28,8 +28,8 @@ namespace test
 		if (in.NumerOfChannels() == 1)
 			alpha = false;
 
-		unsigned int width = 960u;
-		unsigned int height = 540u;
+		size_t width = 960u;
+		size_t height = 540u;
 
 		// do the operation
 		t.start();
