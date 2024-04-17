@@ -6,51 +6,36 @@
 
 namespace qlm
 {
-	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> SeamCarving(const Image<frmt, T>& in, 
-		const size_t width, const size_t height,
-		const EnergyFlag energy, const OrderFlag order)
+	template<bool vertical, ImageFormat frmt, pixel_t T>
+	void RemovePixel(const int x, const int y, const int iter, Image<frmt, T>& out)
 	{
-		auto gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(in);
-
-		Image<ImageFormat::GRAY, int16_t> energy_map;
-
-		if (energy == EnergyFlag::BACKWARD)
+		if constexpr (vertical)
 		{
-			auto sobelx = SobelX(gray, 3);
-			energy_map = SobelY(gray, 3);
-
-			for (int i = 0; i < energy_map.Width() * energy_map.Height(); i++)
+			// shift left
+			for (int i = x; i < out.Width() - iter - 1; i++)
 			{
-				int16_t grad_mag = std::abs(energy_map.GetPixel(i).v) + std::abs(sobelx.GetPixel(i).v);
-				energy_map.SetPixel(i, grad_mag);
+				out.SetPixel(i, y, out.GetPixel(i + 1, y));
 			}
 		}
-
-		const BorderMode<ImageFormat::GRAY, int16_t> border_mode = { 
-			.border_type = BorderType::BORDER_CONSTANT,
-			.border_pixel = Pixel<ImageFormat::GRAY, int16_t>{ std::numeric_limits<int16_t>::max() }
-		};
-		
-		// populate DP matrix
-		for (int y = 1; y < energy_map.Height(); y++)
+		else
 		{
-			for (int x = 0; x < energy_map.Width(); x++)
+			// shift up
+			for (int i = y; i < out.Height() - iter - 1; i++)
 			{
-				int16_t min_energy = std::numeric_limits<int16_t>::max();
-				for (int i = -1; i < 2; i++)
-				{
-					min_energy = std::min(min_energy, energy_map.GetPixel(x + i, y - 1, border_mode).v);
-				}
-				energy_map.SetPixel(x, y, min_energy + energy_map.GetPixel(x, y).v);
+				out.SetPixel(x, i, out.GetPixel(x, i + 1));
 			}
 		}
+	}
 
+
+	template<ImageFormat frmt, pixel_t T>
+	void RemoveSeam(const Image<ImageFormat::GRAY, int16_t>& energy_map, const int iter, Image<frmt, T>& out)
+	{
 		// find optimal seam
 		int min_index{ 0 };
 		int16_t min_val = energy_map.GetPixel(0, energy_map.Height() - 1).v;
 
-		for (int i = 1; i < energy_map.Width(); i++)
+		for (int i = 1; i < energy_map.Width() - iter; i++)
 		{
 			if (min_val > energy_map.GetPixel(i, energy_map.Height() - 1).v)
 			{
@@ -59,16 +44,19 @@ namespace qlm
 			}
 		}
 
-		Image<frmt, T> out = in;
-		const Pixel<frmt, T> red{255, 0, 0};
-
-		out.SetPixel(min_index, energy_map.Height() - 1, red);
+		// remove the pixel
+		RemovePixel<true>(min_index, energy_map.Height() - 1, iter, out);
+		
+		const BorderMode<ImageFormat::GRAY, int16_t> border_mode = {
+			.border_type = BorderType::BORDER_CONSTANT,
+			.border_pixel = Pixel<ImageFormat::GRAY, int16_t>{ std::numeric_limits<int16_t>::max() }
+		};
 
 		for (int y = energy_map.Height() - 2; y > -1; y--)
 		{
-			min_val = std::numeric_limits<int16_t>::max();
-			int next_index;
-			for (int i = -1; i < 2; i++)
+			min_val = energy_map.GetPixel(min_index - 1, y, border_mode).v;
+			int next_index = min_index - 1;
+			for (int i = 0; i < 2; i++)
 			{
 				if (min_val > energy_map.GetPixel(min_index + i, y, border_mode).v)
 				{
@@ -78,8 +66,96 @@ namespace qlm
 			}
 			min_index = next_index;
 
-			out.SetPixel(min_index, y, red);
+			// remove the pixel
+			RemovePixel<true>(min_index, y, iter, out);
 		}
+	}
+
+	template<ImageFormat frmt, pixel_t T>
+	Image<frmt, T> SeamCarving(const Image<frmt, T>& in, 
+		const size_t width, const size_t height,
+		const EnergyFlag energy, const OrderFlag order)
+	{
+		Image<frmt, T> out{ width , height };
+
+		// buffers used in the algorithm
+		Image<frmt, T> temp = in;
+		Image<ImageFormat::GRAY, T> gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(in);
+		Image<ImageFormat::GRAY, int16_t> energy_map, sobelx;
+
+		// how much to remove/insert
+		size_t dx, dy;
+		bool dec_x, dec_y;
+
+		if (width < in.Width())
+		{
+			dx = in.Width() - width;
+			dec_x = true;
+		}
+		else
+		{
+			dx = width - in.Width();
+			dec_x = false;
+		}
+
+		if (height < in.Height())
+		{
+			dy = in.Height() - height;
+			dec_y = true;
+		}
+		else
+		{
+			dy = height - in.Height();
+			dec_y = false;
+		}
+
+		const BorderMode<ImageFormat::GRAY, int16_t> border_mode = {
+			.border_type = BorderType::BORDER_CONSTANT,
+			.border_pixel = Pixel<ImageFormat::GRAY, int16_t>{ std::numeric_limits<int16_t>::max() }
+		};
+
+		// remove from the width
+		for (int iter = 0; iter < dx; iter++)
+		{
+			if (energy == EnergyFlag::BACKWARD)
+			{
+				sobelx = std::move(SobelX(gray, 3));
+				energy_map = std::move(SobelY(gray, 3));
+
+				for (int i = 0; i < energy_map.Width() * energy_map.Height(); i++)
+				{
+					int16_t grad_mag = std::abs(energy_map.GetPixel(i).v) + std::abs(sobelx.GetPixel(i).v);
+					energy_map.SetPixel(i, grad_mag);
+				}
+			}
+
+			// populate DP matrix
+			for (int y = 1; y < energy_map.Height(); y++)
+			{
+				for (int x = 0; x < energy_map.Width() - iter; x++)
+				{
+					int16_t min_energy = std::numeric_limits<int16_t>::max();
+					for (int i = -1; i < 2; i++)
+					{
+						min_energy = std::min(min_energy, energy_map.GetPixel(x + i, y - 1, border_mode).v);
+					}
+					energy_map.SetPixel(x, y, min_energy + energy_map.GetPixel(x, y).v);
+				}
+			}
+
+			// find & remove optimal seam
+			RemoveSeam(energy_map, iter, temp);
+		}
+		
+
+		for (int y = 0; y < out.Height(); y++)
+		{
+			for (int x = 0; x < out.Width(); x++)
+			{
+				out.SetPixel(x, y, temp.GetPixel(x, y));
+			}
+		}
+		
 
 		return out;
 	}
