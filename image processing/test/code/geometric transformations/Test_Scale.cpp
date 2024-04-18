@@ -129,9 +129,9 @@ namespace test
 		res_bool[1] = Test_CompareImages(ref_bi, cur_bi);
 		res_bool[2] = Test_CompareImages(ref_ci, cur_ci);
 
-		normalization[0] = in.Width() * in.Height();
-		normalization[1] = in.Width() * in.Height();
-		normalization[2] = in.Width() * in.Height();
+		normalization[0] = in.width * in.height;
+		normalization[1] = in.width * in.height;
+		normalization[2] = in.width * in.height;
 
 		PrintTestResults(test_name, res_bool, res_time, normalization, col_handle);
 

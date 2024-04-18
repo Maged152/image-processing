@@ -11,8 +11,8 @@ namespace qlm
 	{
 		std::vector<KeyPoint<int>> key_points;
 		// temp buffer to hold the potential key-points
-		T* buff = new T[in.Width() * in.Height()];
-		std::memset(buff, 1, in.Width() * in.Height() * sizeof(T));
+		T* buff = new T[in.width * in.height];
+		std::memset(buff, 1, in.width * in.height * sizeof(T));
 
 		// offsets of the 16-point (circle)
 		constexpr int x_off[16] = { 0, 1, 2, 3, 3, 3, 2, 1, 0, -1, -2, -3, -3, -3, -2, -1 };
@@ -73,9 +73,9 @@ namespace qlm
 			constexpr int x_qc_off[16] = { 0, 3, 0, -3};
 			constexpr int y_qc_off[16] = { -3, 0, 3, 0};
 
-			for (int y = 3; y < in.Height() - 3; y++)
+			for (int y = 3; y < in.height - 3; y++)
 			{
-				for (int x = 3; x < in.Width() - 3; x++)
+				for (int x = 3; x < in.width - 3; x++)
 				{
 					uint32_t darker{ 0 }, brighter{ 0 };
 
@@ -93,7 +93,7 @@ namespace qlm
 						if (!is_corner)
 						{
 							// not a corner
-							buff[y * in.Width() + x] = 0;
+							buff[y * in.width + x] = 0;
 						}
 					}
 
@@ -145,11 +145,11 @@ namespace qlm
 		
 		
 		// check valid key-points
-		for (int y = 3; y < in.Height() - 3; y++)
+		for (int y = 3; y < in.height - 3; y++)
 		{
-			for (int x = 3; x < in.Width() - 3; x++)
+			for (int x = 3; x < in.width - 3; x++)
 			{
-				if (buff[y * in.Width() + x])
+				if (buff[y * in.width + x])
 				{
 					uint32_t darker{0}, brighter{0};
 
@@ -164,14 +164,14 @@ namespace qlm
 						if (is_corner)
 						{
 							// calculate the response
-							buff[y * in.Width() + x] = fast_response(x, y);
+							buff[y * in.width + x] = fast_response(x, y);
 						}
 						else
 						{
 							// check for darker 
 							is_corner = has_n_consecutive_set_bits(darker, arc_length, 16);
 
-							buff[y * in.Width() + x] = is_corner ? fast_response(x, y) : 0;
+							buff[y * in.width + x] = is_corner ? fast_response(x, y) : 0;
 						}
 					}
 					else
@@ -203,18 +203,18 @@ namespace qlm
 
 		if (non_max_suppression)
 		{
-			for (int y = 4; y < in.Height() - 4; y++)
+			for (int y = 4; y < in.height - 4; y++)
 			{
-				for (int x = 4; x < in.Width() - 4; x++)
+				for (int x = 4; x < in.width - 4; x++)
 				{
-					T response = buff[y * in.Width() + x];
+					T response = buff[y * in.width + x];
 
 					if (response)
 					{
-						T max_res = buff[(y + y_nonmax_off[0]) * in.Width() + (x + x_nonmax_off[0])];
+						T max_res = buff[(y + y_nonmax_off[0]) * in.width + (x + x_nonmax_off[0])];
 						for (int i = 1; i < 8; i++)
 						{
-							max_res = std::max(max_res, buff[(y + y_nonmax_off[i]) * in.Width() + (x + x_nonmax_off[i])]);
+							max_res = std::max(max_res, buff[(y + y_nonmax_off[i]) * in.width + (x + x_nonmax_off[i])]);
 						}
 
 						if (response > max_res)

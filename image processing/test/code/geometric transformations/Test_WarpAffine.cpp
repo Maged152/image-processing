@@ -30,10 +30,10 @@ namespace test
 
 		float scale = 0.5f;
 		float angle = 30.0f;
-		const int dst_width = in.Width();
-		const int dst_height = in.Height();
+		const int dst_width = in.width;
+		const int dst_height = in.height;
 
-		const qlm::Point<int> center{ (int)in.Width() / 2, (int)in.Height() / 2 };
+		const qlm::Point<int> center{ (int)in.width / 2, (int)in.height / 2 };
 
 		qlm::AffineMatrix mat = qlm::GetRotationMatrix(center, angle, scale);
 
@@ -74,7 +74,7 @@ namespace test
 		}
 		res = Test_CompareImages(ref, cur);
 
-		const float normalization = in.Width() * in.Height();
+		const float normalization = in.width * in.height;
 		PrintTestResults(test_name, res, t, normalization, col_handle);
 
 		// delete output image

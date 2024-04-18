@@ -58,8 +58,8 @@ namespace qlm
     {
         Image<frmt, T> out = in;
 
-        int width = in.Width();
-        int height = in.Height();
+        int width = in.width;
+        int height = in.height;
 
         auto [x1, y1, x2, y2] = line;
         int dx = x2 - x1;
@@ -115,8 +115,8 @@ namespace qlm
     template<ImageFormat frmt, pixel_t T>
     Image<frmt, T> DrawLine(const Image<frmt, T>& in, const LinePolar& line, const  Pixel<frmt, T>& color)
     {
-        int width = in.Width();
-        int height = in.Height();
+        int width = in.width;
+        int height = in.height;
 
         auto theta = line.angle;
         auto r = line.radius;
@@ -157,7 +157,7 @@ namespace qlm
     Image<frmt, T> DrawCluster(const Image<frmt, T>& in, const std::vector<Cluster<frmt, T>>& clusters)
     {
         Image<frmt, T> out;
-        out.create(in.Width(), in.Height());
+        out.create(in.width, in.height);
 
         for (int c = 0; c < clusters.size(); c++)
         {

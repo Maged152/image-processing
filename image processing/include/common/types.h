@@ -164,7 +164,7 @@ namespace qlm
 			if (other.angle != nullptr) 
 			{
 				angle = new float[other.sobel_x.get_width() * other.sobel_x.get_height()];
-				std::copy(other.angle, other.angle + other.sobel_x.Width() * other.sobel_x.Height(), angle);
+				std::copy(other.angle, other.angle + other.sobel_x.width * other.sobel_x.height, angle);
 			}
 		}
 		// Move constructor
@@ -186,7 +186,7 @@ namespace qlm
 				if (other.angle != nullptr)
 				{
 					angle = new float[other.sobel_x.get_width() * other.sobel_x.get_height()];
-					std::copy(other.angle, other.angle + other.sobel_x.Width() * other.sobel_x.Height(), angle);
+					std::copy(other.angle, other.angle + other.sobel_x.width * other.sobel_x.height, angle);
 				}
 			}
 			return *this;

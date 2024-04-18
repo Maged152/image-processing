@@ -15,7 +15,7 @@ namespace qlm
 		constexpr uint8_t max_value = std::numeric_limits<uint8_t>::max();
 		constexpr uint8_t min_value = std::numeric_limits<uint8_t>::lowest();
 		// out
-		Image<ImageFormat::GRAY, uint8_t> out{in.Width(), in.Height()};
+		Image<ImageFormat::GRAY, uint8_t> out{in.width, in.height};
 		Pixel<ImageFormat::GRAY, uint8_t> out_pix;
 		// get filter 
 		auto ker = GetDerivYKernel(filter_size);
@@ -28,7 +28,7 @@ namespace qlm
 		
 		float v{ 0 }, a{ 0 };
 
-		for (int i = 0; i < out.Height() * out.Width(); i++)
+		for (int i = 0; i < out.height * out.width; i++)
 		{
 			// remove sign
 			v = std::abs(in.GetPixel(i).v);
@@ -138,7 +138,7 @@ namespace qlm
 
 		const wider_t<in_t> max_mag = std::sqrtf(std::powf(max_value, 2) + std::powf(max_value, 2));
 
-		SobelDerivatives<in_t, out_t> out {in.Width(), in.Height()};
+		SobelDerivatives<in_t, out_t> out {in.width, in.height};
 		// x derivative
 		out.sobel_x = std::move(SobelX<in_t, out_t>(in, kernel_size, border_mode));
 		// y derivative
@@ -152,7 +152,7 @@ namespace qlm
 		Pixel<ImageFormat::GRAY, in_t> out_pix;
 		// magnitude
 		float v{0}, a{0}, angle{0};
-		for (int i = 0; i < in.Height() * in.Width(); i++)
+		for (int i = 0; i < in.height * in.width; i++)
 		{
 			// input X, Y pixels
 			x_pix = sobel_x.GetPixel(i);

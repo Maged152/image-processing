@@ -7,12 +7,12 @@
 namespace qlm
 {
 	template<bool vertical, ImageFormat frmt, pixel_t T>
-	void RemovePixel(const int x, const int y, const int iter, Image<frmt, T>& out)
+	void RemovePixel(const int x, const int y, Image<frmt, T>& out)
 	{
 		if constexpr (vertical)
 		{
 			// shift left
-			for (int i = x; i < out.Width() - iter - 1; i++)
+			for (int i = x; i < out.width - 1; i++)
 			{
 				out.SetPixel(i, y, out.GetPixel(i + 1, y));
 			}
@@ -20,7 +20,7 @@ namespace qlm
 		else
 		{
 			// shift up
-			for (int i = y; i < out.Height() - iter - 1; i++)
+			for (int i = y; i < out.height - 1; i++)
 			{
 				out.SetPixel(x, i, out.GetPixel(x, i + 1));
 			}
@@ -29,30 +29,32 @@ namespace qlm
 
 
 	template<ImageFormat frmt, pixel_t T>
-	void RemoveSeam(const Image<ImageFormat::GRAY, int16_t>& energy_map, const int iter, Image<frmt, T>& out)
+	void RemoveSeam(const Image<ImageFormat::GRAY, int16_t>& energy_map, Image<frmt, T>& out, Image<ImageFormat::GRAY, T>& gray)
 	{
 		// find optimal seam
 		int min_index{ 0 };
-		int16_t min_val = energy_map.GetPixel(0, energy_map.Height() - 1).v;
+		int16_t min_val = energy_map.GetPixel(0, energy_map.height - 1).v;
 
-		for (int i = 1; i < energy_map.Width() - iter; i++)
+		for (int i = 1; i < energy_map.width; i++)
 		{
-			if (min_val > energy_map.GetPixel(i, energy_map.Height() - 1).v)
+			if (min_val > energy_map.GetPixel(i, energy_map.height - 1).v)
 			{
-				min_val = energy_map.GetPixel(i, energy_map.Height() - 1).v;
+				min_val = energy_map.GetPixel(i, energy_map.height - 1).v;
 				min_index = i;
 			}
 		}
 
 		// remove the pixel
-		RemovePixel<true>(min_index, energy_map.Height() - 1, iter, out);
+		RemovePixel<false>(min_index, energy_map.height - 1, out);
+		RemovePixel<false>(min_index, energy_map.height - 1, gray);
+
 		
 		const BorderMode<ImageFormat::GRAY, int16_t> border_mode = {
 			.border_type = BorderType::BORDER_CONSTANT,
 			.border_pixel = Pixel<ImageFormat::GRAY, int16_t>{ std::numeric_limits<int16_t>::max() }
 		};
 
-		for (int y = energy_map.Height() - 2; y > -1; y--)
+		for (int y = energy_map.height - 2; y >= 0; y--)
 		{
 			min_val = energy_map.GetPixel(min_index - 1, y, border_mode).v;
 			int next_index = min_index - 1;
@@ -67,7 +69,8 @@ namespace qlm
 			min_index = next_index;
 
 			// remove the pixel
-			RemovePixel<true>(min_index, y, iter, out);
+			RemovePixel<false>(min_index, y, out);
+			RemovePixel<false>(min_index, y, gray);
 		}
 	}
 
@@ -81,31 +84,30 @@ namespace qlm
 		// buffers used in the algorithm
 		Image<frmt, T> temp = in;
 		Image<ImageFormat::GRAY, T> gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(in);
-		Image<ImageFormat::GRAY, int16_t> energy_map, sobelx;
-
+		Image<ImageFormat::GRAY, int16_t> energy_map;
 		// how much to remove/insert
 		size_t dx, dy;
 		bool dec_x, dec_y;
 
-		if (width < in.Width())
+		if (width < in.width)
 		{
-			dx = in.Width() - width;
+			dx = in.width - width;
 			dec_x = true;
 		}
 		else
 		{
-			dx = width - in.Width();
+			dx = width - in.width;
 			dec_x = false;
 		}
 
-		if (height < in.Height())
+		if (height < in.height)
 		{
-			dy = in.Height() - height;
+			dy = in.height - height;
 			dec_y = true;
 		}
 		else
 		{
-			dy = height - in.Height();
+			dy = height - in.height;
 			dec_y = false;
 		}
 
@@ -119,10 +121,10 @@ namespace qlm
 		{
 			if (energy == EnergyFlag::BACKWARD)
 			{
-				sobelx = std::move(SobelX(gray, 3));
-				energy_map = std::move(SobelY(gray, 3));
+				Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3);
+				energy_map = SobelY(gray, 3);
 
-				for (int i = 0; i < energy_map.Width() * energy_map.Height(); i++)
+				for (int i = 0; i < energy_map.width * energy_map.height; i++)
 				{
 					int16_t grad_mag = std::abs(energy_map.GetPixel(i).v) + std::abs(sobelx.GetPixel(i).v);
 					energy_map.SetPixel(i, grad_mag);
@@ -130,9 +132,9 @@ namespace qlm
 			}
 
 			// populate DP matrix
-			for (int y = 1; y < energy_map.Height(); y++)
+			for (int y = 1; y < energy_map.height; y++)
 			{
-				for (int x = 0; x < energy_map.Width() - iter; x++)
+				for (int x = 0; x < energy_map.width; x++)
 				{
 					int16_t min_energy = std::numeric_limits<int16_t>::max();
 					for (int i = -1; i < 2; i++)
@@ -144,13 +146,15 @@ namespace qlm
 			}
 
 			// find & remove optimal seam
-			RemoveSeam(energy_map, iter, temp);
+			RemoveSeam(energy_map, temp, gray);
+			gray.width--;
+			temp.width--;
 		}
 		
 
-		for (int y = 0; y < out.Height(); y++)
+		for (int y = 0; y < out.height; y++)
 		{
-			for (int x = 0; x < out.Width(); x++)
+			for (int x = 0; x < out.width; x++)
 			{
 				out.SetPixel(x, y, temp.GetPixel(x, y));
 			}

@@ -27,7 +27,7 @@
     }
 
     qlm::Image<qlm::ImageFormat::GRAY, uint8_t> mask{};
-    mask.create(templ.Width(), templ.Height(), 1);
+    mask.create(templ.width, templ.height, 1);
 
     t.start();
     auto out = qlm::MatchTemplate(in, templ, qlm::TemplateMatchFlag::SQDIFF, mask);
@@ -39,7 +39,7 @@
     auto [min_loc, max_loc] = qlm::MinMaxLoc(out);
 
     qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
-    qlm::Rectangle rec{ {0, 0}, templ.Width(), templ.Height() };
+    qlm::Rectangle rec{ {0, 0}, templ.width, templ.height };
 
     for (auto &p : min_loc)
     {

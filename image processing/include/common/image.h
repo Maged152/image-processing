@@ -24,10 +24,13 @@ namespace qlm
 	class Image
 	{
 	private:
-		size_t width;
-		size_t height;
 		size_t num_of_channels;
 		Pixel<frmt, T>* data;
+
+	public:
+		size_t width;
+		size_t height;
+
 	private:
 		int ReflectBorderIndex(int idx, int max_idx) const
 		{
@@ -177,16 +180,6 @@ namespace qlm
 		bool LoadFromFile(const std::string& file_name);
 
 		bool SaveToFile(const std::string& file_name, bool alpha = true,int quality = 100);
-
-		size_t Width() const
-		{
-			return width;
-		}
-
-		size_t Height() const
-		{
-			return height;
-		}
 
 		size_t NumerOfChannels() const
 		{

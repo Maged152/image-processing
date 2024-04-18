@@ -8,7 +8,7 @@ namespace qlm
 		T min_val = std::numeric_limits<T>::max();
 		T max_val = std::numeric_limits<T>::lowest();
 
-		const size_t len = in.Width() * in.Height();
+		const size_t len = in.width * in.height;
 
 		// find min and max value
 		for (int i = 0; i < len; i++)
@@ -30,9 +30,9 @@ namespace qlm
 
 		std::pair<std::vector<Point<int>>, std::vector<Point<int>>> locations;
 
-		for (int y = 0; y < in.Height(); y++)
+		for (int y = 0; y < in.height; y++)
 		{
-			for (int x = 0; x < in.Width(); x++)
+			for (int x = 0; x < in.width; x++)
 			{
 				if constexpr (frmt == ImageFormat::GRAY)
 				{

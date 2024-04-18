@@ -4,8 +4,8 @@
 template<qlm::ImageFormat frmt, qlm::pixel_t T>
 qlm::Image<frmt, T> qlm::Resize(const qlm::Image<frmt, T>& in, const size_t width, const size_t height, const qlm::InterpolationFlag method, const BorderMode<frmt, T>& border_mode)
 {
-	size_t img_width = in.Width();
-	size_t img_height = in.Height();
+	size_t img_width = in.width;
+	size_t img_height = in.height;
 	// calculate the scale factors
 	float scale_x = static_cast<float>(width) / img_width;
 	float scale_y = static_cast<float>(height) / img_height;

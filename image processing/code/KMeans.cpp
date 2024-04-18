@@ -14,7 +14,7 @@ namespace qlm
 
 		// choose first centroid random
 		std::mt19937 eng(seed);
-		std::uniform_int_distribution<> distribution(0, in.Width() * in.Height() - 1);
+		std::uniform_int_distribution<> distribution(0, in.width * in.height - 1);
 
 		clusters[0].color = in.GetPixel(distribution(eng));
 
@@ -30,7 +30,7 @@ namespace qlm
 		{
 			// KMeans++ initialization
 			// Calculate distances to nearest centroids for remaining iterations
-			const size_t num_points{ in.Width() * in.Height() };
+			const size_t num_points{ in.width * in.height };
 			std::vector<dist_t> distances(num_points);
 
 			for (int i = 1; i < k; i++)
@@ -59,7 +59,7 @@ namespace qlm
 		}
 		
 		// temp memory to hold cluster information relater to each pixel
-		std::vector<int> pix_cluster(in.Width() * in.Height());
+		std::vector<int> pix_cluster(in.width * in.height);
 		std::vector<int> num_pix_cluster (k);
 		std::vector<Pixel<frmt, float>> pix_avg (k);
 	
@@ -74,7 +74,7 @@ namespace qlm
 			}
 
 			// Assign points to the one of the K centroids
-			for (int i = 0; i < in.Height() * in.Width(); i++)
+			for (int i = 0; i < in.height * in.width; i++)
 			{
 				auto in_pix = in.GetPixel(i);
 
@@ -99,7 +99,7 @@ namespace qlm
 			}
 
 			// Recompute the centroids
-			for (int i = 0; i < in.Height() * in.Width(); i++)
+			for (int i = 0; i < in.height * in.width; i++)
 			{
 				auto pix = in.GetPixel(i);
 				auto cluster_idx = pix_cluster[i];
@@ -124,9 +124,9 @@ namespace qlm
 			}
 		}
 
-		const int image_width = (int)in.Width();
+		const int image_width = (int)in.width;
 		// populate output clusters
-		for (int i = 0; i < in.Height() * in.Width(); i++)
+		for (int i = 0; i < in.height * in.width; i++)
 		{
 			auto cluster_idx = pix_cluster[i];
 			clusters[cluster_idx].pixels.push_back({ i % image_width, i / image_width });

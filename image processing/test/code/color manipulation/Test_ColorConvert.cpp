@@ -35,7 +35,7 @@ namespace test
 		t.end();
 
 		// red to green
-		for (int i = 0; i < out.Height() * out.Width(); i++)
+		for (int i = 0; i < out.height * out.width; i++)
 		{
 			auto pix = out.GetPixel(i);
 			// extract H value
@@ -90,7 +90,7 @@ namespace test
 
 		res = Test_CompareImages(ref, cur);
 
-		const float normalization = in.Width() * in.Height();
+		const float normalization = in.width * in.height;
 		PrintTestResults(test_name, res, t, normalization, col_handle);
 
 		// delete output image

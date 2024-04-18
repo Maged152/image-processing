@@ -90,9 +90,9 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
 	Image<frmt, dst_t> ConvertBitDepth(const Image<frmt, src_t>& in)
 	{
-		Image<frmt, dst_t> out{ in.Width() , in.Height() };
+		Image<frmt, dst_t> out{ in.width , in.height };
 
-		for (int i = 0; i < in.Height() * in.Width(); i++)
+		for (int i = 0; i < in.height * in.width; i++)
 		{
 			auto out_pix = ConvertBitDepth<frmt, src_t, dst_t>(in.GetPixel(i));
 			out.SetPixel(i, out_pix);

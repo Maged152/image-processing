@@ -27,7 +27,7 @@
 	t.show();
 
 	// red to green
-	for (int i = 0; i < out.Height() * out.Width(); i++)
+	for (int i = 0; i < out.height * out.width; i++)
 	{
 		auto pix = out.GetPixel(i);
 		// extract H value

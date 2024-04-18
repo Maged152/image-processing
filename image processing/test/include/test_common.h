@@ -159,15 +159,15 @@ namespace test
                             const qlm::Pixel<frmt, T>& threshold = qlm::Pixel<frmt, T>{})
     {
         // check the dimensions
-        if (in1.Width() != in2.Width() || in1.Height() != in2.Height())
+        if (in1.width != in2.width || in1.height != in2.height)
         {
             std::cout << "the dimensions are not the same\n";
             return false;
         }
         // check the pixels
-        for (int y = 0; y < in1.Height(); y++)
+        for (int y = 0; y < in1.height; y++)
         {
-            for (int x = 0; x < in1.Width(); x++)
+            for (int x = 0; x < in1.width; x++)
             {
                 bool res = Test_ComparePixels(in1.GetPixel(x, y), in2.GetPixel(x, y), threshold);
 

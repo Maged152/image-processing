@@ -8,8 +8,8 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in,
 						       const qlm::InterpolationFlag inter, const float scale_x, const float scale_y,
 							   const BorderMode<frmt, T>& border_mode)
 {
-	size_t width = in.Width();
-	size_t height = in.Height();
+	size_t width = in.width;
+	size_t height = in.height;
 	// create image with the new size
 	size_t new_width = width * scale_x;
 	size_t new_height = height * scale_y;
@@ -25,7 +25,7 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in,
 			float in_x = x / scale_x;
 			float in_y = y / scale_y;
 			// check if inside the image
-			if (in_x < 0 || in_y < 0 || in_x >= in.Width() || in_y >= in.Height())
+			if (in_x < 0 || in_y < 0 || in_x >= in.width || in_y >= in.height)
 				continue;
 			// do interpolation
 			const auto pix = qlm::Interpolation(in, in_x, in_y, inter, border_mode);

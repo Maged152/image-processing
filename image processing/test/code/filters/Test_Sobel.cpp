@@ -125,7 +125,7 @@ namespace test
 		res &= Test_CompareImages(refx, curx);
 		res &= Test_CompareImages(refy, cury);
 
-		const float normalization = gray.Width() * gray.Height();
+		const float normalization = gray.width * gray.height;
 		PrintTestResults(test_name, res, t, normalization, col_handle);
 
 		// delete output image

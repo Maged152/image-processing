@@ -39,7 +39,7 @@ namespace test
 		
 		res = Test_CompareImages(out_u8, in);
 
-		const float normalization = in.Width() * in.Height();
+		const float normalization = in.width * in.height;
 		PrintTestResults(test_name, res, t, normalization, col_handle);
 	
 		return res;
