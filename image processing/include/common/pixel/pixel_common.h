@@ -20,6 +20,7 @@ namespace qlm
     concept pixel_t = std::same_as<T, uint8_t> ||
         std::same_as<T, int16_t> ||
         std::same_as<T, uint16_t> ||
+        std::same_as<T, int32_t> ||
         std::floating_point<T>;
     // Arithmetic data type
     template<typename T>

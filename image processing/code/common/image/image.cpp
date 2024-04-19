@@ -101,6 +101,7 @@ namespace qlm
 	// -------------------------------------------------------------------------------------------------------------
 	template void Image<ImageFormat::GRAY, uint8_t>::create(size_t, size_t);
 	template void Image<ImageFormat::GRAY, int16_t>::create(size_t, size_t);
+	template void Image<ImageFormat::GRAY, int32_t>::create(size_t, size_t);
 	template void Image<ImageFormat::GRAY, float>::create(size_t, size_t);
 	template void Image<ImageFormat::RGB, uint8_t>::create(size_t, size_t);
 	template void Image<ImageFormat::RGB, int16_t>::create(size_t, size_t);
@@ -117,6 +118,7 @@ namespace qlm
 	// ------------------------------------------------------------------------------------------------------------
 	template Pixel<ImageFormat::GRAY, uint8_t> Image<ImageFormat::GRAY, uint8_t>::GetPixel(int, int, const BorderMode<ImageFormat::GRAY, uint8_t>&) const;
 	template Pixel<ImageFormat::GRAY, int16_t> Image<ImageFormat::GRAY, int16_t>::GetPixel(int, int, const BorderMode<ImageFormat::GRAY, int16_t>&) const;
+	template Pixel<ImageFormat::GRAY, int32_t> Image<ImageFormat::GRAY, int32_t>::GetPixel(int, int, const BorderMode<ImageFormat::GRAY, int32_t>&) const;
 	template Pixel<ImageFormat::GRAY, float> Image<ImageFormat::GRAY, float>::GetPixel(int, int, const BorderMode<ImageFormat::GRAY, float>&) const;
 	template Pixel<ImageFormat::RGB, uint8_t> Image<ImageFormat::RGB, uint8_t>::GetPixel(int, int, const BorderMode<ImageFormat::RGB, uint8_t>&) const;
 	template Pixel<ImageFormat::RGB, int16_t> Image<ImageFormat::RGB, int16_t>::GetPixel(int, int, const BorderMode<ImageFormat::RGB, int16_t>&) const;
