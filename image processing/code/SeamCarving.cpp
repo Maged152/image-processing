@@ -6,6 +6,18 @@
 
 namespace qlm
 {
+	struct ValueIndex
+	{
+		int index;
+		int32_t value;
+
+		// Overload operator< to compare based on the value member
+		bool operator<(const ValueIndex& other) const 
+		{
+			return value < other.value;
+		}
+	};
+
 	void PrintImage(const Image<ImageFormat::GRAY, int32_t>& image)
 	{
 		Image<ImageFormat::GRAY, uint8_t> out{ image.width, image.height };
@@ -33,7 +45,7 @@ namespace qlm
 		}
 
 		std::cout << max_pix << "  "  << min_pix << "\n";
-		//out.SaveToFile("tem0.jpg");
+		out.SaveToFile("tem0.jpg");
 	}
 
 	template<bool vertical, ImageFormat frmt, pixel_t T>
@@ -88,21 +100,21 @@ namespace qlm
 	void RemoveSeam(const Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& out, Image<ImageFormat::GRAY, T>& gray)
 	{
 		// find optimal seam
-		int min_index{ 0 };
-		int32_t min_val = energy_map.GetPixel(0, energy_map.height - 1).v;
+		int x_idx{ 0 };
+		int32_t min_val = energy_map.GetPixel(x_idx, energy_map.height - 1).v;
 
-		for (int i = 1; i < energy_map.width; i++)
+		for (int x = 1; x < energy_map.width; x++)
 		{
-			if (min_val > energy_map.GetPixel(i, energy_map.height - 1).v)
+			if (min_val > energy_map.GetPixel(x, energy_map.height - 1).v)
 			{
-				min_val = energy_map.GetPixel(i, energy_map.height - 1).v;
-				min_index = i;
+				min_val = energy_map.GetPixel(x, energy_map.height - 1).v;
+				x_idx = x;
 			}
 		}
 
 		// remove the pixel
-		RemovePixel<true>(min_index, energy_map.height - 1, out);
-		RemovePixel<true>(min_index, energy_map.height - 1, gray);
+		RemovePixel<true>(x_idx, energy_map.height - 1, out);
+		RemovePixel<true>(x_idx, energy_map.height - 1, gray);
 		
 		
 		const BorderMode<ImageFormat::GRAY, int32_t> border_mode = {
@@ -112,21 +124,23 @@ namespace qlm
 
 		for (int y = energy_map.height - 2; y >= 0; y--)
 		{
-			min_val = energy_map.GetPixel(min_index - 1, y, border_mode).v;
-			int next_index = min_index - 1;
-			for (int i = 0; i < 2; i++)
-			{
-				if (min_val > energy_map.GetPixel(min_index + i, y, border_mode).v)
-				{
-					min_val = energy_map.GetPixel(min_index + i, y, border_mode).v;
-					next_index = min_index + i;
-				}
-			}
-			min_index = next_index;
+			ValueIndex left, right, mid;
+
+			left.index = std::max(x_idx - 1, 0);
+			mid.index = x_idx;
+			right.index = std::min(x_idx + 1, (int)energy_map.width - 1);
+
+			left.value = energy_map.GetPixel(left.index, y - 1).v;
+			mid.value = energy_map.GetPixel(mid.index, y - 1).v;
+			right.value = energy_map.GetPixel(right.index, y - 1).v;
+
+			const ValueIndex min_energy = std::min(left, std::min(mid, right));
+
+			x_idx = min_energy.index;
 
 			// remove the pixel
-			RemovePixel<true>(min_index, y, out);
-			RemovePixel<true>(min_index, y, gray);
+			RemovePixel<true>(x_idx, y, out);
+			RemovePixel<true>(x_idx, y, gray);
 		}
 	}
 
@@ -175,15 +189,17 @@ namespace qlm
 			{
 				for (int x = 0; x < energy_map.width; x++)
 				{
-					int32_t min_energy = std::numeric_limits<int32_t>::max();
-					for (int i = -1; i < 2; i++)
-					{
-						min_energy = std::min(min_energy, energy_map.GetPixel(x + i, y - 1, border_mode).v);
-					}
+					int32_t left = energy_map.GetPixel(std::max(x - 1, 0), y - 1).v;
+					int32_t mid = energy_map.GetPixel(x, y - 1).v;
+					int32_t right = energy_map.GetPixel(std::min(x + 1, (int)energy_map.width - 1), y - 1).v;
+
+					int32_t min_energy = std::min(left, std::min(mid, right));
+
 					energy_map.SetPixel(x, y, min_energy + energy_map.GetPixel(x, y).v);
 				}
 			}
 
+			//PrintImage(energy_map);
 			// find & remove optimal seam
 			RemoveSeam(energy_map, temp, gray);
 				
