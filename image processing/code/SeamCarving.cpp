@@ -154,6 +154,7 @@ namespace qlm
 		// remove from the width
 		for (int iter = 0; iter < dx; iter++)
 		{
+			// compute the energy 
 			if (energy == EnergyFlag::BACKWARD)
 			{
 				Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3);
@@ -163,13 +164,12 @@ namespace qlm
 				{
 					for (int x = 0; x < sobelx.width; x++)
 					{
-						int32_t grad_mag = std::abs(sobelx.GetPixel(x, y).v) + std::abs(sobelx.GetPixel(x, y).v);
+						int32_t grad_mag = std::abs(sobelx.GetPixel(x, y).v) + std::abs(sobely.GetPixel(x, y).v);
 						energy_map.SetPixel(x, y, grad_mag);
 					}
 				}
 			}
 			
-
 			// populate DP matrix
 			for (int y = 1; y < energy_map.height; y++)
 			{
