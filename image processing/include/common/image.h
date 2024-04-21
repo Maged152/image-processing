@@ -29,6 +29,7 @@ namespace qlm
 
 	public:
 		size_t width;
+		size_t stride;
 		size_t height;
 
 	private:
@@ -46,7 +47,7 @@ namespace qlm
 			return reflect_idx;
 		}
 	public:
-		Image():data(nullptr), width(0), height(0)
+		Image():data(nullptr), width(0), height(0), stride(0)
 		{
 			if constexpr (frmt == ImageFormat::GRAY)
 			{
@@ -58,9 +59,10 @@ namespace qlm
 			}
 		}
 
-		Image(size_t width, size_t height) : width(width), height(height)
+		Image(size_t width, size_t height, size_t _stride = 0) : width(width), height(height)
 		{
-			data = new Pixel<frmt, T>[width * height];
+			stride = _stride == 0 ? width : _stride;
+			data = new Pixel<frmt, T>[stride * height];
 			if constexpr (frmt == ImageFormat::GRAY)
 			{
 				num_of_channels = 2;
@@ -80,18 +82,20 @@ namespace qlm
 			}
 			width = 0;
 			height = 0;
+			stride = 0;
 		}
 
-		Image(const Image<frmt, T>& other) : width(other.width), height(other.height), num_of_channels(other.num_of_channels)
+		Image(const Image<frmt, T>& other) : width(other.width), height(other.height), stride(other.stride), num_of_channels(other.num_of_channels)
 		{
-			data = new Pixel<frmt, T>[width * height];
-			std::memcpy(data, other.data, (size_t)width * height * sizeof(Pixel<frmt, T>));
+			data = new Pixel<frmt, T>[stride * height];
+			std::memcpy(data, other.data, (size_t)stride * height * sizeof(Pixel<frmt, T>));
 		}
 
-		Image(Image<frmt, T>&& other) noexcept : width(other.width), height(other.height), num_of_channels(other.num_of_channels), data(other.data)
+		Image(Image<frmt, T>&& other) noexcept : width(other.width), height(other.height), stride(other.stride), num_of_channels(other.num_of_channels), data(other.data)
 		{
 			other.width = 0;
 			other.height = 0;
+			other.stride = 0;
 			other.data = nullptr;
 		}
 
@@ -108,10 +112,11 @@ namespace qlm
 			// Copy the other object's width ,height and number of channels
 			width = other.width;
 			height = other.height;
+			stride = other.stride;
 			num_of_channels = other.num_of_channels;
 			// Allocate new memory and copy the other object's data
-			data = new Pixel<frmt, T>[width * height];
-			std::memcpy(data, other.data, (size_t)width * height * sizeof(Pixel<frmt, T>));
+			data = new Pixel<frmt, T>[stride * height];
+			std::memcpy(data, other.data, (size_t)stride * height * sizeof(Pixel<frmt, T>));
 
 			return *this;
 		}
@@ -125,26 +130,28 @@ namespace qlm
 
 				width = other.width;
 				height = other.height;
+				stride = other.stride;
 				data = other.data;
 				num_of_channels = other.num_of_channels;
 
 				other.width = 0;
 				other.height = 0;
+				other.stride = 0;
 				other.data = nullptr;
 			}
 			return *this;
 		}
 
 	public:
-		void create(size_t img_width, size_t img_height);
+		void create(size_t img_width, size_t img_height, size_t img_stride = 0);
 
-		void create(size_t img_width, size_t img_height, Pixel<frmt, T> pix);
+		void create(size_t img_width, size_t img_height, Pixel<frmt, T> pix, size_t img_stride = 0);
 		
 		void SetPixel(int x, int y, const Pixel<frmt, T> &pix)
 		{
 			if (x >= 0 && x < width && y >= 0 && y < height)
 			{
-				data[y * width + x] = pix;
+				data[y * stride + x] = pix;
 			}
 		}
 
@@ -160,7 +167,7 @@ namespace qlm
 		{
 			if (x >= 0 && x < width && y >= 0 && y < height)
 			{
-				return data[y * width + x];
+				return data[y * stride + x];
 			}
 
 			return Pixel<frmt, T>{};
