@@ -155,6 +155,49 @@ namespace qlm
 		}
 	}
 
+	void ComulativeEnergy(Image<ImageFormat::GRAY, int32_t>& energy_map)
+	{
+		for (int y = 1; y < energy_map.height; y++)
+		{
+			for (int x = 0; x < energy_map.width; x++)
+			{
+				int32_t left = energy_map.GetPixel(std::max(x - 1, 0), y - 1).v;
+				int32_t mid = energy_map.GetPixel(x, y - 1).v;
+				int32_t right = energy_map.GetPixel(std::min(x + 1, (int)energy_map.width - 1), y - 1).v;
+
+				int32_t min_energy = std::min(left, std::min(mid, right));
+
+				energy_map.SetPixel(x, y, min_energy + energy_map.GetPixel(x, y).v);
+			}
+		}
+	}
+
+	template<ImageFormat frmt, pixel_t T>
+	void ReduceWidth(const int dx, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& temp)
+	{
+		for (int iter = 0; iter < dx; iter++)
+		{
+			// compute the energy 
+			if (energy == EnergyFlag::BACKWARD)
+			{
+				BackWardEnergy(gray, energy_map);
+			}
+			else
+			{
+				// forward
+			}
+
+			// populate DP matrix
+			ComulativeEnergy(energy_map);
+
+			// find & remove optimal seam
+			RemoveVerticalSeam(energy_map, temp, gray);
+
+			gray.width--;
+			energy_map.width--;
+		}
+	}
+
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> SeamCarving(const Image<frmt, T>& in, 
 		const size_t width, const size_t height,
@@ -172,34 +215,21 @@ namespace qlm
 		GetAspectRatio(width, height, in, dx, dy, dec_x, dec_y);
 
 		// remove from the width
-		for (int iter = 0; iter < dx; iter++)
+		if (order == OrderFlag::WIDTH_FIRST)
 		{
-			// compute the energy 
-			if (energy == EnergyFlag::BACKWARD)
-			{
-				BackWardEnergy(gray, energy_map);
-			}
-			
-			// populate DP matrix
-			for (int y = 1; y < energy_map.height; y++)
-			{
-				for (int x = 0; x < energy_map.width; x++)
-				{
-					int32_t left = energy_map.GetPixel(std::max(x - 1, 0), y - 1).v;
-					int32_t mid = energy_map.GetPixel(x, y - 1).v;
-					int32_t right = energy_map.GetPixel(std::min(x + 1, (int)energy_map.width - 1), y - 1).v;
+			if (dec_x)
+				ReduceWidth(dx, energy, gray, energy_map, temp);
 
-					int32_t min_energy = std::min(left, std::min(mid, right));
+			//if (dec_y)
+				//ReduceHeight(dy, energy, gray, energy_map, temp);
+		}
+		else
+		{
+			//if (dec_y)
+				//ReduceHeight(dy, energy, gray, energy_map, temp);
 
-					energy_map.SetPixel(x, y, min_energy + energy_map.GetPixel(x, y).v);
-				}
-			}
-			
-			// find & remove optimal seam
-			RemoveVerticalSeam(energy_map, temp, gray);
-			
-			gray.width--;
-			energy_map.width--;
+			if (dec_x)
+				ReduceWidth(dx, energy, gray, energy_map, temp);
 		}
 		
 		for (int y = 0; y < out.height; y++)
