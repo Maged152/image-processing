@@ -39,7 +39,7 @@ namespace test
 		}
 
 		qlm::Image<qlm::ImageFormat::GRAY, uint8_t> mask{};
-		mask.create(templ.width, templ.height, 1);
+		mask.create(templ.width, templ.height, qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t> {1});
 
 		t.start();
 		auto out = qlm::MatchTemplate(in, templ, qlm::TemplateMatchFlag::SQDIFF, mask);

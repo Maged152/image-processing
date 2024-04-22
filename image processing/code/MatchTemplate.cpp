@@ -1,6 +1,5 @@
 #include "MatchTemplate.h"
 #include <functional>
-#include <iostream>
 #include <cmath>
 
 namespace qlm

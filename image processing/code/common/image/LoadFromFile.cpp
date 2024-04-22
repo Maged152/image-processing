@@ -31,6 +31,7 @@ namespace qlm
 		}
 
 		width = w;
+		stride = w;
 		height = h;
 		num_of_channels = n;
 

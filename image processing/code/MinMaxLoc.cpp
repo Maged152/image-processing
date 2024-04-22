@@ -11,19 +11,22 @@ namespace qlm
 		const size_t len = in.width * in.height;
 
 		// find min and max value
-		for (int i = 0; i < len; i++)
+		for (int y = 0; y < in.height; y++)
 		{
-			if constexpr (frmt == ImageFormat::GRAY)
+			for (int x = 0; x < in.width; x++)
 			{
-				T in_val = in.GetPixel(i).v;
-				if (in_val > max_val)
+				if constexpr (frmt == ImageFormat::GRAY)
 				{
-					max_val = in_val;
-				}
+					T in_val = in.GetPixel(x, y).v;
+					if (in_val > max_val)
+					{
+						max_val = in_val;
+					}
 
-				if (in_val < min_val)
-				{
-					min_val = in_val;
+					if (in_val < min_val)
+					{
+						min_val = in_val;
+					}
 				}
 			}
 		}
