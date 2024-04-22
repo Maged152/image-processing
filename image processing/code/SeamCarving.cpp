@@ -17,13 +17,14 @@ namespace qlm
 			return value < other.value;
 		}
 	};
-
-	void PrintImage(const Image<ImageFormat::GRAY, int32_t>& image)
+	
+	template<typename T>
+	void PrintImage(const Image<ImageFormat::GRAY, T>& image , const std::string& name)
 	{
 		Image<ImageFormat::GRAY, uint8_t> out{ image.width, image.height };
 
-		int32_t min_pix{ image.GetPixel(0).v };
-		int32_t max_pix = min_pix;
+		T min_pix{ image.GetPixel(0).v };
+		T max_pix = min_pix;
 
 		for (int y = 0; y < image.height; y++)
 		{
@@ -45,7 +46,7 @@ namespace qlm
 		}
 
 		std::cout << max_pix << "  "  << min_pix << "\n";
-		out.SaveToFile("tem0.jpg");
+		out.SaveToFile(name);
 	}
 
 	template<bool vertical, ImageFormat frmt, pixel_t T>
@@ -97,7 +98,7 @@ namespace qlm
 	}
 
 	template<ImageFormat frmt, pixel_t T>
-	void RemoveSeam(const Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& out, Image<ImageFormat::GRAY, T>& gray)
+	void RemoveVerticalSeam(const Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& out, Image<ImageFormat::GRAY, T>& gray)
 	{
 		// find optimal seam
 		int x_idx{ 0 };
@@ -115,12 +116,6 @@ namespace qlm
 		// remove the pixel
 		RemovePixel<true>(x_idx, energy_map.height - 1, out);
 		RemovePixel<true>(x_idx, energy_map.height - 1, gray);
-		
-		
-		const BorderMode<ImageFormat::GRAY, int32_t> border_mode = {
-			.border_type = BorderType::BORDER_CONSTANT,
-			.border_pixel = Pixel<ImageFormat::GRAY, int32_t>{ std::numeric_limits<int32_t>::max() }
-		};
 
 		for (int y = energy_map.height - 2; y >= 0; y--)
 		{
@@ -130,9 +125,9 @@ namespace qlm
 			mid.index = x_idx;
 			right.index = std::min(x_idx + 1, (int)energy_map.width - 1);
 
-			left.value = energy_map.GetPixel(left.index, y - 1).v;
-			mid.value = energy_map.GetPixel(mid.index, y - 1).v;
-			right.value = energy_map.GetPixel(right.index, y - 1).v;
+			left.value = energy_map.GetPixel(left.index, y).v;
+			mid.value = energy_map.GetPixel(mid.index, y).v;
+			right.value = energy_map.GetPixel(right.index, y).v;
 
 			const ValueIndex min_energy = std::min(left, std::min(mid, right));
 
@@ -141,6 +136,22 @@ namespace qlm
 			// remove the pixel
 			RemovePixel<true>(x_idx, y, out);
 			RemovePixel<true>(x_idx, y, gray);
+		}
+	}
+
+	template<pixel_t T>
+	void BackWardEnergy(const Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map)
+	{
+		Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3);
+		Image<ImageFormat::GRAY, int16_t> sobely = SobelY(gray, 3);
+
+		for (int y = 0; y < sobelx.height; y++)
+		{
+			for (int x = 0; x < sobelx.width; x++)
+			{
+				const int32_t grad_mag = std::abs(sobelx.GetPixel(x, y).v) + std::abs(sobely.GetPixel(x, y).v);
+				energy_map.SetPixel(x, y, grad_mag);
+			}
 		}
 	}
 
@@ -160,28 +171,13 @@ namespace qlm
 		bool dec_x, dec_y;
 		GetAspectRatio(width, height, in, dx, dy, dec_x, dec_y);
 
-		const BorderMode<ImageFormat::GRAY, int32_t> border_mode = {
-			.border_type = BorderType::BORDER_CONSTANT,
-			.border_pixel = Pixel<ImageFormat::GRAY, int32_t>{ std::numeric_limits<int32_t>::max() }
-		};
-
 		// remove from the width
 		for (int iter = 0; iter < dx; iter++)
 		{
 			// compute the energy 
 			if (energy == EnergyFlag::BACKWARD)
 			{
-				Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3);
-				Image<ImageFormat::GRAY, int16_t> sobely = SobelY(gray, 3);
-
-				for (int y = 0; y < sobelx.height; y++)
-				{
-					for (int x = 0; x < sobelx.width; x++)
-					{
-						int32_t grad_mag = std::abs(sobelx.GetPixel(x, y).v) + std::abs(sobely.GetPixel(x, y).v);
-						energy_map.SetPixel(x, y, grad_mag);
-					}
-				}
+				BackWardEnergy(gray, energy_map);
 			}
 			
 			// populate DP matrix
@@ -198,11 +194,10 @@ namespace qlm
 					energy_map.SetPixel(x, y, min_energy + energy_map.GetPixel(x, y).v);
 				}
 			}
-
-			//PrintImage(energy_map);
+			
 			// find & remove optimal seam
-			RemoveSeam(energy_map, temp, gray);
-				
+			RemoveVerticalSeam(energy_map, temp, gray);
+			
 			gray.width--;
 			energy_map.width--;
 		}
