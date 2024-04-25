@@ -1,6 +1,7 @@
 #include "SeamCarving.h"
 #include "Sobel.h"
 #include "ColorConvert.h"
+#include "Transposeh.h"
 #include <iostream>
 #include <cmath>
 
@@ -95,6 +96,39 @@ namespace qlm
 			dy = height - in.height;
 			dec_y = false;
 		}
+	}
+
+	void AllocMem(const size_t in_width, const size_t in_height, 
+		          const bool dec_x, const bool dec_y,
+		          const size_t dx, const size_t dy, const OrderFlag order,
+		          Image<ImageFormat::GRAY, int32_t>& energy_map)
+	{
+		size_t d0, d1;
+		if (dec_x && dec_y)
+		{
+			d0 = std::max(in_width, in_height);
+
+			if (order == OrderFlag::WIDTH_FIRST)
+			{
+				d1 = std::max(in_height, in_width - dx);
+			}
+			else
+			{
+				d1 = std::max(in_height - dy, in_width);
+			}
+		}
+		else if (dec_x)
+		{
+			d0 = in_width;
+			d1 = in_height;
+		}
+		else
+		{
+			d0 = in_height;
+			d1 = in_width;
+		}
+
+		energy_map.create(d0, d1);
 	}
 
 	template<ImageFormat frmt, pixel_t T>
@@ -195,7 +229,22 @@ namespace qlm
 
 			gray.width--;
 			energy_map.width--;
+			temp.width--;
 		}
+	}
+
+	template<ImageFormat frmt, pixel_t T>
+	void ReduceHeight(const int dy, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& temp)
+	{
+		auto gray_t = Transpose(gray);
+		energy_map.width = gray_t.width;
+		energy_map.height = gray_t.height;
+
+		auto temp_t = Transpose(temp);
+		ReduceWidth(dy, energy, gray_t, energy_map, temp_t);
+
+		temp = Transpose(temp_t);
+		gray = gray_t;
 	}
 
 	template<ImageFormat frmt, pixel_t T>
@@ -205,33 +254,50 @@ namespace qlm
 	{
 		Image<frmt, T> out{ width , height };
 
-		// buffers used in the algorithm
-		Image<frmt, T> temp = in;
+		// buffer used in the algorithm
 		Image<ImageFormat::GRAY, T> gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(in);
-		Image<ImageFormat::GRAY, int32_t> energy_map {in.width, in.height};
+		Image<ImageFormat::GRAY, int32_t> energy_map;
+		Image<frmt, T> temp = in;
+		
 		// how much to remove/insert
 		size_t dx, dy;
 		bool dec_x, dec_y;
 		GetAspectRatio(width, height, in, dx, dy, dec_x, dec_y);
 
-		// remove from the width
+		// allocate proper memory for energy_map
+		AllocMem(in.width, in.height, dec_x, dec_y, dx, dy, order, energy_map);
+	
 		if (order == OrderFlag::WIDTH_FIRST)
 		{
 			if (dec_x)
+			{
+				energy_map.width = gray.width;
+				energy_map.height = gray.height;
 				ReduceWidth(dx, energy, gray, energy_map, temp);
+			}
 
-			//if (dec_y)
-				//ReduceHeight(dy, energy, gray, energy_map, temp);
+			if (dec_y)
+			{
+				ReduceHeight(dy, energy, gray, energy_map, temp);
+			}
+				
 		}
 		else
 		{
-			//if (dec_y)
-				//ReduceHeight(dy, energy, gray, energy_map, temp);
+			if (dec_y)
+			{
+				ReduceHeight(dy, energy, gray, energy_map, temp);
+			}
 
 			if (dec_x)
+			{
+				energy_map.width = gray.width;
+				energy_map.height = gray.height;
 				ReduceWidth(dx, energy, gray, energy_map, temp);
+			}
 		}
 		
+		// TODO copy function 
 		for (int y = 0; y < out.height; y++)
 		{
 			for (int x = 0; x < out.width; x++)
