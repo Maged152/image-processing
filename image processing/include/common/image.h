@@ -182,6 +182,14 @@ namespace qlm
 			return Pixel<frmt, T>{};
 		}
 
+		void Copy(const Image<frmt, T>& in)
+		{
+			for (int y = 0; y < height; y++) 
+			{
+				std::memcpy(data + y * stride, in.data + y * in.stride, width * sizeof(Pixel<frmt, T>));
+			}
+		}
+
 		Pixel<frmt, T> GetPixel(int x, int y, const BorderMode<frmt, T>& border_mode) const;
 
 		bool LoadFromFile(const std::string& file_name);

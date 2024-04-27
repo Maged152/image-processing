@@ -2,7 +2,6 @@
 #include "Sobel.h"
 #include "ColorConvert.h"
 #include "Transposeh.h"
-#include <iostream>
 #include <cmath>
 
 namespace qlm
@@ -19,37 +18,7 @@ namespace qlm
 		}
 	};
 	
-	template<typename T>
-	void PrintImage(const Image<ImageFormat::GRAY, T>& image , const std::string& name)
-	{
-		Image<ImageFormat::GRAY, uint8_t> out{ image.width, image.height };
-
-		T min_pix{ image.GetPixel(0).v };
-		T max_pix = min_pix;
-
-		for (int y = 0; y < image.height; y++)
-		{
-			for (int x = 0; x < image.width; x++)
-			{
-				auto pix = image.GetPixel(x, y).v;
-				if (pix > max_pix) max_pix = pix;
-				else if (pix < min_pix) min_pix = pix;
-			}
-		}
-
-		for (int y = 0; y < image.height; y++)
-		{
-			for (int x = 0; x < image.width; x++)
-			{
-				uint8_t pix = ((image.GetPixel(x, y).v - min_pix) / (float)(max_pix - min_pix)) * 255;
-				out.SetPixel(x, y, pix);
-			}
-		}
-
-		std::cout << max_pix << "  "  << min_pix << "\n";
-		out.SaveToFile(name);
-	}
-
+	
 	template<bool vertical, ImageFormat frmt, pixel_t T>
 	void RemovePixel(const int x, const int y, Image<frmt, T>& out)
 	{
@@ -173,41 +142,36 @@ namespace qlm
 		}
 	}
 
-	void ComulativeEnergy(Image<ImageFormat::GRAY, int32_t>& energy_map)
-	{
-		for (int y = 1; y < energy_map.height; y++)
-		{
-			for (int x = 0; x < energy_map.width; x++)
-			{
-				int32_t left = energy_map.GetPixel(std::max(x - 1, 0), y - 1).v;
-				int32_t mid = energy_map.GetPixel(x, y - 1).v;
-				int32_t right = energy_map.GetPixel(std::min(x + 1, (int)energy_map.width - 1), y - 1).v;
-
-				int32_t min_energy = std::min(left, std::min(mid, right));
-
-				energy_map.SetPixel(x, y, min_energy + energy_map.GetPixel(x, y).v);
-			}
-		}
-	}
-
-
 	template<pixel_t T>
 	void BackwardEnergy(const Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map)
 	{
 		Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3);
 		Image<ImageFormat::GRAY, int16_t> sobely = SobelY(gray, 3);
 
-		for (int y = 0; y < sobelx.height; y++)
+		// first row
+		for (int x = 0; x < sobelx.width; x++)
+		{
+			const int32_t grad_mag = std::abs(sobelx.GetPixel(x, 0).v) + std::abs(sobely.GetPixel(x, 0).v);
+			energy_map.SetPixel(x, 0, grad_mag);
+		}
+
+		for (int y = 1; y < sobelx.height; y++)
 		{
 			for (int x = 0; x < sobelx.width; x++)
 			{
+				// current value
 				const int32_t grad_mag = std::abs(sobelx.GetPixel(x, y).v) + std::abs(sobely.GetPixel(x, y).v);
-				energy_map.SetPixel(x, y, grad_mag);
+				
+				// cumulative energy
+				const int32_t left = energy_map.GetPixel(std::max(x - 1, 0), y - 1).v;
+				const int32_t mid = energy_map.GetPixel(x, y - 1).v;
+				const int32_t right = energy_map.GetPixel(std::min(x + 1, (int)energy_map.width - 1), y - 1).v;
+
+				const int32_t min_energy = std::min(left, std::min(mid, right));
+
+				energy_map.SetPixel(x, y, grad_mag + min_energy);
 			}
 		}
-
-		// populate DP matrix
-		ComulativeEnergy(energy_map);
 	}
 
 	template<pixel_t T>
@@ -270,7 +234,7 @@ namespace qlm
 		}
 	}
 
-	template<ImageFormat frmt, pixel_t T>
+	template<EnergyFlag energy, ImageFormat frmt, pixel_t T>
 	void ReduceHeight(const int dy, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& temp)
 	{
 		auto gray_t = Transpose(gray);
@@ -334,14 +298,7 @@ namespace qlm
 			}
 		}
 		
-		// TODO copy function 
-		for (int y = 0; y < out.height; y++)
-		{
-			for (int x = 0; x < out.width; x++)
-			{
-				out.SetPixel(x, y, temp.GetPixel(x, y));
-			}
-		}
+		out.Copy(temp);
 
 		return out;
 	}
