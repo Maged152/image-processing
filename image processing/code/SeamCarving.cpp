@@ -173,22 +173,6 @@ namespace qlm
 		}
 	}
 
-	template<pixel_t T>
-	void BackWardEnergy(const Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map)
-	{
-		Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3);
-		Image<ImageFormat::GRAY, int16_t> sobely = SobelY(gray, 3);
-
-		for (int y = 0; y < sobelx.height; y++)
-		{
-			for (int x = 0; x < sobelx.width; x++)
-			{
-				const int32_t grad_mag = std::abs(sobelx.GetPixel(x, y).v) + std::abs(sobely.GetPixel(x, y).v);
-				energy_map.SetPixel(x, y, grad_mag);
-			}
-		}
-	}
-
 	void ComulativeEnergy(Image<ImageFormat::GRAY, int32_t>& energy_map)
 	{
 		for (int y = 1; y < energy_map.height; y++)
@@ -206,6 +190,62 @@ namespace qlm
 		}
 	}
 
+
+	template<pixel_t T>
+	void BackwardEnergy(const Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map)
+	{
+		Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3);
+		Image<ImageFormat::GRAY, int16_t> sobely = SobelY(gray, 3);
+
+		for (int y = 0; y < sobelx.height; y++)
+		{
+			for (int x = 0; x < sobelx.width; x++)
+			{
+				const int32_t grad_mag = std::abs(sobelx.GetPixel(x, y).v) + std::abs(sobely.GetPixel(x, y).v);
+				energy_map.SetPixel(x, y, grad_mag);
+			}
+		}
+
+		// populate DP matrix
+		ComulativeEnergy(energy_map);
+	}
+
+	template<pixel_t T>
+	void ForwardEnergy(const Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map)
+	{
+		for (int y = 1; y < gray.height; y++)
+		{
+			for (int x = 0; x < gray.width; x++)
+			{
+				const int left_x = std::max(0, x - 1);
+				const int right_x = std::min((int)gray.width - 1, x + 1);
+
+				const int32_t pix_left = gray.GetPixel(left_x, y).v;
+				const int32_t pix_right = gray.GetPixel(right_x, y).v;
+				const int32_t pix_top = gray.GetPixel(x, y - 1).v;
+
+				const int32_t cost_u = std::abs(pix_left - pix_right);
+				const int32_t cost_l = cost_u + std::abs(pix_left - pix_top);
+				const int32_t cost_r = cost_u + std::abs(pix_right - pix_top);
+
+				ValueIndex m_u, m_l, m_r;
+
+				m_u.index = cost_u;
+				m_l.index = cost_l;
+				m_r.index = cost_r;
+
+
+				m_u.value = cost_u + energy_map.GetPixel(x, y - 1).v;
+				m_l.value = cost_l + energy_map.GetPixel(left_x, y - 1).v;
+				m_r.value = cost_r + energy_map.GetPixel(right_x, y - 1).v;
+
+				const ValueIndex min_cost = std::min(m_u, std::min(m_l, m_r));
+
+				energy_map.SetPixel(x, y, min_cost.index);
+			}
+		}
+	}
+
 	template<ImageFormat frmt, pixel_t T>
 	void ReduceWidth(const int dx, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& temp)
 	{
@@ -214,15 +254,12 @@ namespace qlm
 			// compute the energy 
 			if (energy == EnergyFlag::BACKWARD)
 			{
-				BackWardEnergy(gray, energy_map);
+				BackwardEnergy(gray, energy_map);
 			}
 			else
 			{
-				// forward
+				ForwardEnergy(gray, energy_map);
 			}
-
-			// populate DP matrix
-			ComulativeEnergy(energy_map);
 
 			// find & remove optimal seam
 			RemoveVerticalSeam(energy_map, temp, gray);
