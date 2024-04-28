@@ -234,7 +234,7 @@ namespace qlm
 		}
 	}
 
-	template<EnergyFlag energy, ImageFormat frmt, pixel_t T>
+	template<ImageFormat frmt, pixel_t T>
 	void ReduceHeight(const int dy, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& temp)
 	{
 		auto gray_t = Transpose(gray);
@@ -245,7 +245,7 @@ namespace qlm
 		ReduceWidth(dy, energy, gray_t, energy_map, temp_t);
 
 		temp = Transpose(temp_t);
-		gray = gray_t;
+		gray = Transpose(gray_t);
 	}
 
 	template<ImageFormat frmt, pixel_t T>
