@@ -142,41 +142,56 @@ namespace qlm
 		}
 	}
 
+	
 	template<pixel_t T>
 	void BackwardEnergy(const Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map)
 	{
 		Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3);
 		Image<ImageFormat::GRAY, int16_t> sobely = SobelY(gray, 3);
 
-		// first row
-		for (int x = 0; x < sobelx.width; x++)
-		{
-			const int32_t grad_mag = std::abs(sobelx.GetPixel(x, 0).v) + std::abs(sobely.GetPixel(x, 0).v);
-			energy_map.SetPixel(x, 0, grad_mag);
-		}
-
-		for (int y = 1; y < sobelx.height; y++)
+		for (int y = 0; y < sobelx.height; y++)
 		{
 			for (int x = 0; x < sobelx.width; x++)
 			{
-				// current value
 				const int32_t grad_mag = std::abs(sobelx.GetPixel(x, y).v) + std::abs(sobely.GetPixel(x, y).v);
-				
-				// cumulative energy
-				const int32_t left = energy_map.GetPixel(std::max(x - 1, 0), y - 1).v;
-				const int32_t mid = energy_map.GetPixel(x, y - 1).v;
-				const int32_t right = energy_map.GetPixel(std::min(x + 1, (int)energy_map.width - 1), y - 1).v;
-
-				const int32_t min_energy = std::min(left, std::min(mid, right));
-
-				energy_map.SetPixel(x, y, grad_mag + min_energy);
+				energy_map.SetPixel(x, y, grad_mag);
 			}
 		}
 	}
 
+	void ComulativeEnergy(Image<ImageFormat::GRAY, int32_t>& energy_map)
+	{
+		for (int y = 1; y < energy_map.height; y++)
+		{
+			for (int x = 0; x < energy_map.width; x++)
+			{
+				int32_t left = energy_map.GetPixel(std::max(x - 1, 0), y - 1).v;
+				int32_t mid = energy_map.GetPixel(x, y - 1).v;
+				int32_t right = energy_map.GetPixel(std::min(x + 1, (int)energy_map.width - 1), y - 1).v;
+
+				int32_t min_energy = std::min(left, std::min(mid, right));
+
+				energy_map.SetPixel(x, y, min_energy + energy_map.GetPixel(x, y).v);
+			}
+		}
+	}
+	
 	template<pixel_t T>
 	void ForwardEnergy(const Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map)
 	{
+		for (int x = 0; x < gray.width; x++)
+		{
+			const int left_x = std::max(0, x - 1);
+			const int right_x = std::min((int)gray.width - 1, x + 1);
+
+			const int32_t pix_left = gray.GetPixel(left_x, 0).v;
+			const int32_t pix_right = gray.GetPixel(right_x, 0).v;
+
+			const int32_t cost = std::abs(pix_left - pix_right);
+
+			energy_map.SetPixel(x, 0, cost);
+		}
+
 		for (int y = 1; y < gray.height; y++)
 		{
 			for (int x = 0; x < gray.width; x++)
@@ -224,6 +239,9 @@ namespace qlm
 			{
 				ForwardEnergy(gray, energy_map);
 			}
+
+			// populate DP matrix
+			ComulativeEnergy(energy_map);
 
 			// find & remove optimal seam
 			RemoveVerticalSeam(energy_map, temp, gray);
