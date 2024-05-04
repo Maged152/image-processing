@@ -19,26 +19,34 @@ namespace qlm
 	};
 	
 	
-	template<bool vertical, ImageFormat frmt, pixel_t T>
+	template<ImageFormat frmt, pixel_t T>
 	void RemovePixel(const int x, const int y, Image<frmt, T>& out)
-	{
-		if constexpr (vertical)
+	{	
+		// shift left
+		for (int i = x; i < out.width - 1; i++)
 		{
-			// shift left
-			for (int i = x; i < out.width - 1; i++)
-			{
-				out.SetPixel(i, y, out.GetPixel(i + 1, y));
-			}
-		}
-		else
-		{
-			// shift up
-			for (int i = y; i < out.height - 1; i++)
-			{
-				out.SetPixel(x, i, out.GetPixel(x, i + 1));
-			}
+			out.SetPixel(i, y, out.GetPixel(i + 1, y));
 		}
 	}
+
+	template< ImageFormat frmt, pixel_t T>
+	void InsertPixel(const int x, const int y, Image<frmt, T>& out)
+	{
+		const int left_x = x;
+		const int right_x = x + 1;
+
+		// new pixel
+		const Pixel<frmt, T> pix = (out.GetPixel(left_x, y) + out.GetPixel(right_x, y)) / 2;
+
+		// shift pixels
+		for (int i = out.width - 2; i < x; i--)
+		{
+			out.SetPixel(i + 1, y, out.GetPixel(i, y));
+		}
+
+		out.SetPixel(x + 1, y, pix);
+	}
+		
 
 	template<ImageFormat frmt, pixel_t T>
 	void GetAspectRatio(const size_t width, const size_t height, const Image<frmt, T>& in, 
@@ -73,72 +81,98 @@ namespace qlm
 		          Image<ImageFormat::GRAY, int32_t>& energy_map)
 	{
 		size_t d0, d1;
-		if (dec_x && dec_y)
-		{
-			d0 = std::max(in_width, in_height);
 
-			if (order == OrderFlag::WIDTH_FIRST)
-			{
-				d1 = std::max(in_height, in_width - dx);
-			}
-			else
-			{
-				d1 = std::max(in_height - dy, in_width);
-			}
-		}
-		else if (dec_x)
+		d0 = std::max(in_width, in_height);
+
+		if (order == OrderFlag::WIDTH_FIRST)
 		{
-			d0 = in_width;
-			d1 = in_height;
+			d1 = std::max(in_height, in_width - dx);
 		}
 		else
 		{
-			d0 = in_height;
-			d1 = in_width;
+			d1 = std::max(in_height - dy, in_width);
 		}
+	
 
 		energy_map.create(d0, d1);
+	}
+	
+	int GetNextIndex(const Image<ImageFormat::GRAY, int32_t>& energy_map, const int prev_x, const int cur_y)
+	{
+		ValueIndex left, right, mid;
+
+		left.index = std::max(prev_x - 1, 0);
+		mid.index = prev_x;
+		right.index = std::min(prev_x + 1, (int)energy_map.width - 1);
+
+		left.value = energy_map.GetPixel(left.index, cur_y).v;
+		mid.value = energy_map.GetPixel(mid.index, cur_y).v;
+		right.value = energy_map.GetPixel(right.index, cur_y).v;
+
+		const ValueIndex min_energy = std::min(left, std::min(mid, right));
+
+		return min_energy.index;
+	}
+
+	int GetMinRowEnergy(const Image<ImageFormat::GRAY, int32_t>& energy_map, const int y)
+	{
+		int x_idx{ 0 };
+		int32_t min_val = energy_map.GetPixel(x_idx, y).v;
+
+		for (int x = 1; x < energy_map.width; x++)
+		{
+			if (min_val > energy_map.GetPixel(x, y).v)
+			{
+				min_val = energy_map.GetPixel(x, y).v;
+				x_idx = x;
+			}
+		}
+
+		return x_idx;
 	}
 
 	template<ImageFormat frmt, pixel_t T>
 	void RemoveVerticalSeam(const Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& out, Image<ImageFormat::GRAY, T>& gray)
 	{
 		// find optimal seam
-		int x_idx{ 0 };
-		int32_t min_val = energy_map.GetPixel(x_idx, energy_map.height - 1).v;
-
-		for (int x = 1; x < energy_map.width; x++)
-		{
-			if (min_val > energy_map.GetPixel(x, energy_map.height - 1).v)
-			{
-				min_val = energy_map.GetPixel(x, energy_map.height - 1).v;
-				x_idx = x;
-			}
-		}
+		// min in the last row
+		int x_idx = GetMinRowEnergy(energy_map, energy_map.height - 1);
 
 		// remove the pixel
-		RemovePixel<true>(x_idx, energy_map.height - 1, out);
-		RemovePixel<true>(x_idx, energy_map.height - 1, gray);
+		RemovePixel(x_idx, energy_map.height - 1, out);
+		RemovePixel(x_idx, energy_map.height - 1, gray);
 
+		// process rest of the rows
 		for (int y = energy_map.height - 2; y >= 0; y--)
 		{
-			ValueIndex left, right, mid;
-
-			left.index = std::max(x_idx - 1, 0);
-			mid.index = x_idx;
-			right.index = std::min(x_idx + 1, (int)energy_map.width - 1);
-
-			left.value = energy_map.GetPixel(left.index, y).v;
-			mid.value = energy_map.GetPixel(mid.index, y).v;
-			right.value = energy_map.GetPixel(right.index, y).v;
-
-			const ValueIndex min_energy = std::min(left, std::min(mid, right));
-
-			x_idx = min_energy.index;
+			x_idx = GetNextIndex(energy_map, x_idx, y);
 
 			// remove the pixel
-			RemovePixel<true>(x_idx, y, out);
-			RemovePixel<true>(x_idx, y, gray);
+			RemovePixel(x_idx, y, out);
+			RemovePixel(x_idx, y, gray);
+		}
+	}
+
+	template<ImageFormat frmt, pixel_t T>
+	void InsertVerticalSeam(const Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& out, Image<ImageFormat::GRAY, T>& gray)
+	{
+		// find optimal seam
+		// min in the last row
+		int x_idx = GetMinRowEnergy(energy_map, energy_map.height - 1);
+
+		// remove the pixel
+		RemovePixel(x_idx, energy_map.height - 1, gray);
+
+		// insert the pixel
+		InsertPixel(x_idx, energy_map.height - 1, out);
+
+		// process rest of the rows
+		for (int y = energy_map.height - 2; y >= 0; y--)
+		{
+			x_idx = GetNextIndex(energy_map, x_idx, y);
+
+			RemovePixel(x_idx, y, gray);
+			InsertPixel(x_idx, y, out);
 		}
 	}
 
@@ -251,6 +285,33 @@ namespace qlm
 	}
 
 	template<ImageFormat frmt, pixel_t T>
+	void EnlargeWidth(const int dx, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& temp)
+	{
+		for (int iter = 0; iter < dx; iter++)
+		{
+			// compute the energy
+			EnergyFunction(gray, energy_map);
+
+			// populate DP matrix
+			if (energy == EnergyFlag::BACKWARD)
+			{
+				BackwardComulative(energy_map);
+			}
+			else
+			{
+				ForwardComulative(gray, energy_map);
+			}
+
+			// find & insert optimal seam
+			InsertVerticalSeam(energy_map, temp, gray);
+
+			gray.width--;
+			energy_map.width--;
+			temp.width++;
+		}
+	}
+
+	template<ImageFormat frmt, pixel_t T>
 	void ReduceHeight(const int dy, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, Image<ImageFormat::GRAY, int32_t>& energy_map, Image<frmt, T>& temp)
 	{
 		auto gray_t = Transpose(gray);
@@ -291,6 +352,12 @@ namespace qlm
 				energy_map.width = gray.width;
 				energy_map.height = gray.height;
 				ReduceWidth(dx, energy, gray, energy_map, temp);
+			}
+			else
+			{
+				energy_map.width = gray.width;
+				energy_map.height = gray.height;
+				EnlargeWidth(dx, energy, gray, energy_map, temp);
 			}
 
 			if (dec_y)
