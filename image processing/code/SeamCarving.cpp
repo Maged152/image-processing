@@ -36,19 +36,19 @@ namespace qlm
     template< ImageFormat frmt, pixel_t T>
     void InsertPixel(const int x, const int y, Image<frmt, T>& out)
     {
+        // new pixel
+        const int left_x = x;
+        const int right_x = std::min(x + 1, (int)out.width - 2);
+
+        const Pixel<frmt, qlm::cast_t<T, T>> pix_l = out.GetPixel(left_x, y);
+        const Pixel<frmt, qlm::cast_t<T, T>> pix_r = out.GetPixel(right_x, y);
+        const Pixel<frmt, T> pix = (pix_l + pix_r) / 2;
+
         // shift pixels
         for (int i = out.width - 2; i > x; i--)
         {
             out.SetPixel(i + 1, y, out.GetPixel(i, y));
         }
-
-        // new pixel
-        const int left_x = x;
-        const int right_x = std::min(x + 1, (int)out.width - 1);
-        
-        const Pixel<frmt, qlm::cast_t<T, T>> pix_l = out.GetPixel(left_x, y);
-        const Pixel<frmt, qlm::cast_t<T, T>> pix_r = out.GetPixel(right_x, y);
-        const Pixel<frmt, T> pix = (pix_l + pix_r) / 2;
 
         out.SetPixel(x + 1, y, pix);
     }
@@ -120,15 +120,19 @@ namespace qlm
         return min_energy.index;
     }
 
-    int GetIncrement(const int x_idx, const std::vector<int>& base_line)
+    int GetIncrement(const int x_idx, std::vector<int>& base_line)
     {
         int inc = 0;
 
         for (int i = 0; i < base_line.size(); i++)
         {
-            if (x_idx > base_line[i])
+            if (x_idx >= base_line[i])
             {
                 inc += 2;
+            }
+            else
+            {
+                base_line[i]--;
             }
         }
         return inc;
@@ -174,17 +178,15 @@ namespace qlm
     }
 
     template<ImageFormat frmt, pixel_t T>
-    void InsertVerticalSeam(const energy_t& energy_map, Image<frmt, T>& out, Image<ImageFormat::GRAY, T>& gray, std::vector<int>& base_line)
+    void InsertVerticalSeam(const energy_t& energy_map, Image<frmt, T>& out, Image<ImageFormat::GRAY, T>& gray, std::vector<std::vector<int>>& base_line)
     {
         // find optimal seam
         // min in the last row
         int x_idx = GetMinRowEnergy(energy_map, energy_map.height - 1);
-        
+        int inc = GetIncrement(x_idx, base_line[energy_map.height - 1]);
+        base_line[energy_map.height - 1].push_back(x_idx);
         // remove the pixel
         RemovePixel(x_idx, energy_map.height - 1, gray);
-
-        const int inc = GetIncrement(x_idx, base_line);
-        base_line.push_back(x_idx);
 
         // insert the pixel
         InsertPixel(x_idx + inc, energy_map.height - 1, out);
@@ -193,10 +195,14 @@ namespace qlm
         for (int y = energy_map.height - 2; y >= 0; y--)
         {
             x_idx = GetNextIndex(energy_map, x_idx, y);
+            inc = GetIncrement(x_idx, base_line[y]);
+            base_line[y].push_back(x_idx);
 
             RemovePixel(x_idx, y, gray);
             InsertPixel(x_idx + inc, y, out);
         }
+
+        
     }
 
     
@@ -310,7 +316,7 @@ namespace qlm
     template<ImageFormat frmt, pixel_t T>
     void EnlargeWidth(const int dx, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, energy_t& energy_map, Image<frmt, T>& temp)
     {
-        std::vector<int> base_line;
+        std::vector<std::vector<int>> base_line(energy_map.height);
 
         for (int iter = 0; iter < dx; iter++)
         {
