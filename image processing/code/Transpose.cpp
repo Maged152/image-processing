@@ -3,26 +3,33 @@
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> Transpose(const Image<frmt, T>& in)
+	void Transpose(const Image<frmt, T>& in, Image<frmt, T>& out)
 	{
-		const size_t img_width = in.width;
-		const size_t img_height = in.height;
-		// output image
-		Image<frmt, T> out = Image<frmt, T>{};
-		out.create(img_height, img_width);
-
-		// loop over the image
-		for (int y = 0; y < img_height; y++)
+		for (int y = 0; y < in.height; y++)
 		{
-			for (int x = 0; x < img_width; x++)
+			for (int x = 0; x < in.width; x++)
 			{
 				out.SetPixel(y, x, in.GetPixel(x, y));
 			}
 		}
+	}
+
+	template<ImageFormat frmt, pixel_t T>
+	Image<frmt, T> Transpose(const Image<frmt, T>& in)
+	{
+		// output image
+		Image<frmt, T> out{ in.height, in.width };
+
+		Transpose(in, out);
 
 		return out;
 	}
 
+
+	template void Transpose(const Image<ImageFormat::RGB, uint8_t>&, Image<ImageFormat::RGB, uint8_t>&);
+	template void Transpose(const Image<ImageFormat::GRAY, uint8_t>&, Image<ImageFormat::GRAY, uint8_t>&);
+	template void Transpose(const Image<ImageFormat::RGB, int16_t>&, Image<ImageFormat::RGB, int16_t>&);
+	template void Transpose(const Image<ImageFormat::GRAY, int16_t>&, Image<ImageFormat::GRAY, int16_t>&);
 
 	template Image<ImageFormat::RGB, uint8_t> Transpose(const Image<ImageFormat::RGB, uint8_t>&);
 	template Image<ImageFormat::GRAY, uint8_t> Transpose(const Image<ImageFormat::GRAY, uint8_t>&);
