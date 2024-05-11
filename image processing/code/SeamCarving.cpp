@@ -58,7 +58,7 @@ namespace qlm
     void GetAspectRatio(const size_t width, const size_t height, const Image<frmt, T>& in, 
                               size_t& dx, size_t& dy, bool& dec_x, bool& dec_y)
     {
-        if (width < in.width)
+        if (width <= in.width)
         {
             dx = in.width - width;
             dec_x = true;
@@ -69,7 +69,7 @@ namespace qlm
             dec_x = false;
         }
 
-        if (height < in.height)
+        if (height <= in.height)
         {
             dy = in.height - height;
             dec_y = true;
@@ -353,8 +353,35 @@ namespace qlm
         auto temp_t = Transpose(temp);
         ReduceWidth(dy, energy, gray_t, energy_map, temp_t);
 
-        temp = Transpose(temp_t);
-        gray = Transpose(gray_t);
+        temp.height = temp_t.width;
+        temp.width = temp_t.height;
+        Transpose(temp_t, temp);
+
+        gray.height = gray_t.width;
+        gray.width = gray_t.height;
+        Transpose(gray_t, gray);
+    }
+
+    template<ImageFormat frmt, pixel_t T>
+    void EnlargeHeight(const int dy, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, energy_t& energy_map, Image<frmt, T>& temp)
+    {
+        auto gray_t = Transpose(gray);
+        energy_map.width = gray_t.width;
+        energy_map.height = gray_t.height;
+
+        Image<frmt, T> temp_t { gray_t.width + dy, gray_t.height };
+        temp_t.width = gray_t.width;
+        Transpose(temp, temp_t);
+        
+        EnlargeWidth(dy, energy, gray_t, energy_map, temp_t); 
+
+        temp.height = temp_t.width;
+        temp.width = temp_t.height;
+        Transpose(temp_t, temp);
+        
+        gray.height = gray_t.width;
+        gray.width = gray_t.height;
+        Transpose(gray_t, gray);
     }
 
     template<ImageFormat frmt, pixel_t T>
@@ -363,7 +390,6 @@ namespace qlm
         const EnergyFlag energy, const OrderFlag order)
     {
         Image<frmt, T> out{ width , height };
-
         // buffer used in the algorithm
         Image<ImageFormat::GRAY, T> gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(in);
         energy_t energy_map;
@@ -381,19 +407,17 @@ namespace qlm
 
         // allocate proper memory for energy_map
         AllocMem(in.width, in.height, dec_x, dec_y, dx, dy, order, energy_map);
-    
+        energy_map.width = gray.width;
+        energy_map.height = gray.height;
+
         if (order == OrderFlag::WIDTH_FIRST)
         {
             if (dec_x)
             {
-                energy_map.width = gray.width;
-                energy_map.height = gray.height;
                 ReduceWidth(dx, energy, gray, energy_map, temp);
             }
             else
             {
-                energy_map.width = gray.width;
-                energy_map.height = gray.height;
                 EnlargeWidth(dx, energy, gray, energy_map, temp);
             }
 
@@ -401,7 +425,10 @@ namespace qlm
             {
                 ReduceHeight(dy, energy, gray, energy_map, temp);
             }
-                
+            else
+            {
+                EnlargeHeight(dy, energy, gray, energy_map, temp);
+            }   
         }
         else
         {
@@ -409,15 +436,22 @@ namespace qlm
             {
                 ReduceHeight(dy, energy, gray, energy_map, temp);
             }
+            else
+            {
+                EnlargeHeight(dy, energy, gray, energy_map, temp);
+            }
 
             if (dec_x)
             {
-                energy_map.width = gray.width;
-                energy_map.height = gray.height;
                 ReduceWidth(dx, energy, gray, energy_map, temp);
+            }
+            else
+            {
+                EnlargeWidth(dx, energy, gray, energy_map, temp);
             }
         }
         
+
         out.Copy(temp);
 
         return out;
