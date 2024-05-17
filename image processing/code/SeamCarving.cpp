@@ -80,28 +80,6 @@ namespace qlm
             dec_y = false;
         }
     }
-
-    void AllocMem(const size_t in_width, const size_t in_height, 
-                  const bool dec_x, const bool dec_y,
-                  const size_t dx, const size_t dy, const OrderFlag order,
-                  energy_t& energy_map)
-    {
-        size_t d0, d1;
-
-        d0 = std::max(in_width, in_height);
-
-        if (order == OrderFlag::WIDTH_FIRST)
-        {
-            d1 = std::max(in_height, in_width - dx);
-        }
-        else
-        {
-            d1 = std::max(in_height - dy, in_width);
-        }
-    
-
-        energy_map.create(d0, d1);
-    }
     
     int GetNextIndex(const energy_t& energy_map, const int prev_x, const int cur_y)
     {
@@ -341,6 +319,10 @@ namespace qlm
             energy_map.width--;
             
         }
+
+        // update the gray image
+        gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(temp);
+        energy_map.width = gray.width;
     }
 
     template<ImageFormat frmt, pixel_t T>
@@ -379,9 +361,9 @@ namespace qlm
         temp.width = temp_t.height;
         Transpose(temp_t, temp);
         
-        gray.height = gray_t.width;
-        gray.width = gray_t.height;
-        Transpose(gray_t, gray);
+        //gray.height = gray_t.width;
+        //gray.width = gray_t.height;
+        gray = Transpose(gray_t);
     }
 
     template<ImageFormat frmt, pixel_t T>
@@ -394,7 +376,8 @@ namespace qlm
         Image<ImageFormat::GRAY, T> gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(in);
         energy_t energy_map;
 
-        Image<frmt, T> temp {std::max(width, in.width), std::max(height, in.height)};
+        const size_t max_d = std::max(std::max(width, in.width), std::max(height, in.height));
+        Image<frmt, T> temp { max_d, max_d };
         temp.height = in.height;
         temp.width = in.width;
         temp.Copy(in);
@@ -406,7 +389,7 @@ namespace qlm
         GetAspectRatio(width, height, in, dx, dy, dec_x, dec_y);
 
         // allocate proper memory for energy_map
-        AllocMem(in.width, in.height, dec_x, dec_y, dx, dy, order, energy_map);
+        energy_map.create(max_d, max_d);
         energy_map.width = gray.width;
         energy_map.height = gray.height;
 
