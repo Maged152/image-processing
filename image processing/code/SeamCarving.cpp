@@ -4,7 +4,6 @@
 #include "Transposeh.h"
 #include <cmath>
 #include <vector>
-#include <iostream>
 
 namespace qlm
 {

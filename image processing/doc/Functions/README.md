@@ -16,6 +16,7 @@ Here you can find the implementation of
     * [Translate](./Geometric%20Transformations/Translate)
     * [Warp Affine](./Geometric%20Transformations/WarpAffine)
     * [Warp perspective](./Geometric%20Transformations/WarpPerspective)
+    * [Seam Carving](./Geometric%20Transformations/SeamCarving)
 * Features Detection
     * [Hough lines](./Features%20Detection/HoughLines)
     * [Harris Corner](./Features%20Detection/HarrisCorner)
