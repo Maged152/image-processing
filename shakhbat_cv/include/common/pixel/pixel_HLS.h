@@ -4,8 +4,8 @@
 namespace qlm
 {
     // Specialization for HLS format
-    template<qlm::pixel_t T>
-    class qlm::Pixel<qlm::ImageFormat::HLS, T>
+    template<pixel_t T>
+    class Pixel<ImageFormat::HLS, T>
     {
     public:
         T h, l, s, a;

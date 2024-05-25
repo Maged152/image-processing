@@ -1,5 +1,5 @@
 #include "common/image.h"
-#include "stb_image_write.h"
+#include "stb/stb_image_write.h"
 #include <fstream>
 
 namespace qlm

@@ -121,11 +121,6 @@ template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
 qlm::ConvertBitDepth<qlm::ImageFormat::RGB, int16_t, uint8_t>
 (const qlm::Image<qlm::ImageFormat::RGB, int16_t>&);
 
-// Explicit instantiation for GRAY, uint8_t, int16_t
-template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
-qlm::ConvertBitDepth<qlm::ImageFormat::GRAY, uint8_t, int16_t>
-(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&);
-
 
 // Explicit instantiation for GRAY, uint8_t, int16_t
 template qlm::Pixel<qlm::ImageFormat::GRAY, int16_t>

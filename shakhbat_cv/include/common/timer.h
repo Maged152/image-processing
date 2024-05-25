@@ -5,7 +5,7 @@
 
 namespace qlm
 {
-	using time_point = std::chrono::time_point<std::chrono::steady_clock>;
+	using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
 	using sec = std::chrono::seconds;
 	using msec = std::chrono::milliseconds;
 	using usec = std::chrono::microseconds;

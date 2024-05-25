@@ -4,8 +4,8 @@
 namespace qlm
 {
     // Specialization for HSV format
-    template<qlm::pixel_t T>
-    class qlm::Pixel<qlm::ImageFormat::HSV, T>
+    template<pixel_t T>
+    class Pixel<ImageFormat::HSV, T>
     {
     public:
         T h, s, v, a;

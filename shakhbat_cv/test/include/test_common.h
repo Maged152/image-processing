@@ -4,6 +4,7 @@
 #include <string>
 #include <windows.h>
 #include <array>
+#include <filesystem>
 
 #define CONSOLE_COLOR_BLACK 0
 #define CONSOLE_COLOR_BLUE 1
@@ -24,7 +25,7 @@
 
 namespace test
 {
-    const std::string example_folder = "doc/Examples/";
+    const std::string example_folder = "../shakhbat_cv/doc/Examples/";
 
     inline void PrintTestResults(const std::string& name,
                                  const bool res, 
@@ -54,7 +55,7 @@ namespace test
     }
 
 
-    template <int size>
+    template <size_t size>
     inline void PrintTestResults(const std::string& name,
         const std::array<bool, size>& res,
         const std::array<qlm::Timer<qlm::usec>, size>& time,

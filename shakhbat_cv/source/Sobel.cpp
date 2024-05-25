@@ -136,7 +136,7 @@ namespace qlm
 		const in_t min_value = std::numeric_limits<in_t>::lowest();
 		const in_t max_value = std::numeric_limits<in_t>::max();
 
-		const wider_t<in_t> max_mag = std::sqrtf(std::powf(max_value, 2) + std::powf(max_value, 2));
+		const wider_t<in_t> max_mag = std::sqrt(std::pow(max_value, 2) + std::pow(max_value, 2));
 
 		SobelDerivatives<in_t, out_t> out {in.width, in.height};
 		// x derivative
@@ -158,8 +158,8 @@ namespace qlm
 			x_pix = sobel_x.GetPixel(i);
 			y_pix = sobel_y.GetPixel(i);
 			// calculate the magnitude
-			v = std::sqrtf(std::powf(x_pix.v, 2) + std::powf(y_pix.v, 2));
-			a = std::sqrtf(std::powf(x_pix.a, 2) + std::powf(y_pix.a, 2));
+			v = std::sqrt(std::pow(x_pix.v, 2) + std::pow(y_pix.v, 2));
+			a = std::sqrt(std::pow(x_pix.a, 2) + std::pow(y_pix.a, 2));
 			// normalize value
 			v = (v - min_value) / (float)(max_mag - min_value);
 			a = (a - min_value) / (float)(max_mag - min_value);
@@ -169,7 +169,7 @@ namespace qlm
 			// store
 			out.magnitude.SetPixel(i, out_pix);
 			// calculate the angle
-			angle = std::atan2f(out.sobel_y.GetPixel(i).v, out.sobel_x.GetPixel(i).v) * 180.0f / M_PI;
+			angle = std::atan2(out.sobel_y.GetPixel(i).v, out.sobel_x.GetPixel(i).v) * 180.0f / M_PI;
 			out.angle[i] = angle;
 		}
 

@@ -4,8 +4,8 @@
 namespace qlm
 {
     // Specialization for RGB format
-    template<qlm::pixel_t T>
-    class qlm::Pixel<qlm::ImageFormat::RGB, T>
+    template<pixel_t T>
+    class Pixel<ImageFormat::RGB, T>
     {
     public:
         T r, g, b, a;

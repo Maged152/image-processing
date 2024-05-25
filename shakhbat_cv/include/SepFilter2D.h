@@ -8,7 +8,7 @@ namespace qlm
 	Image<frmt, dst_t> SepFilter2D(
 		const Image<frmt, src_t>& in,
 		const SepKernel& kernel,
-		const BorderMode<frmt, src_t>& border_mode = BorderMode{}
+		const BorderMode<frmt, src_t>& border_mode =  BorderMode<frmt, src_t>{}
 	);
 
 }

@@ -4,8 +4,8 @@
 namespace qlm
 {
     // Specialization for YCrCb format
-    template<qlm::pixel_t T>
-    class qlm::Pixel<qlm::ImageFormat::YCrCb, T>
+    template<pixel_t T>
+    class Pixel<ImageFormat::YCrCb, T>
     {
     public:
         T y, cr, cb, a;

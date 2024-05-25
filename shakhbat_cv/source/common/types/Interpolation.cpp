@@ -22,10 +22,10 @@ namespace qlm
 	Pixel<frmt, T> BilinearInterpolation(const Image<frmt, T>& src, float x, float y, const BorderMode<frmt, T>& border_mode)
 	{
 		// get the four points
-		int x1 = std::floorf(x);
-		int y1 = std::floorf(y);
-		int x2 = std::ceilf(x);
-		int y2 = std::ceilf(y);
+		int x1 = std::floor(x);
+		int y1 = std::floor(y);
+		int x2 = std::ceil(x);
+		int y2 = std::ceil(y);
 		// get the four neighbors
 		qlm::Pixel<frmt, T> tl = src.GetPixel(x1, y1, border_mode);
 		qlm::Pixel<frmt, T> tr = src.GetPixel(x2, y1, border_mode);

@@ -3,7 +3,7 @@
 
 int main()
 {
-    //test::Test_All();
+    test::Test_All();
     qlm::Timer<qlm::msec> t{};
     std::string file_name = "castle.jpg"; 
     // load the input image

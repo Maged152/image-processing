@@ -4,8 +4,8 @@
 namespace qlm
 {
     // Specialization for GRAY format
-    template<qlm::pixel_t T>
-    class qlm::Pixel<qlm::ImageFormat::GRAY, T>
+    template<pixel_t T>
+    class Pixel<ImageFormat::GRAY, T>
     {
     public:
         T v, a;

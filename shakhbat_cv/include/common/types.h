@@ -116,8 +116,8 @@ namespace qlm
 	struct Rectangle
 	{
 		Point<int> top_left;
-		int width;
-		int height;
+		size_t width;
+		size_t height;
 	};
 
 	template<class T>

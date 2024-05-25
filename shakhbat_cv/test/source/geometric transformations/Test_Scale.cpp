@@ -8,9 +8,10 @@ namespace test
 		HANDLE col_handle;
 		col_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-		std::array<bool, 3> res_bool;
-		std::array<float, 3> normalization;
-		std::array<qlm::Timer<qlm::usec>, 3> res_time;
+		const size_t num_out = 3;
+		std::array<bool, num_out> res_bool;
+		std::array<float, num_out> normalization;
+		std::array<qlm::Timer<qlm::usec>, num_out> res_time;
 
 		const std::string folder_path = example_folder + "Geometric Transformations/Scale/";
 		const std::string test_name = "Test_Scale[NN, BI, CI]";
