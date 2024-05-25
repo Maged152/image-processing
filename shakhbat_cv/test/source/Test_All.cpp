@@ -34,6 +34,7 @@ namespace test
 		res &= Test_WarpAffine();
 		res &= Test_Scale();
 		res &= Test_WarpPerspective();
+		res &= Test_SeamCarving();
 
 		return res;
 	}

@@ -162,7 +162,9 @@ namespace test
         // check the dimensions
         if (in1.width != in2.width || in1.height != in2.height)
         {
-            std::cout << "the dimensions are not the same\n";
+            std::cout << "the dimensions are not the same" 
+                      << in1.width << "x" << in1.height << " vs "
+                      << in2.width << "x" << in2.height << "\n" ;
             return false;
         }
         // check the pixels

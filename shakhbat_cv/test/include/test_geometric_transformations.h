@@ -20,9 +20,12 @@ namespace test
 	// Transpose
 	bool Test_Transpose();
 
-	// WarpAffine
+	// Warp Affine
 	bool Test_WarpAffine();
 
-	// WarpPerspective
+	// Warp Perspective
 	bool Test_WarpPerspective();
+
+	// Seam Carving
+	bool Test_SeamCarving();
 }
