@@ -98,4 +98,4 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 
 
 * [Example](../../../Examples/Filters/Sobel)
-* [Implementation](../../../../code/Sobel.cpp)
+* You can check the implementation [here](../../../../source/Sobel.cpp)

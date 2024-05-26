@@ -24,7 +24,7 @@ a 2D rotation around a specified center point by a given angle and scaling facto
 ### Return Value
 The function returns a transformation matrix representing transformation of type `TransformationMatrix`.
 
-* [Implementation](../../../../code/WarpAffine/WarpAffine.cpp)
+* You can check the implementation [here](../../../../source/WarpAffine/WarpAffine.cpp)
 
 ## Get Affine Transform
 
@@ -50,7 +50,7 @@ destination points.
 ### Return Value
 The function returns a transformation matrix representing transformation of type `TransformationMatrix`.
 
-* [Implementation](../../../../code/WarpAffine/GetWarpAffine.cpp)
+* You can check the implementation [here](../../../../source/WarpAffine/GetWarpAffine.cpp)
 
 
 ## Get perspective Transform
@@ -78,4 +78,4 @@ destination points.
 ### Return Value
 The function returns a transformation matrix representing transformation of type `PerspectiveMatrix`.
 
-* [Implementation](../../../../code/WarpPerspective/GetPerspectiveTransform.cpp)
+* You can check the implementation [here](../../../../source/WarpPerspective/GetPerspectiveTransform.cpp)

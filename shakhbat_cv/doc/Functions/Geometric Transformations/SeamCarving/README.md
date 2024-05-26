@@ -32,4 +32,4 @@ namespace qlm
 The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Geometric%20Transformations/SeamCarving)
-* [Implementation](../../../../code/SeamCarving.cpp)
+* You can check the implementation [here](../../../../source/SeamCarving.cpp)

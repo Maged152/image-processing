@@ -24,7 +24,7 @@ namespace qlm
 | Name         | Type                  | Description                      |
 |--------------|-----------------------|----------------------------------|
 | `in`         | `Image`               | The input image.                 |
-| `mat`        | `PerspectiveMatrix`   | 3×3 transformation matrix.       |
+| `mat`        | `PerspectiveMatrix`   | 3ï¿½3 transformation matrix.       |
 | `dst_width`  | `int`                 | Output image width.              |
 | `dst_height` | `int`                 | Output image height.             |
 | `inter`      | `InterpolationFlag`   | The interpolation method.        |
@@ -34,4 +34,4 @@ namespace qlm
 The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Geometric%20Transformations/WarpPerspective)
-* [Implementation](../../../../code/WarpPerspective/WarpPerspective.cpp)
+* You can check the implementation [here](../../../../source/WarpPerspective/WarpPerspective.cpp)

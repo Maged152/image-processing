@@ -32,4 +32,4 @@ namespace qlm
 The function returns a vector of lines of type `std::vector<LinePolar>`.
 
 * [Example](../../../Examples/Features%20Detection/HoughLines)
-* [Implementation](../../../../code/HoughLines.cpp)
+* You can check the implementation [here](../../../../source/HoughLines.cpp)

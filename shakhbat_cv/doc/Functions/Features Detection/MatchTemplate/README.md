@@ -50,4 +50,4 @@ between the template and the corresponding region in the input image.
 
 
 * [Example](../../../Examples/Features%20Detection/MatchTemplate)
-* [Implementation](../../../../code/MatchTemplate.cpp)
+* You can check the implementation [here](../../../../source/MatchTemplate.cpp)

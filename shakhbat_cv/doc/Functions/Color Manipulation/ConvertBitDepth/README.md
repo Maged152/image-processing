@@ -3,6 +3,8 @@
 ## Description
 The function converts an input image/pixel bit depth from `src_t` to `dst_t`. 
 
+You can check the implementation [here](../../../../source/ConvertBitDepth.cpp)
+
 ## C++ API
 ```c++
 namespace qlm
@@ -27,5 +29,26 @@ namespace qlm
 The function returns an image of type `Image<dst_frmt, dst_t>`.
 The function returns an image of type `Pixel<dst_frmt, dst_t>`.
 
-* [Example](../../../Examples/Color%20Manipulation/ConvertBitDepth)
-* [Implementation](../../../../code/ConvertBitDepth.cpp)
+## Example
+
+```c++
+   qlm::Timer<qlm::msec> t{};
+	std::string file_name = "input.jpg";
+	// load the image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	if (!in.LoadFromFile(file_name))
+	{
+		std::cout << "Failed to read the image\n";
+		return -1;
+	}
+
+	// U8 to S16
+	t.start();
+	auto out = qlm::ConvertBitDepth<qlm::ImageFormat::RGB,uint8_t, int16_t>(in);
+	t.end();
+	
+	t.show();
+```
+
+
+Time = 2 ms

@@ -24,7 +24,7 @@ namespace qlm
 | Name         | Type                  | Description                      |
 |--------------|-----------------------|----------------------------------|
 | `in`         | `Image`               | The input image.                 |
-| `mat`        | `AffineMatrix`        | 2×3 transformation matrix.       |
+| `mat`        | `AffineMatrix`        | 2ï¿½3 transformation matrix.       |
 | `dst_width`  | `int`                 | Output image width.              |
 | `dst_height` | `int`                 | Output image height.             |
 | `inter`      | `InterpolationFlag`   | The interpolation method.        |
@@ -34,4 +34,4 @@ namespace qlm
 The function returns an image of type `Image<frmt, T>`.
 
 * [Example](../../../Examples/Geometric%20Transformations/WarpAffine)
-* [Implementation](../../../../code/WarpAffine/WarpAffine.cpp)
+* You can check the implementation [here](../../../../source/WarpAffine/WarpAffine.cpp)

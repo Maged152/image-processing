@@ -33,4 +33,4 @@ The function returns a `std::pair<std::vector<Point<int>>, std::vector<Point<int
 
 
 * [Example](../../../Examples/Pixel-Wise/MinMaxLoc)
-* [Implementation](../../../../code/MinMaxLoc.cpp)
+* You can check the implementation [here](../../../../source/MinMaxLoc.cpp)

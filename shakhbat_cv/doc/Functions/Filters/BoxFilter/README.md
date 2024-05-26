@@ -45,4 +45,4 @@ namespace qlm
 The function returns an image of type `Image<frmt, dst_t>`.
 
 * [Example](../../../Examples/Filters/BoxFilter)
-* [Implementation](../../../../code/BoxFilter.cpp)
+* You can check the implementation [here](../../../../source/BoxFilter.cpp)
