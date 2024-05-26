@@ -21,7 +21,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the input image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 		// check alpha component
 		bool alpha{ true };
@@ -46,7 +46,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to write the output x image \n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		if (!y.SaveToFile("outy.jpg", alpha))
@@ -54,7 +54,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to write the output y image \n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		if (!out.magnitude.SaveToFile("out.jpg", alpha))
@@ -62,7 +62,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to write the output image \n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		
@@ -73,7 +73,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the reference image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		qlm::Image<qlm::ImageFormat::GRAY, uint8_t> refx;
@@ -82,7 +82,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the reference x image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 		qlm::Image<qlm::ImageFormat::GRAY, uint8_t> refy;
 		if (!ref.LoadFromFile(folder_path + "resulty.jpg"))
@@ -90,7 +90,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the reference y image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		// read output image
@@ -100,7 +100,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the output image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		qlm::Image<qlm::ImageFormat::GRAY, uint8_t> curx;
@@ -109,7 +109,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the output x image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		qlm::Image<qlm::ImageFormat::GRAY, uint8_t> cury;
@@ -118,7 +118,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the output y image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		res = Test_CompareImages(ref, cur);

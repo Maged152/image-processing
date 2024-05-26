@@ -21,7 +21,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the input image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 		// check alpha component
 		bool alpha{ true };

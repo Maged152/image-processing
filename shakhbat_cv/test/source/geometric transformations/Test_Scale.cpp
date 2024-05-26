@@ -23,7 +23,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the input image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 		// check alpha component
 		bool alpha{ true };
@@ -52,7 +52,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to write the out_nn image \n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		if (!out_bi.SaveToFile("out_bi.jpg", alpha))
@@ -60,7 +60,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to write the out_bi image \n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		if (!out_ci.SaveToFile("out_ci.jpg", alpha))
@@ -68,7 +68,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to write the out_ci image \n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		// read output image
@@ -79,7 +79,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the out_nn image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		if (!cur_bi.LoadFromFile("out_bi.jpg"))
@@ -87,7 +87,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the out_bi image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		if (!cur_ci.LoadFromFile("out_ci.jpg"))
@@ -95,7 +95,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the out_ci image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 
@@ -107,7 +107,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the nearest_neighbor image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		if (!ref_bi.LoadFromFile(folder_path + "bilinear.jpg"))
@@ -115,7 +115,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the bilinear image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		if (!ref_ci.LoadFromFile(folder_path + "bicubic.jpg"))
@@ -123,7 +123,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the bi-cubic image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		res_bool[0] = Test_CompareImages(ref_nn, cur_nn);

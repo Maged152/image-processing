@@ -21,7 +21,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the input image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 		// check alpha component
 		bool alpha{ true };
@@ -41,7 +41,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to write the output image \n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 
 		// read output image
@@ -51,7 +51,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the output image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 		// read reference image
 		qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
@@ -60,7 +60,7 @@ namespace test
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
 			std::cout << "Failed to read the reference image\n";
 			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return -1;
+			return false;
 		}
 		res = Test_CompareImages(ref, cur);
 
