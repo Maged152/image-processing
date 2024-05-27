@@ -1,7 +1,10 @@
 # Filter 2D
 
 ## Description
-Applys 2D filter of size MxN on the input image
+Apples 2D filter of size MxN on the input image
+
+You can check the implementation [here](../../../../source/Filter2D.cpp)
+
 ## C++ API
 ```c++
 namespace qlm
@@ -27,5 +30,46 @@ namespace qlm
 ## Return Value
 The function returns an image of type `Image<frmt, T>`.
 
-* [Example](../../../Examples/Filters/Filter2D)
-* You can check the implementation [here](../../../../source/Filter2D.cpp)
+## Example
+
+```c++
+	qlm::Timer<qlm::msec> t{};
+	std::string file_name = "input.jpg";
+	// load the image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	if (!in.LoadFromFile(file_name))
+	{
+		std::cout << "Failed to read the image\n";
+		return -1;
+	}
+	// check alpha component
+	bool alpha{ true };
+	if (in.NumerOfChannels() == 3)
+		alpha = false;
+
+	qlm::Kernel k{ 3, 3 };
+	// sharpen filter
+	k.Set(0, 0, 0); k.Set(0, 1, -1); k.Set(0, 2, 0);
+	k.Set(1, 0, -1); k.Set(1, 1, 5); k.Set(1, 2, -1);
+	k.Set(2, 0, 0); k.Set(2, 1, -1); k.Set(2, 2, 0);
+
+	// do the operation
+	t.start();
+	auto out = qlm::Filter2D(in, k, qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{});
+	t.end();
+
+	t.show();
+
+
+	if (!out.SaveToFile("result.jpg", alpha))
+	{
+		std::cout << "Failed to write \n";
+	}
+```
+
+### The input
+![Input Image](input.jpg)
+### The output
+![Input Image](result.jpg)
+
+Time = 21 ms

@@ -3,8 +3,9 @@
 ## Description
 Template matching is a technique for finding areas of an image that match 
 a given template image (a smaller image patch) using the specified method 
-and stores the comparison results in result
+and stores the comparison results in result.
 
+You can check the implementation [here](../../../../source/MatchTemplate.cpp)
 ## C++ API
 ```c++
 namespace qlm
@@ -49,5 +50,65 @@ where each pixel represents the degree of match (similarity)
 between the template and the corresponding region in the input image.
 
 
-* [Example](../../../Examples/Features%20Detection/MatchTemplate)
-* You can check the implementation [here](../../../../source/MatchTemplate.cpp)
+## Example
+
+```c++
+    qlm::Timer<qlm::msec> t{};
+    std::string file_name = "input.jpg";
+    // load the input image
+    qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+    if (!in.LoadFromFile(file_name))
+    {
+        std::cout << "Failed to read the input image\n";
+        return -1;
+    }
+
+    // check alpha component
+        bool alpha{ true };
+        if (in.NumerOfChannels() == 1)
+            alpha = false;
+
+    std::string template_name = "template.jpg";
+    // load the template image
+    qlm::Image<qlm::ImageFormat::RGB, uint8_t> templ;
+    if (!templ.LoadFromFile(template_name))
+    {
+        std::cout << "Failed to read the template image\n";
+        return -1;
+    }
+
+    qlm::Image<qlm::ImageFormat::GRAY, uint8_t> mask{};
+    mask.create(templ.width, templ.height, 1);
+
+    t.start();
+    auto out = qlm::MatchTemplate(in, templ, qlm::TemplateMatchFlag::SQDIFF, mask);
+    t.end();
+
+    t.show();
+
+    // find min/max locations
+    auto [min_loc, max_loc] = qlm::MinMaxLoc(out);
+
+    qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
+    qlm::Rectangle rec{ {0, 0}, templ.width, templ.height };
+
+    for (auto &p : min_loc)
+    {
+        rec.top_left = p;
+        in = qlm::DrawRectangle(in, rec, green);
+    }
+
+    if (!in.SaveToFile("result.jpg", alpha))
+    {
+        std::cout << "Failed to write \n";
+    }
+```
+
+### The input
+![Input Image](input.jpg)
+### The template
+![Input Image](template.jpg)
+### The output
+![Input Image](result.jpg)
+
+Time = 215240 ms
