@@ -25,7 +25,7 @@
 
 namespace test
 {
-    const std::string example_folder = "../shakhbat_cv/doc/Examples/";
+    const std::string example_folder = "../shakhbat_cv/doc/Functions/";
 
     inline void PrintTestResults(const std::string& name,
                                  const bool res, 
