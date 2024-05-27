@@ -21,7 +21,7 @@ a specified filter size and standard deviation (sigma).
 ### Return Value
 The function returns a one-dimensional Gaussian kernel of type `Kernel1D`.
 
-* You can check the implementation [here](../../../../source/Gaussian/Gaussian.cpp)
+* You can check the implementation [here](../../../../source/Gaussian.cpp)
 
 ## Get Derivative Kernel
 

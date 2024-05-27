@@ -1,4 +1,0 @@
-# FAST Example
-
-
-
