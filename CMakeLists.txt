@@ -1,6 +1,12 @@
 ﻿cmake_minimum_required (VERSION 3.22)
 project (cv_Example) 
 
+# enable testing
+if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
+    include(CTest)
+    option(SHAKHBAT_CV_BUILD_TESTING "Enable testing" ON)
+endif()
+
 add_subdirectory (shakhbat_cv)
 
 set(CMAKE_CXX_STANDARD 20)

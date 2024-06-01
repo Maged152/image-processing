@@ -11,10 +11,9 @@ file(GLOB_RECURSE SOURCES source/*.cpp)
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include dependencies)
 
-option(BUILD_TEST "Enable testing" ON)
-
 # Check if testing is enabled
-if(${BUILD_TEST})
+if(SHAKHBAT_CV_BUILD_TESTING AND BUILD_TESTING)
+    message(STATUS "Testing for ${PROJECT_NAME} is enabled")
     add_subdirectory(test)
 endif()
 
