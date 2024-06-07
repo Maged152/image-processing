@@ -11,6 +11,8 @@ file(GLOB_RECURSE SOURCES source/*.cpp)
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include dependencies)
 
+add_library(qlm::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
 # Check if testing is enabled
 if(SHAKHBAT_CV_BUILD_TESTING AND BUILD_TESTING)
     message(STATUS "Testing for ${PROJECT_NAME} is enabled")
