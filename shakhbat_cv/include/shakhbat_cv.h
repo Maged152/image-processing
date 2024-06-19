@@ -27,3 +27,4 @@
 #include "MatchTemplate.h"
 #include "MinMaxLoc.h"
 #include "SeamCarving.h"
+#include "Histogram.h"

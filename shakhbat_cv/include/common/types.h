@@ -227,7 +227,6 @@ namespace qlm
 		static constexpr int num_channels = (frmt == ImageFormat::GRAY) ? 1 : 3;
 		static constexpr size_t tot_elements = std::numeric_limits<T>::max() - std::numeric_limits<T>::lowest() + 1;
 
-		// Using std::array to hold the histogram
 		std::array<std::array<size_t, tot_elements>, num_channels> hist;
 
 		// Constructor initializes the histograms to zero
