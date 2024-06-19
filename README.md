@@ -3,8 +3,10 @@ Implementation of some image processing algorithms in c++
 Here I'm using [stb](https://github.com/nothings/stb) to R/W images.
 
 # Build
-    $ cmake -S . -B build
+    $ cmake -S . -B build -DCMAKE_GENERATOR:INTERNAL="MinGW Makefiles"
     $ cmake --build build
+# Install
+    $ cmake --install build --prefix <install_dir>
 
 # Functions
 The `qlm` namespace is used to encapsulate various utility functions and data types for this project.
@@ -41,7 +43,7 @@ Here you can find the implementation of :
     * Floyd-Steinberg (backlog)
 * Pixel-Wise
     * [MinMax Location](shakhbat_cv/doc/Functions/Pixel-Wise/MinMaxLoc)
-    * Histogram (backlog)
+    * [Histogram](shakhbat_cv/doc/Functions/Pixel-Wise/Histogram)
 * Get Functions
     * [Get Kernel](shakhbat_cv/doc/Functions/Get%20functions/Get%20Kernel)
     * [Get Transformation Matrix](shakhbat_cv/doc/Functions/Get%20functions/Get%20Transformation%20Matrix)
