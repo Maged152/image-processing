@@ -1,0 +1,51 @@
+{
+	"version": 3,
+	"configurePresets": [
+		{
+			"name": "base",
+			"hidden": true,
+			"binaryDir": "${sourceDir}/build/${presetName}"
+		},
+		{
+			"name": "g++",
+			"displayName": "g++ configuration",
+			"inherits": "base",
+			"description": "Configure with g++",
+			"generator": "MinGW Makefiles",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "gcc",
+				"CMAKE_CXX_COMPILER": "g++"
+			}
+		},
+		{
+			"name": "msvc",
+			"inherits": "base",
+			"displayName": "msvc configuration",
+			"description": "Configure with MSVC",
+			"generator": "Visual Studio 17 2022",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "cl",
+				"CMAKE_CXX_COMPILER": "cl"
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "g++",
+			"configurePreset": "g++",
+			"description": "Build with g++"
+		},
+		{
+			"name": "msvc",
+			"configurePreset": "msvc",
+			"description": "Build with msvc"
+		}
+	],
+	"testPresets": [
+	  {
+		"name": "base",
+		"configurePreset": "base",
+		"output": {"outputOnFailure": true}
+	  }
+	]
+}
