@@ -4,6 +4,9 @@ project(shakhbat_cv VERSION 1.1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+List (APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(FetchDependencies)
+
 # Enable CTest and options only for the main project
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     include(CTest)
@@ -32,6 +35,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/dependencies>
     $<INSTALL_INTERFACE:${INSTALL_INC_DIR}>
 )
+target_link_libraries(${PROJECT_NAME} PRIVATE png_static)
 
 add_library(qlm::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
