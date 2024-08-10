@@ -1,12 +1,16 @@
-#include "WebCam.h"
+#include "common/WebCam.h"
 #include <iostream>
 
 namespace qlm
 {
-    WebCam::WebCam(int width, int height, int device) : cam_width(width), cam_height(height), device_num(-1), num_cameras(-1)
-    {}
+    WebCam::WebCam(int width, int height, int device) : device_num(device), num_cameras(-1)
+    {
+        capture.mWidth = width;
+        capture.mHeight = height;
+        capture.mTargetBuf = new int [width * height];
+    }
 
-    WebCam::Init()
+    bool WebCam::Init()
     {
         num_cameras = setupESCAPI();
         if (num_cameras == 0)
@@ -15,15 +19,13 @@ namespace qlm
             return false;
         }
 
-        if (device >= num_cameras) 
+        if (device_num >= num_cameras) 
         {
             std::cerr << "Invalid device index." << std::endl;
             return false;
         }
 
-        device_num = device;
-
-        if (initCapture(device, &capture) == 0) 
+        if (initCapture(device_num, &capture) == 0) 
         {
             std::cerr << "Capture initialization failed - device may be in use." << std::endl;
             return false;
@@ -32,4 +34,30 @@ namespace qlm
         return true;
     }
 
+     Image<ImageFormat::RGB, uint8_t> qlm::WebCam::Capture()
+    {
+        doCapture(device_num);
+        while (isCaptureDone(device_num) == 0) 
+        { 
+            // Wait for capture to complete
+        }
+
+        Image<ImageFormat::RGB, uint8_t> frame {(size_t)capture.mWidth, (size_t)capture.mHeight};
+
+        // Get pixel
+        union RGBint
+        {
+            int rgb;
+            unsigned char c[4];
+        };
+        RGBint col;
+
+        for (int i = 0; i < capture.mWidth * capture.mHeight; i++)
+        {
+            col.rgb =  capture.mTargetBuf[i];
+            frame.SetPixel(i, {col.c[2], col.c[1], col.c[0]});
+        }
+
+        return frame;
+    }
 }

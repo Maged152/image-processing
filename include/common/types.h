@@ -1,5 +1,6 @@
 #pragma once
 #include "image.h"
+#include "WebCam.h"
 #include "types/TransformationMatrix.h"
 #include "types/Kernel.h"
 #include "types/Interpolation.h"
