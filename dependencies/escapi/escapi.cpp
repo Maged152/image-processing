@@ -1,5 +1,5 @@
 #include <windows.h>
-#include "escapi.h"
+#include "escapi/escapi.h"
 
 countCaptureDevicesProc countCaptureDevices;
 initCaptureProc initCapture;

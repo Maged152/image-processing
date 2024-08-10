@@ -72,6 +72,19 @@ namespace qlm
 				num_of_channels = 4;
 			}
 		}
+		
+		Image(size_t width, size_t height, Pixel<frmt, T>* data) : width(width), height(height), data(data)
+		{
+			stride = width ;
+			if constexpr (frmt == ImageFormat::GRAY)
+			{
+				num_of_channels = 2;
+			}
+			else
+			{
+				num_of_channels = 4;
+			}
+		}
 
 		~Image()
 		{

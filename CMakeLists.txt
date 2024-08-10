@@ -26,7 +26,7 @@ set(INSTALL_RUN_DIR "dll")
 set(INSTALL_CFG_DIR "cmake")
 
 # Source files
-file(GLOB_RECURSE SOURCES source/*.cpp)
+file(GLOB_RECURSE SOURCES source/*.cpp dependencies/*.cpp)
 
 # Create the static library
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
@@ -35,9 +35,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/dependencies>
     $<INSTALL_INTERFACE:${INSTALL_INC_DIR}>
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE png_static)
-
 add_library(qlm::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+# Copy the ESCAPI DLL to the output directory
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_SOURCE_DIR}/dependencies/escapi/escapi.dll
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
 
 # Check if testing is enabled
 if(SHAKHBAT_CV_BUILD_TESTING AND BUILD_TESTING)
@@ -69,6 +74,11 @@ install(
     DIRECTORY include/ dependencies/
     DESTINATION ${INSTALL_INC_DIR}
     FILES_MATCHING PATTERN "*.h"
+)
+
+install(FILES 
+    "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/escapi/escapi.dll"
+    DESTINATION ${INSTALL_LIB_DIR}
 )
 
 # Create the package configuration file
