@@ -25,6 +25,9 @@ set(INSTALL_LIB_DIR "lib")
 set(INSTALL_RUN_DIR "dll")
 set(INSTALL_CFG_DIR "cmake")
 
+# Find the Qt5 package
+find_package(Qt5 COMPONENTS Widgets)
+
 # Source files
 file(GLOB_RECURSE SOURCES source/*.cpp dependencies/*.cpp)
 
@@ -35,6 +38,12 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/dependencies>
     $<INSTALL_INTERFACE:${INSTALL_INC_DIR}>
 )
+
+if (Qt5Widgets_FOUND)
+    message(STATUS "found Qt5Widgets")
+    target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
+endif()
+
 add_library(qlm::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Copy the ESCAPI DLL to the output directory
