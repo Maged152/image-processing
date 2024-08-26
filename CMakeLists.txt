@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(shakhbat_cv VERSION 1.1.0)
+project(shakhbat_cv VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -39,13 +39,6 @@ target_link_libraries(${PROJECT_NAME} qlm::ThreadPool)
 
 add_library(qlm::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-# Copy the ESCAPI DLL to the output directory
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${CMAKE_SOURCE_DIR}/dependencies/escapi/escapi.dll
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>
-)
-
 # Check if testing is enabled
 if(SHAKHBAT_CV_BUILD_TESTING AND BUILD_TESTING)
     message(STATUS "Testing for ${PROJECT_NAME} is enabled")
@@ -76,11 +69,6 @@ install(
     DIRECTORY include/ dependencies/
     DESTINATION ${INSTALL_INC_DIR}
     FILES_MATCHING PATTERN "*.h"
-)
-
-install(FILES 
-    "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/escapi/escapi.dll"
-    DESTINATION ${INSTALL_LIB_DIR}
 )
 
 # Create the package configuration file
