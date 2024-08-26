@@ -1,14 +1,13 @@
 include(FetchContent)
 
-####################################### Fetch libuvc #######################################
-# FetchContent_Declare(
-#   libuvc
-#   GIT_REPOSITORY https://github.com/libuvc/libuvc.git
-#   GIT_TAG v0.0.7 
-# )
+####################################### Fetch ThreadPool #######################################
+FetchContent_Declare(
+  thread_pool
+  GIT_REPOSITORY https://github.com/Maged152/ThreadPool.git
+  GIT_TAG v1.0.0 
+)
 
-# set(BUILD_TEST OFF CACHE BOOL "Disable tests" FORCE)
-# set(BUILD_EXAMPLE OFF CACHE BOOL "Disable examples" FORCE)
-# set(CMAKE_BUILD_TARGET "Static" CACHE BOOL "" FORCE)
+set(ThreadPool_BUILD_EXAMPLES OFF CACHE BOOL "Disable examples" FORCE)
+set(ThreadPool_BUILD_Doc OFF CACHE BOOL "Disable doc" FORCE)
 
-# FetchContent_MakeAvailable(libuvc)
+FetchContent_MakeAvailable(thread_pool)
