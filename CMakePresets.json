@@ -14,7 +14,8 @@
 			"generator": "MinGW Makefiles",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "gcc",
-				"CMAKE_CXX_COMPILER": "g++"
+				"CMAKE_CXX_COMPILER": "g++",
+				"CMAKE_PREFIX_PATH": "C:/Qt/6.7.0/mingw_64/lib/cmake"
 			}
 		},
 		{
