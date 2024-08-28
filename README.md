@@ -2,11 +2,24 @@
 Implementation of some image processing algorithms in c++
 Here I'm using [stb](https://github.com/nothings/stb) to R/W images.
 
-# Build
-    $ cmake -S . -B build -DCMAKE_GENERATOR:INTERNAL="MinGW Makefiles"
-    $ cmake --build build
-# Install
-    $ cmake --install build --prefix <install_dir>
+# Build & Targets
+
+## Configure 
+    $ cmake -S <source_dir> -B <build_dir>
+
+You can use `presets`
+
+    $ cmake -S <source_dir> --preset <preset_name>
+
+To know the existing presets
+
+    $ cmake -S <source_dir> --list-presets
+
+## Build
+    $ cmake --build <build_dir>
+
+## Install
+    $ cmake --install <build_dir> --prefix <install_dir>
 
 # Functions
 The `qlm` namespace is used to encapsulate various utility functions and data types for this project.
