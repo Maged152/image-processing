@@ -33,12 +33,12 @@ namespace qlm
 	}
 
 
-	template<typename Duration>
+	template<typename duration_t>
 	struct Timer
 	{
 	public:
 		time_point start_time, end_time;
-		Duration duration;
+		duration_t duration;
 	public:
 		void start()
 		{
@@ -47,11 +47,17 @@ namespace qlm
 		void end()
 		{
 			end_time = std::chrono::high_resolution_clock::now();
-			duration = std::chrono::duration_cast<Duration>(end_time - start_time);
+			duration = std::chrono::duration_cast<duration_t>(end_time - start_time);
 		}
+
+		float Duration() const
+		{
+			return duration.count();
+		}
+		
 		void show() const
 		{
-			std::cout << "Time taken: " << duration.count() << GetType<Duration>();
+			std::cout << "Time taken: " << duration.count() << GetType<duration_t>();
 		}
 	};
 }

@@ -1,110 +1,67 @@
 #pragma once
 
 #include "shakhbat_cv.h"
+#include "gtest/gtest.h"
 #include <string>
 #include <windows.h>
 #include <array>
 #include <filesystem>
 
-#define CONSOLE_COLOR_BLACK 0
-#define CONSOLE_COLOR_BLUE 1
-#define CONSOLE_COLOR_GREEN 2
-#define CONSOLE_COLOR_CYAN 3
-#define CONSOLE_COLOR_RED 4
-#define CONSOLE_COLOR_MAGENTA 5
-#define CONSOLE_COLOR_YELLOW 6
-#define CONSOLE_COLOR_WHITE 7
-#define CONSOLE_COLOR_GRAY 8
-#define CONSOLE_COLOR_LIGHT_BLUE 9
-#define CONSOLE_COLOR_LIGHT_GREEN 10
-#define CONSOLE_COLOR_LIGHT_CYAN 11
-#define CONSOLE_COLOR_LIGHT_RED 12
-#define CONSOLE_COLOR_LIGHT_MAGENTA 13
-#define CONSOLE_COLOR_LIGHT_YELLOW 14
-#define CONSOLE_COLOR_BRIGHT_WHITE 15
+#define ANSI_TXT_GRN "\033[0;32m"
+#define ANSI_TXT_RED "\033[0;31m"
+#define ANSI_TXT_MGT "\033[0;35m" //Magenta
+#define ANSI_TXT_DFT "\033[0;0m" //Console default
 
+#define GTEST_BOX      "[Parameters] "
+#define GTEST_BOX_TIME "[Time      ] "
+#define GTEST_BOX_FAST "[Faster    ] "
+#define GTEST_BOX_SLOW "[Slower    ] "
+
+#define COUT_GTEST ANSI_TXT_GRN << GTEST_BOX 
+#define COUT_GTEST_TIME ANSI_TXT_GRN << GTEST_BOX_TIME
+#define COUT_GTEST_FAST ANSI_TXT_GRN << GTEST_BOX_FAST 
+#define COUT_GTEST_SLOW ANSI_TXT_GRN << GTEST_BOX_SLOW 
+
+#define COUT_GTEST_MGT COUT_GTEST << ANSI_TXT_MGT
+#define COUT_GTEST_MGT_TIME COUT_GTEST_TIME << ANSI_TXT_MGT
+#define COUT_GTEST_GRN_FAST COUT_GTEST_FAST << ANSI_TXT_GRN
+#define COUT_GTEST_RED_SLOW COUT_GTEST_SLOW << ANSI_TXT_RED
 namespace test
 {
-    const std::string example_folder = "../../doc/Functions/";
+    const std::string example_folder = "doc/Functions/";
 
-    inline void PrintTestResults(const std::string& name,
-                                 const bool res, 
-                                 const qlm::Timer<qlm::usec>& time,
-                                 const float normalization_factor,
-                                 const HANDLE& col_handle)
-    {
-        // test name
-        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_BLUE);
-        std::cout << name << " : ";
-        // time taken
-        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_YELLOW);
-        std::cout << time.duration.count() / normalization_factor << " usec : ";
-
-        if (res)
-        {
-            SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_GREEN);
-            std::cout << "PASSED\n";
-        }
-        else
-        {
-            SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-            std::cout << "FAILED\n";
-        }
-
-        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
+    void PrintTime(const qlm::Timer<qlm::usec>& time)
+	{
+		std::cout << COUT_GTEST_MGT_TIME << "Time"
+			                             << " = "
+			                             << time.Duration()
+			                             << " usec"
+		                                 << ANSI_TXT_DFT << std::endl;
     }
 
-
-    template <size_t size>
-    inline void PrintTestResults(const std::string& name,
-        const std::array<bool, size>& res,
-        const std::array<qlm::Timer<qlm::usec>, size>& time,
-        const std::array<float, size>& normalization_factor,
-        const HANDLE& col_handle)
-    {
-        // test name
-        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_BLUE);
-        std::cout << name << " : ";
-        // time taken
-        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_YELLOW);
-        std::cout << "[";
-        for (int i = 0; i < time.size(); i++)
-        {
-            std::cout << time[i].duration.count() / normalization_factor[i] << ", ";
-        }
-        std::cout << "\b\b]usec : ";
-
-        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_GREEN);
-        std::cout << "[";
-
-        for (auto& r : res)
-        {
-            if (r)
-            {
-                SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_GREEN);
-                std::cout << "PASSED, ";
-            }
-            else
-            {
-                SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-                std::cout << "FAILED, ";
-            }
-        }
-
-        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_GREEN);
-        std::cout << "\b\b]\n";
-
-        SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-    }
-
-    // run all tests
-    bool Test_All();
-
-    // compare two pixels
     template<qlm::ImageFormat frmt, qlm::pixel_t T>
-    bool Test_ComparePixels(const qlm::Pixel<frmt, T>& in1,
-                            const qlm::Pixel<frmt, T>& in2,
-                            const qlm::Pixel<frmt, T>& threshold = qlm::Pixel<frmt, T> {})
+    qlm::Image<frmt, T> ReReadImage(qlm::Image<frmt, T>& out)
+    {
+    const bool save_out = out.SaveToFile("out.jpg");
+    EXPECT_EQ(save_out, true);
+
+    // read output image
+    qlm::Image<qlm::ImageFormat::RGB, uint8_t> cur;
+    const bool reread_out = cur.LoadFromFile("out.jpg");
+    EXPECT_EQ(reread_out, true);
+
+    // delete output image
+    const bool remove_out = std::filesystem::remove("out.jpg");
+    EXPECT_EQ(remove_out, true);
+
+    return cur;
+    }
+
+     // compare two pixels
+    template<qlm::ImageFormat frmt, qlm::pixel_t T>
+    bool ComparePixels(const qlm::Pixel<frmt, T>& in1,
+                       const qlm::Pixel<frmt, T>& in2,
+                       const qlm::Pixel<frmt, T>& threshold = qlm::Pixel<frmt, T> {})
     {
         auto abs_diff = qlm::AbsDiff(in1, in2);
 
@@ -125,11 +82,6 @@ namespace test
                 
                 return true;
             }
-            /*else
-            {
-                std::cout << (int)abs_diff.r << "  " << (int)abs_diff.g << " "
-                    << (int)abs_diff.b << "  " << "\n";
-            }*/
         }
         else if constexpr (frmt == qlm::ImageFormat::HLS)
         {
@@ -155,32 +107,22 @@ namespace test
 
     // compare two images
     template<qlm::ImageFormat frmt, qlm::pixel_t T>
-    bool Test_CompareImages(const qlm::Image<frmt, T>& in1,
-                            const qlm::Image<frmt, T>& in2,
-                            const qlm::Pixel<frmt, T>& threshold = qlm::Pixel<frmt, T>{})
+    void CompareImages(const qlm::Image<frmt, T>& in1,
+                       const qlm::Image<frmt, T>& in2,
+                       const qlm::Pixel<frmt, T>& threshold = qlm::Pixel<frmt, T>{})
     {
         // check the dimensions
-        if (in1.width != in2.width || in1.height != in2.height)
-        {
-            std::cout << "the dimensions are not the same" 
-                      << in1.width << "x" << in1.height << " vs "
-                      << in2.width << "x" << in2.height << "\n" ;
-            return false;
-        }
+        EXPECT_EQ(in1.width, in2.width);
+        EXPECT_EQ(in1.height, in2.height);
+       
         // check the pixels
         for (int y = 0; y < in1.height; y++)
         {
             for (int x = 0; x < in1.width; x++)
             {
-                bool res = Test_ComparePixels(in1.GetPixel(x, y), in2.GetPixel(x, y), threshold);
-
-                if (res == false)
-                {
-                    return false;
-                }
+                const bool res = ComparePixels(in1.GetPixel(x, y), in2.GetPixel(x, y), threshold);
+                EXPECT_EQ(res, true);
             }
         }
-
-        return true;
     }
 }
