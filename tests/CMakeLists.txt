@@ -13,7 +13,7 @@ FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
 # Find all test source files
-file(GLOB_RECURSE TEST_SOURCES *Box*.cpp)
+file(GLOB_RECURSE TEST_SOURCES source/filters/*.cpp)
 
 # Create a target for each test file
 foreach(TEST_SOURCE ${TEST_SOURCES})
@@ -23,12 +23,5 @@ foreach(TEST_SOURCE ${TEST_SOURCES})
     target_link_libraries(${TEST_NAME} qlm::shakhbat_cv GTest::gtest_main)
     target_include_directories(${TEST_NAME} PRIVATE "include")
 
-    gtest_discover_tests(${TEST_NAME})
-
-    add_custom_target(Test_${TEST_NAME}
-        COMMAND ${CMAKE_COMMAND} -E env
-                ${CMAKE_CURRENT_BINARY_DIR}/${TEST_NAME}
-        # DEPENDS ${TEST_NAME}
-        COMMENT "Running ${TEST_NAME} test"
-    )
+    gtest_discover_tests(${TEST_NAME} WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endforeach()
