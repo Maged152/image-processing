@@ -3,7 +3,6 @@
 #include "shakhbat_cv.h"
 #include "gtest/gtest.h"
 #include <string>
-#include <windows.h>
 #include <array>
 #include <filesystem>
 
@@ -42,19 +41,19 @@ namespace test
     template<qlm::ImageFormat frmt, qlm::pixel_t T>
     qlm::Image<frmt, T> ReReadImage(qlm::Image<frmt, T>& out)
     {
-    const bool save_out = out.SaveToFile("out.jpg");
-    EXPECT_EQ(save_out, true);
+        const bool save_out = out.SaveToFile("out.jpg");
+        EXPECT_EQ(save_out, true);
 
-    // read output image
-    qlm::Image<qlm::ImageFormat::RGB, uint8_t> cur;
-    const bool reread_out = cur.LoadFromFile("out.jpg");
-    EXPECT_EQ(reread_out, true);
+        // read output image
+        qlm::Image<frmt, T> cur;
+        const bool reread_out = cur.LoadFromFile("out.jpg");
+        EXPECT_EQ(reread_out, true);
 
-    // delete output image
-    const bool remove_out = std::filesystem::remove("out.jpg");
-    EXPECT_EQ(remove_out, true);
+        // delete output image
+        const bool remove_out = std::filesystem::remove("out.jpg");
+        EXPECT_EQ(remove_out, true);
 
-    return cur;
+        return cur;
     }
 
      // compare two pixels
