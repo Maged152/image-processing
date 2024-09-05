@@ -1,85 +1,36 @@
-#include "test_cv.h"
-#include <filesystem>
+#include "test_common.h"
 
-namespace test
+TEST(Test_shakhbat_cv, Translate)
 {
-	bool Test_Translate()
-	{
-		HANDLE col_handle;
-		col_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	qlm::Timer<qlm::usec> t{};
+	const std::string folder_path = test::example_folder + "Geometric Transformations/Translate/";
 
-		bool res = false;
-		qlm::Timer<qlm::usec> t{};
+	// read input image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	EXPECT_EQ(load_in, true);
 
-		const std::string folder_path = example_folder + "Geometric Transformations/Translate/";
-		const std::string test_name = "Test_Translate";
-
-		// read input image
-		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-		if (!in.LoadFromFile(folder_path + "input.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the input image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-		// check alpha component
-		bool alpha{ true };
-		if (in.NumerOfChannels() == 1)
-			alpha = false;
+	// check alpha component
+	bool alpha{ true };
+	if (in.NumerOfChannels() == 1)
+		alpha = false;
 
 
-		qlm::Point displacement{ 50 ,50 };
-		// do the operation
-		t.start();
-		auto out = qlm::Translate(in, displacement);
-		t.end();
+	qlm::Point displacement{ 50 ,50 };
+	// do the operation
+	t.start();
+	auto out = qlm::Translate(in, displacement);
+	t.end();
 
-		// write the output and reread it
-		if (!out.SaveToFile("out.jpg", alpha))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to write the output image \n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
+	test::PrintTime(t);
 
-		// read output image
-		qlm::Image<qlm::ImageFormat::RGB, uint8_t> cur;
-		if (!cur.LoadFromFile("out.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the output image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-		// read reference image
-		qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-		if (!ref.LoadFromFile(folder_path + "result.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the reference image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-		res = Test_CompareImages(ref, cur);
+	// reread output image
+	out = test::ReReadImage(out);
 
-		const float normalization = in.width * in.height;
-		PrintTestResults(test_name, res, t, normalization, col_handle);
+	// read reference image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
+	const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+	EXPECT_EQ(load_ref, true);
 
-		// delete output image
-		if (!std::filesystem::remove("out.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to delete the output image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-		}
-
-		return res;
-	}
-}
-
-int main()
-{
-	return !test::Test_Translate();
+	test::CompareImages(out, ref);
 }

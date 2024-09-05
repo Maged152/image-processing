@@ -1,87 +1,38 @@
-#include "test_cv.h"
-#include <filesystem>
+#include "test_common.h"
 
-namespace test
+TEST(Test_shakhbat_cv, FloodFill)
 {
-	bool Test_FloodFill()
-	{
-		HANDLE col_handle;
-		col_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	qlm::Timer<qlm::usec> t{};
+	const std::string folder_path = test::example_folder + "Color Manipulation/FloodFill/";
 
-		bool res = false;
-		qlm::Timer<qlm::usec> t{};
+	// read input image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	EXPECT_EQ(load_in, true);
 
-		const std::string folder_path = example_folder + "Color Manipulation/FloodFill/";
-		const std::string test_name = "Test_FloodFill";
+	// check alpha component
+	bool alpha{ true };
+	if (in.NumerOfChannels() == 1)
+		alpha = false;
 
-		// read input image
-		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-		if (!in.LoadFromFile(folder_path + "input.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the input image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-		// check alpha component
-		bool alpha{ true };
-		if (in.NumerOfChannels() == 1)
-			alpha = false;
+	// do the operation
+	qlm::Point seed{ 300 ,300 };
+	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{ 0,0,0 };
+	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> threshold{ 20,20,20 };
+	
+	t.start();
+	auto out = qlm::FloodFill(in, seed, color, threshold);
+	t.end();
 
+	test::PrintTime(t);
 
-		qlm::Point seed{ 300 ,300 };
-		qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{ 0,0,0 };
-		qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> threshold{ 20,20,20 };
-		// do the operation
-		t.start();
-		auto out = qlm::FloodFill(in, seed, color, threshold);
-		t.end();
+	// reread output image
+	out = test::ReReadImage(out);
 
-		// write the output and reread it
-		if (!out.SaveToFile("out.jpg", alpha))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to write the output image \n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
+	// read reference image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
+	const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+	EXPECT_EQ(load_ref, true);
 
-		// read output image
-		qlm::Image<qlm::ImageFormat::RGB, uint8_t> cur;
-		if (!cur.LoadFromFile("out.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the output image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-		// read reference image
-		qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-		if (!ref.LoadFromFile(folder_path + "result.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the reference image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-		res = Test_CompareImages(ref, cur);
-
-		const float normalization = in.width * in.height;
-		PrintTestResults(test_name, res, t, normalization, col_handle);
-
-		// delete output image
-		if (!std::filesystem::remove("out.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to delete the output image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-		}
-
-		return res;
-	}
-}
-
-int main()
-{
-	return !test::Test_FloodFill();
+	test::CompareImages(out, ref);
 }

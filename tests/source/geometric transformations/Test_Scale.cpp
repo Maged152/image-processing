@@ -1,170 +1,61 @@
-#include "test_cv.h"
-#include <filesystem>
+#include "test_common.h"
 
-namespace test
+TEST(Test_shakhbat_cv, Scale)
 {
-	bool Test_Scale()
-	{
-		HANDLE col_handle;
-		col_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	qlm::Timer<qlm::usec> t_nn, t_bi,t_ci;
+	const std::string folder_path = test::example_folder + "Geometric Transformations/Scale/";
 
-		const size_t num_out = 3;
-		std::array<bool, num_out> res_bool;
-		std::array<float, num_out> normalization;
-		std::array<qlm::Timer<qlm::usec>, num_out> res_time;
+	// read input image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	EXPECT_EQ(load_in, true);
 
-		const std::string folder_path = example_folder + "Geometric Transformations/Scale/";
-		const std::string test_name = "Test_Scale[NN, BI, CI]";
+	// check alpha component
+	bool alpha{ true };
+	if (in.NumerOfChannels() == 1)
+		alpha = false;
 
-		// read input image
-		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-		if (!in.LoadFromFile(folder_path + "input.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the input image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-		// check alpha component
-		bool alpha{ true };
-		if (in.NumerOfChannels() == 1)
-			alpha = false;
+	float scale_x = 2.7f;
+	float scale_y = 2.7f;
 
-		float scale_x = 2.7f;
-		float scale_y = 2.7f;
+	t_nn.start();
+	auto out_nn = qlm::Scale(in, qlm::InterpolationFlag::NEAREST_NEIGHBOR, scale_x, scale_y);
+	t_nn.end();
 
-		res_time[0].start();
-		auto out_nn = qlm::Scale(in, qlm::InterpolationFlag::NEAREST_NEIGHBOR, scale_x, scale_y);
-		res_time[0].end();
+	test::PrintTime(t_nn);
 
-		res_time[1].start();
-		auto out_bi = qlm::Scale(in, qlm::InterpolationFlag::BILINEAR, scale_x, scale_y);
-		res_time[1].end();
+	t_bi.start();
+	auto out_bi = qlm::Scale(in, qlm::InterpolationFlag::BILINEAR, scale_x, scale_y);
+	t_bi.end();
 
-		res_time[2].start();
-		auto out_ci = qlm::Scale(in, qlm::InterpolationFlag::BICUBIC, scale_x, scale_y);
-		res_time[2].end();
+	test::PrintTime(t_bi);
+
+	t_ci.start();
+	auto out_ci = qlm::Scale(in, qlm::InterpolationFlag::BICUBIC, scale_x, scale_y);
+	t_ci.end();
+
+	test::PrintTime(t_ci);
 
 
-		// write the output and reread it
-		if (!out_nn.SaveToFile("out_nn.jpg", alpha))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to write the out_nn image \n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
+	// reread output image
+	out_nn = test::ReReadImage(out_nn);
+	out_bi = test::ReReadImage(out_bi);
+	out_ci = test::ReReadImage(out_ci);
 
-		if (!out_bi.SaveToFile("out_bi.jpg", alpha))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to write the out_bi image \n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
+	// read reference image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref_nn, ref_bi, ref_ci;
+	
+	const bool load_ref_nn = ref_nn.LoadFromFile(folder_path + "nearest_neighbor.jpg");
+	EXPECT_EQ(load_ref_nn, true);
 
-		if (!out_ci.SaveToFile("out_ci.jpg", alpha))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to write the out_ci image \n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
+	const bool load_ref_bi = ref_bi.LoadFromFile(folder_path + "bilinear.jpg");
+	EXPECT_EQ(load_ref_bi, true);
 
-		// read output image
-		qlm::Image<qlm::ImageFormat::RGB, uint8_t> cur_nn, cur_bi, cur_ci;
+	const bool load_ref_ci = ref_ci.LoadFromFile(folder_path + "bicubic.jpg");
+	EXPECT_EQ(load_ref_ci, true);
 
-		if (!cur_nn.LoadFromFile("out_nn.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the out_nn image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-
-		if (!cur_bi.LoadFromFile("out_bi.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the out_bi image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-
-		if (!cur_ci.LoadFromFile("out_ci.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the out_ci image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-
-
-		// read reference image
-		qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref_nn, ref_bi, ref_ci;
-
-		if (!ref_nn.LoadFromFile(folder_path + "nearest_neighbor.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the nearest_neighbor image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-
-		if (!ref_bi.LoadFromFile(folder_path + "bilinear.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the bilinear image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-
-		if (!ref_ci.LoadFromFile(folder_path + "bicubic.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to read the bi-cubic image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-			return false;
-		}
-
-		res_bool[0] = Test_CompareImages(ref_nn, cur_nn);
-		res_bool[1] = Test_CompareImages(ref_bi, cur_bi);
-		res_bool[2] = Test_CompareImages(ref_ci, cur_ci);
-
-		normalization[0] = in.width * in.height;
-		normalization[1] = in.width * in.height;
-		normalization[2] = in.width * in.height;
-
-		PrintTestResults(test_name, res_bool, res_time, normalization, col_handle);
-
-		// delete output image
-		if (!std::filesystem::remove("out_nn.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to delete the out_nn image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-		}
-
-		if (!std::filesystem::remove("out_bi.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to delete the out_bi image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-		}
-
-		if (!std::filesystem::remove("out_ci.jpg"))
-		{
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_RED);
-			std::cout << "Failed to delete the out_ci image\n";
-			SetConsoleTextAttribute(col_handle, CONSOLE_COLOR_WHITE);
-		}
-
-		bool f_res = res_bool[0] && res_bool[1] && res_bool[2];
-
-		return f_res;
-	}
-}
-
-int main()
-{
-	return !test::Test_Scale();
+	// compare results
+	test::CompareImages(out_nn, ref_nn);
+	test::CompareImages(out_bi, ref_bi);
+	test::CompareImages(out_ci, ref_ci);
 }

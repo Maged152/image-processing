@@ -13,7 +13,7 @@ FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
 # Find all test source files
-file(GLOB_RECURSE TEST_SOURCES source/filters/*.cpp)
+file(GLOB_RECURSE TEST_SOURCES *.cpp)
 
 # Create a target for each test file
 foreach(TEST_SOURCE ${TEST_SOURCES})
