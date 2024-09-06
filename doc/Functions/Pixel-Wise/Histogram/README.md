@@ -41,7 +41,6 @@ The function returns a `Histogram_t<frmt, T>`, which represents the histogram of
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	// RGB to HSV
 	t.start();
 	auto out = qlm::Histogram(in);
 	t.end();
