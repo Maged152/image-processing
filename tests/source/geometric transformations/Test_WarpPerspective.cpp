@@ -33,9 +33,9 @@ TEST(Test_shakhbat_cv, WarpPerspective)
 	border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
 
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::WarpPerspective(in, mat, dst_width, dst_height, qlm::InterpolationFlag::BILINEAR, border_mode);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

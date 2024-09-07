@@ -57,12 +57,12 @@ The function returns an image of type `Image<dst_frmt, dst_t>`.
 		alpha = false;
 
 	// RGB to HSV
-	t.start();
+	t.Start();
 	auto out = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, 
 								 qlm::ImageFormat::HSV, uint8_t>(in);
-	t.end();
+	t.End();
 	
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 	// red to green
 	for (int i = 0; i < out.height * out.width; i++)

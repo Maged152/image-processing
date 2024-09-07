@@ -56,11 +56,11 @@ The function returns a vector of key-points(corners) of type `std::vector<KeyPoi
     const bool nonmax_suppression = true;
 
     // do the operation
-    t.start();
+    t.Start();
     auto out = qlm::FAST(gray, arc_len, threshold, nonmax_suppression);
-    t.end();
+    t.End();
 
-    t.show();
+    std::cout <<"Time = " << t.ElapsedString() << "\n";
 
     // draw corners
     qlm::Circle<int> circle = { .radius = 2 };

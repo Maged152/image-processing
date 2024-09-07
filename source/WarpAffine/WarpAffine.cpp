@@ -48,7 +48,7 @@ namespace qlm
 			return std::pair<float, float>(out_x, out_y);
 		};
 		
-		// start/end index
+		// Start/end index
 		const auto [tl_x, tl_y] = transform_in_out(0, 0);
 		const auto [tr_x, tr_y] = transform_in_out(in.width - 1, 0);
 		const auto [br_x, br_y] = transform_in_out(in.width - 1, in.height -1);

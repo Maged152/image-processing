@@ -60,11 +60,11 @@ The function returns a vector of key-points(corners) of type `std::vector<KeyPoi
     float threshold = 0.0000001;
 
     // do the operation
-    t.start();
+    t.Start();
     auto out = qlm::HarrisCorner(gray, block_size, filter_size, k, threshold);
-    t.end();
+    t.End();
 
-    t.show();
+    std::cout <<"Time = " << t.ElapsedString() << "\n";
 
     // draw corners
     qlm::Circle<int> circle = { .radius = 2 };

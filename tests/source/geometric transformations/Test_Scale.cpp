@@ -18,21 +18,21 @@ TEST(Test_shakhbat_cv, Scale)
 	float scale_x = 2.7f;
 	float scale_y = 2.7f;
 
-	t_nn.start();
+	t_nn.Start();
 	auto out_nn = qlm::Scale(in, qlm::InterpolationFlag::NEAREST_NEIGHBOR, scale_x, scale_y);
-	t_nn.end();
+	t_nn.End();
 
 	test::PrintTime(t_nn);
 
-	t_bi.start();
+	t_bi.Start();
 	auto out_bi = qlm::Scale(in, qlm::InterpolationFlag::BILINEAR, scale_x, scale_y);
-	t_bi.end();
+	t_bi.End();
 
 	test::PrintTime(t_bi);
 
-	t_ci.start();
+	t_ci.Start();
 	auto out_ci = qlm::Scale(in, qlm::InterpolationFlag::BICUBIC, scale_x, scale_y);
-	t_ci.end();
+	t_ci.End();
 
 	test::PrintTime(t_ci);
 

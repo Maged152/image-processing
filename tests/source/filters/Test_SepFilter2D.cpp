@@ -23,9 +23,9 @@ TEST(Test_shakhbat_cv, SepFilter2D)
 	auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
 	border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
 
-	t.start();
+	t.Start();
 	auto out = qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, uint8_t>(in, box, border_mode);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

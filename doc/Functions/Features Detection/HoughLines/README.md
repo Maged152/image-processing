@@ -51,11 +51,11 @@ The function returns a vector of lines of type `std::vector<LinePolar>`.
 	if (in.NumerOfChannels() == 1)
 		alpha = false;
 	// do the operation
-	t.start();
+	t.Start();
 	std::vector<qlm::LinePolar> lines = qlm::HoughLines(in, 1, 3 * 3.14f / 180, 110);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 	// out image to draw on
 	auto draw = qlm::ColorConvert< qlm::ImageFormat::GRAY, uint8_t, qlm::ImageFormat::RGB, uint8_t>(in);

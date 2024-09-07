@@ -52,11 +52,11 @@ The function returns an image of type `Image<frmt, T>`.
 	float scale_y = 2.7f;
 
 	// do the operation
-	t.start();
+	t.Start();
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_nn = qlm::Scale(in, qlm::InterpolationFlag::NEAREST_NEIGHBOR, scale_x, scale_y);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 	if (!out_nn.SaveToFile("nearest_neighbor.jpg", alpha))
 	{
@@ -64,11 +64,11 @@ The function returns an image of type `Image<frmt, T>`.
 	}
 
 	// do the operation
-	t.start();
+	t.Start();
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_bl = qlm::Scale(in, qlm::InterpolationFlag::BILINEAR, scale_x, scale_y);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 	if (!out_bl.SaveToFile("bilinear.jpg", alpha))
 	{
@@ -76,11 +76,11 @@ The function returns an image of type `Image<frmt, T>`.
 	}
 
 	// do the operation
-	t.start();
+	t.Start();
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_bc = qlm::Scale(in, qlm::InterpolationFlag::BICUBIC, scale_x, scale_y);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 	if (!out_bc.SaveToFile("bicubic.jpg", alpha))
 	{

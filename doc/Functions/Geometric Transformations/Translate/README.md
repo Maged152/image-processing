@@ -47,11 +47,11 @@ The function returns an image of type `Image<frmt, T>`.
 
 	qlm::Point displacement{ 50 ,50 };
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::Translate(in, displacement);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 
 	if (!out.SaveToFile("result.jpg", alpha))

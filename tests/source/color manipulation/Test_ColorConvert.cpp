@@ -17,9 +17,9 @@ TEST(Test_shakhbat_cv, ColorConvert)
 	
 	// do the operation
 	// RGB to HSV
-	t.start();
+	t.Start();
 	auto out = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t,qlm::ImageFormat::HSV, uint8_t>(in);
-	t.end();
+	t.End();
 
 	// red to green
 	for (int i = 0; i < out.height * out.width; i++)

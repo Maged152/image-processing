@@ -17,9 +17,9 @@ TEST(Test_shakhbat_cv, Transpose)
 
 
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::Transpose(in);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

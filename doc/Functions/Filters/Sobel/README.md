@@ -120,11 +120,11 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 	// RGB to GRAY
 	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::Sobel<uint8_t, int16_t>(gray, filter_size);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 	// S16 to U8
 	auto x = qlm::ConvertSobelDepth(out.sobel_x, filter_size);

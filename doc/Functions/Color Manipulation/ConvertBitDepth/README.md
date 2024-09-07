@@ -43,11 +43,11 @@ The function returns an image of type `Pixel<dst_frmt, dst_t>`.
 	}
 
 	// U8 to S16
-	t.start();
+	t.Start();
 	auto out = qlm::ConvertBitDepth<qlm::ImageFormat::RGB,uint8_t, int16_t>(in);
-	t.end();
+	t.End();
 	
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 ```
 
 

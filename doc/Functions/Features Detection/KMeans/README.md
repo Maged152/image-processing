@@ -70,11 +70,11 @@ namespace qlm
     const qlm::KMeansInit init = qlm::KMeansInit::KMEANS_PLUS_PLUS;
 
     // do the operation
-    t.start();
+    t.Start();
     auto clusters = qlm::KMeans(in, k, init);
-    t.end();
+    t.End();
 
-    t.show();
+    std::cout <<"Time = " << t.ElapsedString() << "\n";
 
     // draw clusters
     auto out = qlm::DrawCluster(in, clusters);

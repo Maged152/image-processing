@@ -16,9 +16,9 @@ TEST(Test_shakhbat_cv, Rotate)
 		alpha = false;
 
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::Rotate(in, qlm::RotateFlag::ROTATE_90_CLOCKWISE);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

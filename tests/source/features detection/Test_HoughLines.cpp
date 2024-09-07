@@ -16,9 +16,9 @@ TEST(Test_shakhbat_cv, HoughLines)
 		alpha = false;
 
 	// do the operation
-	t.start();
+	t.Start();
 	std::vector<qlm::LinePolar> lines = qlm::HoughLines(in, 1, 3 * 3.14f / 180, 110);
-	t.end();
+	t.End();
 
 	// out image to draw on
 	auto draw = qlm::ColorConvert<qlm::ImageFormat::GRAY, uint8_t, qlm::ImageFormat::RGB, uint8_t>(in);

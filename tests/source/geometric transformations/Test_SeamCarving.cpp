@@ -22,9 +22,9 @@ TEST(Test_shakhbat_cv, SeamCarving)
 	const qlm::OrderFlag order = qlm::OrderFlag::WIDTH_FIRST;
 
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::SeamCarving(in, target_width, target_height, energy, order);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

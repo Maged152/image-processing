@@ -18,9 +18,9 @@ TEST(Test_shakhbat_cv, Translate)
 
 	qlm::Point displacement{ 50 ,50 };
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::Translate(in, displacement);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

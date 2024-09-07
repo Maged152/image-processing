@@ -17,9 +17,9 @@ TEST(Test_shakhbat_cv, ConvertBitDepth)
 
 	// do the operation
 	// U8 to S16
-	t.start();
+	t.Start();
 	auto out = qlm::ConvertBitDepth<qlm::ImageFormat::RGB, uint8_t, int16_t>(in);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

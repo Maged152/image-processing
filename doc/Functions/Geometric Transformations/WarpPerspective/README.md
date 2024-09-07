@@ -72,11 +72,11 @@ The function returns an image of type `Image<frmt, T>`.
     border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
 
     // do the operation
-    t.start();
+    t.Start();
     auto out = qlm::WarpPerspective(in, mat, dst_width, dst_height, qlm::InterpolationFlag::BILINEAR, border_mode);
-    t.end();
+    t.End();
 
-    t.show();
+    std::cout <<"Time = " << t.ElapsedString() << "\n";
 
     if (!out.SaveToFile("result.jpg", alpha))
     {

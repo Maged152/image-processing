@@ -44,11 +44,11 @@ The function returns an image of type `Image<frmt, T>`.
 		alpha = false;
 
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::Flip(in, qlm::FlipFlag::FLIP_VERTICAL_AXIS);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 
 	if (!out.SaveToFile("result.jpg", alpha))

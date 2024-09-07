@@ -51,11 +51,11 @@ The function returns an image of type `Image<frmt, T>`.
 	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{0,0,0};
 	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> threshold{ 20,20,20 };
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::FloodFill(in, seed, color, threshold);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 
 	if (!out.SaveToFile("result.jpg", alpha))

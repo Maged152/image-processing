@@ -19,9 +19,9 @@ TEST(Test_shakhbat_cv, KMeans)
 	const qlm::KMeansInit init = qlm::KMeansInit::KMEANS_PLUS_PLUS;
 
 	// do the operation
-	t.start();
+	t.Start();
 	auto clusters = qlm::KMeans(in, k, init);
-	t.end();
+	t.End();
 
 
 	// draw clusters

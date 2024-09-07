@@ -20,9 +20,9 @@ TEST(Test_shakhbat_cv, FloodFill)
 	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{ 0,0,0 };
 	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> threshold{ 20,20,20 };
 	
-	t.start();
+	t.Start();
 	auto out = qlm::FloodFill(in, seed, color, threshold);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

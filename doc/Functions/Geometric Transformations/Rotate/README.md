@@ -44,11 +44,11 @@ The function returns an image of type `Image<frmt, T>`.
 		alpha = false;
 
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::Rotate(in, qlm::RotateFlag::ROTATE_90_CLOCKWISE);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 
 	if (!out.SaveToFile("result.jpg", alpha))

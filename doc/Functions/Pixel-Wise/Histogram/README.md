@@ -41,11 +41,11 @@ The function returns a `Histogram_t<frmt, T>`, which represents the histogram of
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	t.start();
+	t.Start();
 	auto out = qlm::Histogram(in);
-	t.end();
+	t.End();
 	
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
     for (auto& channel : out.hist) 
     {

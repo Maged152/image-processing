@@ -19,9 +19,9 @@ TEST(Test_shakhbat_cv, Sobel)
 	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 
 	size_t filter_size = 3;
-	t.start();
+	t.Start();
 	auto out = qlm::Sobel<uint8_t, int16_t>(gray, filter_size);
-	t.end();
+	t.End();
 
 	// S16 to U8
 	auto x = qlm::ConvertSobelDepth(out.sobel_x, filter_size);

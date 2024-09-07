@@ -53,11 +53,11 @@ The function returns an image of type `Image<frmt, T>`.
 	unsigned int height = 540u;
 
 	// do the operation
-	t.start();
+	t.Start();
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::Resize(in, width, height);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 	
 	if (!out.SaveToFile("result.jpg", alpha))
 	{

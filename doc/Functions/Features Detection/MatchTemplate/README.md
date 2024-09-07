@@ -80,11 +80,11 @@ between the template and the corresponding region in the input image.
     qlm::Image<qlm::ImageFormat::GRAY, uint8_t> mask{};
     mask.create(templ.width, templ.height, 1);
 
-    t.start();
+    t.Start();
     auto out = qlm::MatchTemplate(in, templ, qlm::TemplateMatchFlag::SQDIFF, mask);
-    t.end();
+    t.End();
 
-    t.show();
+    std::cout <<"Time = " << t.ElapsedString() << "\n";
 
     // find min/max locations
     auto [min_loc, max_loc] = qlm::MinMaxLoc(out);

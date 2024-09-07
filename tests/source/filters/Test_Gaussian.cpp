@@ -12,9 +12,9 @@ TEST(Test_shakhbat_cv, Gaussian)
 	// do the operation
 	size_t filter_size = 3;
 	float sigma = 1.0f;
-	t.start();
+	t.Start();
 	auto out = qlm::Gaussian<qlm::ImageFormat::RGB, uint8_t>(in, filter_size, sigma);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

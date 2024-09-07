@@ -34,9 +34,9 @@ TEST(Test_shakhbat_cv, Histogram)
 	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
-	t.start();
+	t.Start();
 	auto out = qlm::Histogram(in);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

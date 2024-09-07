@@ -19,9 +19,9 @@ TEST(Test_shakhbat_cv, Resize)
 	size_t height = 540u;
 
 	// do the operation
-	t.start();
+	t.Start();
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out = qlm::Resize(in, width, height);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

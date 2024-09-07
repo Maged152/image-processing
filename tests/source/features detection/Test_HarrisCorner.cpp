@@ -23,9 +23,9 @@ TEST(Test_shakhbat_cv, HarrisCorner)
 	float threshold = 0.0000001;
 
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::HarrisCorner(gray, block_size, filter_size, k, threshold);
-	t.end();
+	t.End();
 
 	// draw corners
 	qlm::Circle<int> circle = { .radius = 2 };

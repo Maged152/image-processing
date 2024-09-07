@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common/timer.hpp"
+#include <thread_pool.hpp>
 #include "common/draw.hpp"
 #include "common/types.hpp"
 #include "common/solve.hpp"

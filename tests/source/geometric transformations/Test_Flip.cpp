@@ -16,9 +16,9 @@ TEST(Test_shakhbat_cv, Flip)
 		alpha = false;
 
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::Flip(in, qlm::FlipFlag::FLIP_VERTICAL_AXIS);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

@@ -33,8 +33,7 @@ namespace test
 	{
 		std::cout << COUT_GTEST_MGT_TIME << "Time"
 			                             << " = "
-			                             << time.Duration()
-			                             << " usec"
+			                             << time.ElapsedString()
 		                                 << ANSI_TXT_DFT << std::endl;
     }
 

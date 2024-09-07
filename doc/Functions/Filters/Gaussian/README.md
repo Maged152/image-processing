@@ -51,11 +51,11 @@ The function returns an image of type `Image<frmt, T>`.
 	unsigned int filter_size = 3;
 	float sigma = 1.0f;
 	// do the operation
-	t.start();
+	t.Start();
 	auto out = qlm::Gaussian<qlm::ImageFormat::RGB, uint8_t>(in, filter_size, sigma);
-	t.end();
+	t.End();
 
-	t.show();
+	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 
 	if (!out.SaveToFile("result.jpg", alpha))

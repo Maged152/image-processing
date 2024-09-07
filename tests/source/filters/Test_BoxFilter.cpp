@@ -17,9 +17,9 @@ TEST(Test_shakhbat_cv, BoxFilter)
 	auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
 	border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
 
-	t.start();
+	t.Start();
 	auto out = qlm::BoxFilter<qlm::ImageFormat::RGB, uint8_t, uint8_t>(in, filter_x_size, filter_y_size, normalize, border_mode);
-	t.end();
+	t.End();
 
 	test::PrintTime(t);
 

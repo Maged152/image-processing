@@ -11,9 +11,9 @@ TEST(Test_shakhbat_cv, HarrisCorner)
 
     auto gray = qlm::ColorConvert< qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 
-    t.start();
+    t.Start();
     auto [min_loc, max_loc] = qlm::MinMaxLoc(gray);    
-    t.end();
+    t.End();
 
     test::PrintTime(t);
 

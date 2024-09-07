@@ -47,11 +47,11 @@ The function returns a `std::pair<std::vector<Point<int>>, std::vector<Point<int
         return -1;
     }
   
-    t.start();
+    t.Start();
     auto [min_loc, max_loc] = qlm::MinMaxLoc(out);    
-    t.end();
+    t.End();
 
-    t.show();
+    std::cout <<"Time = " << t.ElapsedString() << "\n";
 
     std::cout << "number of min = " << min_loc.size() << "\n";
     std::cout << "number of max = " << max_loc.size() << "\n";
