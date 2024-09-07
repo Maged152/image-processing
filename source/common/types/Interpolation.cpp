@@ -1,4 +1,4 @@
-#include "common/types/Interpolation.h"
+#include "common/types/Interpolation.hpp"
 #include <cmath>
 
 namespace qlm

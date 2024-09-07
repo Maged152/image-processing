@@ -1,4 +1,4 @@
-#include "ConvertBitDepth.h"
+#include "ConvertBitDepth.hpp"
 #include <algorithm>
 #include <cmath>
 

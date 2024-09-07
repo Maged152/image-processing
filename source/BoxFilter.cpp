@@ -1,5 +1,5 @@
-#include "BoxFilter.h"
-#include "SepFilter2D.h"
+#include "BoxFilter.hpp"
+#include "SepFilter2D.hpp"
 
 namespace qlm
 {

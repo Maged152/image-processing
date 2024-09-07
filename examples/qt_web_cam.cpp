@@ -1,4 +1,4 @@
-#include "shakhbat_cv.h"
+#include "shakhbat_cv.hpp"
 #include <QApplication>
 #include <QWidget>
 #include <QLabel>

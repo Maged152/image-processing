@@ -1,4 +1,4 @@
-#include "FAST.h"
+#include "FAST.hpp"
 #include <cmath>
 
 namespace qlm

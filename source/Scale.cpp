@@ -1,4 +1,4 @@
-#include "Scale.h"
+#include "Scale.hpp"
 #include <iostream>
 #include <cmath>
 #include <algorithm>

@@ -1,4 +1,4 @@
-#include "common/types/TransformationMatrix.h"
+#include "common/types/TransformationMatrix.hpp"
 #include <iostream>
 #include <iomanip>
 #include <cmath>

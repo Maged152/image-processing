@@ -1,4 +1,4 @@
-#include "SepFilter2D.h"
+#include "SepFilter2D.hpp"
 
 namespace qlm
 {

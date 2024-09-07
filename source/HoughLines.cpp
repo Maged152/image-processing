@@ -1,4 +1,4 @@
-#include "HoughLines.h"
+#include "HoughLines.hpp"
 #include <iostream>
 
 template<qlm::ImageFormat frmt, qlm::pixel_t T>

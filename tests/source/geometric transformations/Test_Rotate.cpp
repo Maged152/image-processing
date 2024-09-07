@@ -1,4 +1,4 @@
-#include "test_common.h"
+#include "test_common.hpp"
 
 TEST(Test_shakhbat_cv, Rotate)
 {

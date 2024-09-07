@@ -1,4 +1,4 @@
-#include "MinMaxLoc.h"
+#include "MinMaxLoc.hpp"
 
 namespace qlm
 {

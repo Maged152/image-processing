@@ -1,5 +1,5 @@
-#include "Gaussian.h"
-#include "SepFilter2D.h"
+#include "Gaussian.hpp"
+#include "SepFilter2D.hpp"
 #include <cmath>
 namespace qlm
 {

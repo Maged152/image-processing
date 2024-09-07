@@ -1,5 +1,5 @@
-#include "WarpPerspective.h"
-#include "common/solve.h"
+#include "WarpPerspective.hpp"
+#include "common/solve.hpp"
 
 namespace qlm
 {

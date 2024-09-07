@@ -1,4 +1,4 @@
-#include "ColorConvert.h"
+#include "ColorConvert.hpp"
 #include <algorithm>
 #include <cmath>
 

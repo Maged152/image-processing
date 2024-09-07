@@ -1,7 +1,7 @@
-#include "SeamCarving.h"
-#include "Sobel.h"
-#include "ColorConvert.h"
-#include "Transposeh.h"
+#include "SeamCarving.hpp"
+#include "Sobel.hpp"
+#include "ColorConvert.hpp"
+#include "Transposeh.hpp"
 #include <cmath>
 #include <vector>
 

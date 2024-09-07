@@ -1,4 +1,4 @@
-#include "KMeans.h"
+#include "KMeans.hpp"
 #include <random>
 #include <numeric>
 #include <cmath>

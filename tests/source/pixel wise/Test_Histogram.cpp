@@ -1,4 +1,4 @@
-#include "test_common.h"
+#include "test_common.hpp"
 #include <fstream>
 
 template <typename T, std::size_t N, std::size_t M>

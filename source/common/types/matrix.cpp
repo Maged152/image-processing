@@ -1,4 +1,4 @@
-#include "common/types/matrix.h"
+#include "common/types/matrix.hpp"
 #include <iostream>
 #include <random>
 #include <iomanip>

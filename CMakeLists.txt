@@ -68,7 +68,9 @@ install(EXPORT "${TARGETS_EXPORT_NAME}"
 install(
     DIRECTORY include/ dependencies/
     DESTINATION ${INSTALL_INC_DIR}
-    FILES_MATCHING PATTERN "*.h"
+    FILES_MATCHING 
+    PATTERN "*.h" 
+    PATTERN "*.hpp"
 )
 
 # Create the package configuration file

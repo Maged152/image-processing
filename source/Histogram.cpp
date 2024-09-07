@@ -1,6 +1,6 @@
 #define _USE_MATH_DEFINES
 
-#include "Histogram.h"
+#include "Histogram.hpp"
 
 namespace qlm
 {

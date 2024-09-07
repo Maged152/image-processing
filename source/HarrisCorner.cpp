@@ -1,9 +1,9 @@
-#include "HarrisCorner.h"
-#include "ColorConvert.h"
-#include "Gaussian.h"
-#include "SepFilter2D.h"
-#include "Sobel.h"
-#include "BoxFilter.h"
+#include "HarrisCorner.hpp"
+#include "ColorConvert.hpp"
+#include "Gaussian.hpp"
+#include "SepFilter2D.hpp"
+#include "Sobel.hpp"
+#include "BoxFilter.hpp"
 
 namespace qlm
 {

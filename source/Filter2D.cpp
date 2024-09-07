@@ -1,4 +1,4 @@
-#include "Filter2D.h"
+#include "Filter2D.hpp"
 
 template<qlm::ImageFormat frmt, qlm::pixel_t T>
 qlm::Image<frmt, T> qlm::Filter2D(const qlm::Image<frmt, T>& in, const qlm::Kernel& kernel, const  BorderMode<frmt, T>& border_mode)
