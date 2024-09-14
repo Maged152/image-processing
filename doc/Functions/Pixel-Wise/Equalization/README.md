@@ -50,12 +50,12 @@ The function returns an `Image<frmt, T>`, which is the result of the equalizatio
 	std::cout << "Equalization time = " << t.ElapsedString() << "\n";
 
     // Save the output image
-    out.SaveToFile("output_histogram.jpg");
+    out.SaveToFile("result_histogram.jpg");
 ```
 
 ### The input
 ![Input Image](input.png)
 
 ### HISTOGRAM
-![Input Image](output_histogram.jpg)
+![Input Image](result_histogram.jpg)
 Time = 2 ms
