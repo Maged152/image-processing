@@ -5,6 +5,7 @@
 #include <string>
 #include <array>
 #include <filesystem>
+#include <fstream>
 
 #define ANSI_TXT_GRN "\033[0;32m"
 #define ANSI_TXT_RED "\033[0;31m"
@@ -122,5 +123,74 @@ namespace test
                 EXPECT_EQ(res, true);
             }
         }
+    }
+
+    template <qlm::ImageFormat frmt, typename T>
+    void WriteHistogram(const qlm::Histogram_t<frmt, T>& histogram, const std::string& filename)
+    {
+        std::ofstream file(filename);
+        
+        if (!file)
+        {
+            std::cerr << "Failed to open file for writing: " << filename << std::endl;
+            return;
+        }
+
+        // Write the number of channels and the histogram data element by element
+        for (const auto& channel : histogram.hist)
+        {
+            file << channel.size() << "\n";  // Write the size of the channel
+
+            // Write each element in the channel
+            for (const auto& value : channel)
+            {
+                file << value << " ";
+            }
+            file << "\n";  // Newline between channels
+        }
+
+        file.close();
+        if (file.fail())
+        {
+            std::cerr << "Failed to write data to file: " << filename << std::endl;
+        }
+    }
+
+    template <qlm::ImageFormat frmt, typename T>
+    qlm::Histogram_t<frmt, T> ReadHistogram(const std::string& filename)
+    {
+        qlm::Histogram_t<frmt, T> histogram;  // Create an empty histogram
+
+        std::ifstream file(filename);
+        
+        if (!file)
+        {
+            std::cerr << "Failed to open file for reading: " << filename << std::endl;
+            return histogram;  // Return empty histogram on failure
+        }
+
+        // Read the size and histogram data element by element
+        for (auto& channel : histogram.hist)
+        {
+            size_t size = 0;
+            file >> size;  // Read the size of the channel
+
+            // Resize the vector to hold the data
+            channel.resize(size);
+
+            // Read each element into the channel
+            for (auto& value : channel)
+            {
+                file >> value;
+            }
+        }
+
+        file.close();
+        if (file.fail())
+        {
+            std::cerr << "Failed to read data from file: " << filename << std::endl;
+        }
+
+        return histogram;
     }
 }

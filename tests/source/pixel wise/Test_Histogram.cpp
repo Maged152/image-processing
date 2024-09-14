@@ -1,28 +1,4 @@
 #include "test_common.hpp"
-#include <fstream>
-
-template <typename T, std::size_t N, std::size_t M>
-void readArrayFromFile(const std::string& filename, std::array<std::array<T, N>, M>& out)
-{
-    std::ifstream file(filename, std::ios::binary);
-    
-    if (!file)
-    {
-        std::cerr << "Failed to open file for reading: " << filename << std::endl;
-        return;
-    }
-
-    for (auto& channel : out)
-    {
-        file.read(reinterpret_cast<char*>(channel.data()), channel.size() * sizeof(T));
-    }
-
-    file.close();
-    if (file.fail())
-    {
-        std::cerr << "Failed to read data from file: " << filename << std::endl;
-    }
-}
 
 TEST(Test_shakhbat_cv, Histogram)
 {
@@ -41,8 +17,7 @@ TEST(Test_shakhbat_cv, Histogram)
 	test::PrintTime(t);
 
     // reference result
-    qlm::Histogram_t<qlm::ImageFormat::RGB, uint8_t> ref;
-    readArrayFromFile("tests/source/pixel wise/result_hist.txt", ref.hist);
+    const auto ref = test::ReadHistogram<qlm::ImageFormat::RGB, uint8_t>("tests/source/pixel wise/result_histogram.txt");
 
     // compare results
     for (int c = 0; c < out.num_channels; c++)

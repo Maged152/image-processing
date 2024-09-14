@@ -15,17 +15,7 @@ namespace qlm
             const Histogram_t<frmt, T> histogram = Histogram(in);
             
             // calculate cumulative sum
-            Histogram_t<frmt, T> cumsum;
-
-            for(int c = 0; c < histogram.num_channels; c++)
-            {
-                cumsum.hist[c][0] = histogram.hist[c][0];
-
-                for (int b = 1; b < histogram.tot_elements; b++)
-                {
-                    cumsum.hist[c][b] = cumsum.hist[c][b - 1] + histogram.hist[c][b];
-                }
-            }
+            Histogram_t<frmt, T> cumsum = histogram.CumulativeHistogram();
 
             constexpr T max_val = std::numeric_limits<T>::max();
             const int tot_pixels = in.width * in.height;

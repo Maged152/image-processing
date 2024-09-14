@@ -179,16 +179,44 @@ namespace qlm
 	struct Histogram_t 
 	{
 		static constexpr int num_channels = (frmt == ImageFormat::GRAY) ? 1 : 3;
-		static constexpr size_t tot_elements = (size_t)std::numeric_limits<T>::max() - std::numeric_limits<T>::lowest() + 1;
-		// todo : change to pixel
-		std::array<std::array<size_t, tot_elements>, num_channels> hist;
+		// Dynamically calculate the number of elements based on T
+    	static constexpr size_t tot_elements = static_cast<size_t>(std::numeric_limits<T>::max() - std::numeric_limits<T>::lowest()) + 1;
 
-		// Constructor initializes the histograms to zero
-		Histogram_t() 
+		// Histogram data: dynamically allocated based on channel count
+		std::array<std::vector<size_t>, num_channels> hist;
+
+		// Constructor to initialize the histogram arrays
+		Histogram_t()
 		{
-			for (auto& channel : hist) 
+			for (auto& channel_hist : hist) 
 			{
-				channel.fill(0);
+				channel_hist.resize(tot_elements, 0);  // Allocate and initialize to zero
+			}
+		}
+
+		// Get the cumulative sum of the histogram
+		Histogram_t<frmt, T> CumulativeHistogram() const
+		{
+			Histogram_t<frmt, T> cumsum;
+
+			for (int c = 0; c < num_channels; ++c)
+			{
+				cumsum.hist[c][0] = hist[c][0];
+				for (size_t i = 1; i < tot_elements; ++i)
+				{
+					cumsum.hist[c][i] = cumsum.hist[c][i - 1] + hist[c][i];
+				}
+			}
+
+			return cumsum;
+		}
+
+		 // Reset the histogram data
+		void Reset()
+		{
+			for (auto& channel_hist : hist)
+			{
+				std::fill(channel_hist.begin(), channel_hist.end(), 0);
 			}
 		}
 	};
