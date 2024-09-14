@@ -22,7 +22,7 @@ namespace qlm
 
 ## Parameters
 
-| Name     | Type         | Description                                                         |
+| Name     | Type         | Description                                            |
 |----------|--------------|--------------------------------------------------------|
 | `in`     | `Image`      | The input image.                                       |
 | `width`  | `size_t`     | The desired width of the output image.                 |
