@@ -58,4 +58,5 @@ The function returns an `Image<frmt, T>`, which is the result of the equalizatio
 
 ### HISTOGRAM
 ![Input Image](result_histogram.jpg)
+
 Time = 2 ms
