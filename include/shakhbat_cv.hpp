@@ -28,3 +28,4 @@
 #include "MinMaxLoc.hpp"
 #include "SeamCarving.hpp"
 #include "Histogram.hpp"
+#include "Equalization.hpp"
