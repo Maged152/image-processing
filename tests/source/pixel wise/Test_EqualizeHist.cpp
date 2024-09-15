@@ -1,9 +1,9 @@
 #include "test_common.hpp"
 
-TEST(Test_shakhbat_cv, Equalization)
+TEST(Test_shakhbat_cv, EqualizeHist)
 {
 	qlm::Timer<qlm::usec> t{};
-	const std::string folder_path = test::example_folder + "pixel-wise/Equalization/";
+	const std::string folder_path = test::example_folder + "pixel-wise/EqualizeHist/";
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in;
@@ -12,7 +12,7 @@ TEST(Test_shakhbat_cv, Equalization)
 
 	// do the operation
 	t.Start();
-	auto out = qlm::Equalization(in, qlm::EqualizationFlag::HISTOGRAM);
+	auto out = qlm::EqualizeHist(in);
 	t.End();
 
 	test::PrintTime(t);

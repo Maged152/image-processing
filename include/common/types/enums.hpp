@@ -43,10 +43,4 @@ namespace qlm
 		FORWARD,
 		BACKWARD
 	};
-
-    enum class EqualizationFlag
-	{
-		HISTOGRAM,
-		ADAPTIVE_HISTOGRAM
-	};
 }

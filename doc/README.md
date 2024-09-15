@@ -34,7 +34,7 @@ Here you can find the implementation of :
 * Pixel-Wise
     * [MinMax Location](Functions/Pixel-Wise/MinMaxLoc)
     * [Histogram](Functions/Pixel-Wise/Histogram)
-    * [Equalization](Functions/Pixel-Wise/Equalization)
+    * [Histogram Equalization](Functions/Pixel-Wise/EqualizeHist)
 * Get Functions
     * [Get Kernel](Functions/Get%20functions/Get%20Kernel)
     * [Get Transformation Matrix](Functions/Get%20functions/Get%20Transformation%20Matrix)

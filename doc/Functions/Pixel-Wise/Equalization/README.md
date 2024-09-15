@@ -1,21 +1,17 @@
-# Equalization
+# EqualizeHist
 ## Description
-The Equalization function applies a specific type of equalization based on `EqualizationFlag` parameter.
+The function applies Histogram Equalization on the input image.
 
-The available flags are :
+Histogram equalization enhances the contrast of the image by redistributing the pixel intensity values.
 
-* `HISTOGRAM` : **Histogram equalization** enhances the contrast of the image by redistributing the pixel intensity values.
-
-You can check the implementation [here](../../../../source/Equalization.cpp)
+You can check the implementation [here](../../../../source/EqualizeHist.cpp)
 
 ## C++ API
 ```c++
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> Equalization(
-		const Image<frmt, T>& in,
-		const EqualizationFlag flag)
+	Image<frmt, T> EqualizeHist(const Image<frmt, T>& in)
 }
 ```
 
@@ -24,7 +20,6 @@ namespace qlm
 | Name                  | Type                | Description                                                                                               |
 |-----------------------|---------------------|-----------------------------------------------------------------------------------------------------------|
 | `in`                  | `Image`             | The input image.                                                                                          |
-| `flag`                | `EqualizationFlag`  | Specifies the type of equalization to apply.                                                              |
 
 
 ## Return Value
@@ -44,10 +39,10 @@ The function returns an `Image<frmt, T>`, which is the result of the equalizatio
     }
 
     t.Start();
-    auto out = qlm::Equalization(in, qlm::EqualizationFlag::HISTOGRAM);
+    auto out = qlm::EqualizeHist(in);
     t.End();
 
-	std::cout << "Equalization time = " << t.ElapsedString() << "\n";
+	std::cout << "Histogram Equalization time = " << t.ElapsedString() << "\n";
 
     // Save the output image
     out.SaveToFile("result_histogram.jpg");
