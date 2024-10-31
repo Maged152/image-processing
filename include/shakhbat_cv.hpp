@@ -29,3 +29,4 @@
 #include "SeamCarving.hpp"
 #include "Histogram.hpp"
 #include "EqualizeHist.hpp"
+#include "GaussianPyramid.hpp"

@@ -220,4 +220,18 @@ namespace qlm
 			}
 		}
 	};
+
+	template<ImageFormat frmt, pixel_t T>
+	struct Pyramid
+	{
+		std::vector<Image<frmt, T>> layers;
+		size_t num_layers;
+		float scale;
+		size_t filter_size;
+		float sigma;
+
+		Pyramid(const size_t num_layers, const float scale, const size_t filter_size,const float sigma) :
+			num_layers(num_layers), scale(scale), filter_size(filter_size), sigma(sigma), layers(num_layers)
+			{}
+	};
 }
