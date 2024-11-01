@@ -10,7 +10,7 @@ namespace qlm
         Pyramid<frmt, T> pyr {num_layers, scale, filter_size, sigma};
         pyr.layers[0] = in;
 
-        for (int layer = 1; layer < num_layers; layer++)
+        for (size_t layer = 1; layer < num_layers; layer++)
         {
             const auto gaussian_image = Gaussian(pyr.layers[layer - 1], filter_size, sigma, sigma, border_mode);
             pyr.layers[layer] = Scale(gaussian_image, InterpolationFlag::NEAREST_NEIGHBOR, scale, scale, border_mode);
