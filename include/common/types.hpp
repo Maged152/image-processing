@@ -1,10 +1,12 @@
 #pragma once
+
 #include "image.hpp"
 #include "types/TransformationMatrix.hpp"
 #include "types/Kernel.hpp"
 #include "types/Interpolation.hpp"
 #include "types/matrix.hpp"
 #include "types/enums.hpp"
+#include "types/KDTree.hpp"
 #include <vector>
 #include <limits>
 #include <array>
