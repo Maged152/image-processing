@@ -20,32 +20,30 @@ struct KDNode
     }
 };
 
-
 template <int N, typename T>
 class KDTree 
 {
     private:
-        KDNode<N, T>* root;
+        KDNode<N, T>* root = nullptr;
         std::vector<KDNode<N, T>> nodes;
         int occupied = 0;
         int capacity = 0;
 
     public:
-        KDTree(const int size) : root(nullptr), capacity(size), nodes(size)
+        KDTree(const int size) : capacity(size), nodes(size)
         {}
 
         ~KDTree() 
-        {
-            if (root != nullptr) 
-            {
-                delete root;
-                Clear();
-            }
-        }
+        {}
 
         void Build(const std::vector<std::array<T, N>>& points) 
         {
-            Reset();
+            Clear();
+
+            if (points.empty()) 
+            {
+                return;
+            }
 
             if (points.size() > capacity) 
             {
@@ -66,7 +64,7 @@ class KDTree
 
         // bool find(const std::array<T, N>& point) const 
         // {
-        //     return find(root, point, 0);
+        //     return find(&nodes[0], point, 0);
         // }
 
     private:
@@ -82,7 +80,8 @@ class KDTree
                 else 
                 {
                     nodes.push_back(KDNode<N, T>(point, depth % N));
-                    capacity++;
+                    capacity = nodes.capacity();
+                    occupied++;
                     return &nodes.back();
                 }
             }
@@ -126,15 +125,8 @@ class KDTree
 
         void Clear() 
         {
-            for (auto node : nodes) 
-            {
-                delete node;
-            }
+            occupied = 0;
+            root = nullptr;
         }
 
-        void Reset() 
-        {
-            root = nullptr;
-            occupied = 0;
-        }
 };
