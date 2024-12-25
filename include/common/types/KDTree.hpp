@@ -50,6 +50,8 @@ class KDTree
         int occupied = 0;
         int capacity = 0;
 
+        using dist_t = qlm::wider_t<qlm::signed_t<T>>;
+
     public:
         KDTree(const int size) : capacity(size), nodes(size)
         {}
@@ -83,10 +85,14 @@ class KDTree
             root = Insert(root, point, 0);
         }
 
-        // bool find(const std::array<T, N>& point) const 
-        // {
-        //     return find(&nodes[0], point, 0);
-        // }
+        std::array<T, N> NearestPoint(const std::array<T, N>& point) const 
+        {
+            std::array<T, N> best_point;
+            dist_t best_dist = std::numeric_limits<dist_t>::max();
+            NearestPoint(root, point, best_point, best_dist);
+
+            return best_point;
+        }
 
     void Print() const
     {
@@ -126,29 +132,6 @@ class KDTree
             return node;
         }
       
-        // bool find(KDNode<T, N>* node, const std::array<T, N>& point, int depth) const 
-        // {
-        //     if (node == nullptr) 
-        //     {
-        //         return false;
-        //     }
-
-        //     if (node->data == point) 
-        //     {
-        //         return true;
-        //     }
-
-        //     int axis = depth % N;
-        //     if (point[axis] < node->data[axis]) 
-        //     {
-        //         return find(node->left, point, depth + 1);
-        //     } 
-        //     else 
-        //     {
-        //         return find(node->right, point, depth + 1);
-        //     }
-        // }
-
         void Clear() 
         {
             occupied = 0;
@@ -169,5 +152,61 @@ class KDTree
             // Recur for left and right subtrees with updated prefix
             PrintTree(root->right, prefix + (is_right ? "|   " : "    "), true);
             PrintTree(root->left, prefix + (is_right ? "|   " : "    "), false);
+        }
+
+        dist_t SquaredEuclideanDistance(const std::array<T, N>& p0, const std::array<T, N>& p1) const 
+        {
+            dist_t sum = 0;
+            for (int i = 0; i < N; ++i) 
+            {
+                const dist_t diff = p0[i] - p1[i];
+                sum += diff * diff;
+            }
+
+            return sum;
+        }
+        
+        void NearestPoint(KDNode<T, N>* node, const std::array<T, N>& query, std::array<T, N>& best_point, dist_t& best_dist) const 
+        {
+            if (node == nullptr) 
+            {
+                return;
+            }
+
+            // calculate distance
+            const dist_t dist = SquaredEuclideanDistance(node->data, query);
+
+            // Update the best point and distance if closer
+            if (dist < best_dist) 
+            {
+                best_point = node->data;
+                best_dist = dist;
+            }
+
+            // Determine which subtree to search first
+            const int axis = node->axis;
+            KDNode<T, N>* good_side = nullptr;
+            KDNode<T, N>* bad_side = nullptr;
+
+            if (query[axis] < node->data[axis]) 
+            {
+                good_side = root->left;
+                bad_side = root->right;
+            } 
+            else 
+            {
+                good_side = root->right;
+                bad_side = root->left;
+            }
+            
+            // search the good side
+            NearestPoint(good_side, query, best_point, best_dist);
+
+            // search the bad side if needed
+            const dist_t plane_dist = node->data[axis] - query[axis];
+            if (plane_dist * plane_dist < best_dist) 
+            {
+                NearestPoint(bad_side, query, best_point, best_dist);
+            }
         }
 };
