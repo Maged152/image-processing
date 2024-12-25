@@ -2,8 +2,10 @@
 
 #include <array>
 #include <vector>
+#include <iostream>
+#include <string>
 
-template <int N, typename T>
+template <typename T, int N>
 struct KDNode 
 {
     std::array<T, N> data;
@@ -11,6 +13,11 @@ struct KDNode
     KDNode* right;
     int axis;
 
+    // Default constructor
+    KDNode() : left(nullptr), right(nullptr), axis(0) 
+    {}
+
+    // Parameterized constructor
     KDNode(const std::array<T, N>& data, int axis = 0) : data(data), left(nullptr), right(nullptr), axis(axis) 
     {}
 
@@ -18,14 +25,28 @@ struct KDNode
     {
         return data[axis] < other.data[axis];
     }
+
+    void Print() const 
+    {
+        std::cout << "(";
+        for (int i = 0; i < N; ++i) 
+        {
+            std::cout << data[i];
+            if (i < N - 1) 
+            {
+                std::cout << ", ";
+            }
+        }
+        std::cout << ")";
+    }
 };
 
-template <int N, typename T>
+template <typename T, int N>
 class KDTree 
 {
     private:
-        KDNode<N, T>* root = nullptr;
-        std::vector<KDNode<N, T>> nodes;
+        KDNode<T, N>* root = nullptr;
+        std::vector<KDNode<T, N>> nodes;
         int occupied = 0;
         int capacity = 0;
 
@@ -67,19 +88,24 @@ class KDTree
         //     return find(&nodes[0], point, 0);
         // }
 
+    void Print() const
+    {
+        PrintTree(root);
+    }
+
     private:
-        KDNode<N, T>* Insert(KDNode<N, T>* node, const std::array<T, N>& point, const int depth) 
+        KDNode<T, N>* Insert(KDNode<T, N>* node, const std::array<T, N>& point, const int depth) 
         {
             if (node == nullptr) 
             {
                 if (occupied < capacity) 
                 {
-                    nodes[occupied] = KDNode<N, T>(point, depth % N);
+                    nodes[occupied] = KDNode<T, N>(point, depth % N);
                     return &nodes[occupied++];
                 } 
                 else 
                 {
-                    nodes.push_back(KDNode<N, T>(point, depth % N));
+                    nodes.push_back(KDNode<T, N>(point, depth % N));
                     capacity = nodes.capacity();
                     occupied++;
                     return &nodes.back();
@@ -100,7 +126,7 @@ class KDTree
             return node;
         }
       
-        // bool find(KDNode<N, T>* node, const std::array<T, N>& point, int depth) const 
+        // bool find(KDNode<T, N>* node, const std::array<T, N>& point, int depth) const 
         // {
         //     if (node == nullptr) 
         //     {
@@ -129,4 +155,19 @@ class KDTree
             root = nullptr;
         }
 
+        void PrintTree(KDNode<T, N>* root, std::string prefix = "", bool is_right = true) const
+        {
+            if (root == nullptr) return;
+
+            std::cout << prefix;
+
+            std::cout <<  "|--" << (is_right ? "R: " : "L: ");
+
+            root->Print();
+            std::cout << std::endl;
+
+            // Recur for left and right subtrees with updated prefix
+            PrintTree(root->right, prefix + (is_right ? "|   " : "    "), true);
+            PrintTree(root->left, prefix + (is_right ? "|   " : "    "), false);
+        }
 };
