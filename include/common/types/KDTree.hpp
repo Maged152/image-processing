@@ -11,16 +11,15 @@ namespace qlm
     struct KDNode 
     {
         std::array<T, N> data;
-        KDNode* left;
-        KDNode* right;
-        int axis;
+        KDNode* left = nullptr;
+        KDNode* right = nullptr;
+        int axis = 0;
+        int index = -1;
 
-        // Default constructor
-        KDNode() : left(nullptr), right(nullptr), axis(0) 
+        KDNode()
         {}
 
-        // Parameterized constructor
-        KDNode(const std::array<T, N>& data, int axis = 0) : data(data), left(nullptr), right(nullptr), axis(axis) 
+        KDNode(const std::array<T, N>& data, int axis = 0, int index = -1) : data(data), left(nullptr), right(nullptr), axis(axis), index(index) 
         {}
 
         bool operator<(const KDNode& other) const 
@@ -87,19 +86,20 @@ namespace qlm
                 root = Insert(root, point, 0);
             }
 
-            std::array<T, N> NearestPoint(const std::array<T, N>& point) const 
+            int NearestPoint(const std::array<T, N>& point) const 
             {
-                std::array<T, N> best_point;
+                KDNode<T, N>* best_node = nullptr;
                 dist_t best_dist = std::numeric_limits<dist_t>::max();
-                NearestPoint(root, point, best_point, best_dist);
 
-                return best_point;
+                NearestPoint(root, point, best_node, best_dist);
+
+                return best_node->index;
             }
 
-        void Print() const
-        {
-            PrintTree(root);
-        }
+            void Print() const
+            {
+                PrintTree(root);
+            }
 
         private:
             KDNode<T, N>* Insert(KDNode<T, N>* node, const std::array<T, N>& point, const int depth) 
@@ -108,12 +108,12 @@ namespace qlm
                 {
                     if (occupied < capacity) 
                     {
-                        nodes[occupied] = KDNode<T, N>(point, depth % N);
+                        nodes[occupied] = KDNode<T, N>(point, depth % N, occupied);
                         return &nodes[occupied++];
                     } 
                     else 
                     {
-                        nodes.push_back(KDNode<T, N>(point, depth % N));
+                        nodes.push_back(KDNode<T, N>(point, depth % N, occupied));
                         capacity = nodes.capacity();
                         occupied++;
                         return &nodes.back();
@@ -168,7 +168,7 @@ namespace qlm
                 return sum;
             }
             
-            void NearestPoint(KDNode<T, N>* node, const std::array<T, N>& query, std::array<T, N>& best_point, dist_t& best_dist) const 
+            void NearestPoint(KDNode<T, N>* node, const std::array<T, N>& query, KDNode<T, N>*& best_node, dist_t& best_dist) const 
             {
                 if (node == nullptr) 
                 {
@@ -181,7 +181,7 @@ namespace qlm
                 // Update the best point and distance if closer
                 if (dist < best_dist) 
                 {
-                    best_point = node->data;
+                    best_node = node;
                     best_dist = dist;
                 }
 
@@ -202,13 +202,13 @@ namespace qlm
                 }
                 
                 // search the good side
-                NearestPoint(good_side, query, best_point, best_dist);
+                NearestPoint(good_side, query, best_node, best_dist);
 
                 // search the bad side if needed
                 const dist_t plane_dist = node->data[axis] - query[axis];
                 if (plane_dist * plane_dist < best_dist) 
                 {
-                    NearestPoint(bad_side, query, best_point, best_dist);
+                    NearestPoint(bad_side, query, best_node, best_dist);
                 }
             }
     };
