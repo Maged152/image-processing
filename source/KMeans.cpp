@@ -62,7 +62,9 @@ namespace qlm
 		std::vector<int> pix_cluster(in.width * in.height);
 		std::vector<int> num_pix_cluster (k);
 		std::vector<Pixel<frmt, float>> pix_avg (k);
-	
+
+		KDTree<T, 3> kd_tree(k);
+		std::vector<std::array<T, 3>> centroids (k);
 
 		for (int t = 0; t < max_iter; t++)
 		{
@@ -71,43 +73,31 @@ namespace qlm
 			{
 				num_pix_cluster[i] = 0;
 				pix_avg[i].Set(0.0f);
+
+				centroids[i][0]	= clusters[i].color.r;
+				centroids[i][1]	= clusters[i].color.g;
+				centroids[i][2]	= clusters[i].color.b;
 			}
+
+            kd_tree.Build(centroids);
 
 			// Assign points to the one of the K centroids
 			for (int i = 0; i < in.height * in.width; i++)
 			{
-				auto in_pix = in.GetPixel(i);
-
-				int cluster_idx{ 0 };
-				dist_t distance{ std::numeric_limits<dist_t>::max()};
-
-				// loop over all clusters and choose the closest
-				for (int c = 0; c < k; c++)
-				{
-					// calculate distance
-					auto cur_dist = L2Norm(clusters[c].color, in_pix);
-					if (cur_dist < distance)
-					{
-						distance = cur_dist;
-						cluster_idx = c;
-					}
-				}
+				const auto in_pix = in.GetPixel(i);
+				const auto cluster_idx = kd_tree.NearestPoint({in_pix.r, in_pix.g, in_pix.b});
 
 				// assign pixel to the cluster
 				pix_cluster[i] = cluster_idx;
 				num_pix_cluster[cluster_idx]++;
+
+				// average pixels
+				pix_avg[cluster_idx] = pix_avg[cluster_idx] + in_pix;
 			}
 
-			// Recompute the centroids
-			for (int i = 0; i < in.height * in.width; i++)
-			{
-				auto pix = in.GetPixel(i);
-				auto cluster_idx = pix_cluster[i];
-				pix_avg[cluster_idx] = pix_avg[cluster_idx] + pix;
-			}
-
-			 T centers_squared_diff {0};
+			T centers_squared_diff {0};
 		
+			// Recompute the centroids
 			for (int c = 0; c < k; c++)
 			{
 				Pixel<frmt, float> num_pix{ (float)num_pix_cluster[c] };
