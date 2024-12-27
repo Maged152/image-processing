@@ -96,6 +96,13 @@ namespace qlm
                 return best_node->index;
             }
 
+            std::vector<int> RadiusSearch(const std::array<T, N>& point, dist_t radius) const 
+            {
+                std::vector<int> indices;
+                RadiusSearch(root, point, radius, indices);
+                return indices;
+            }
+
             void Print() const
             {
                 PrintTree(root);
@@ -209,6 +216,49 @@ namespace qlm
                 if (plane_dist * plane_dist < best_dist) 
                 {
                     NearestPoint(bad_side, query, best_node, best_dist);
+                }
+            }
+    
+            void RadiusSearch(KDNode<T, N>* node, const std::array<T, N>& query, dist_t radius, std::vector<int>& indices) const 
+            {
+                if (node == nullptr) 
+                {
+                    return;
+                }
+
+                // calculate distance
+                const dist_t dist = SquaredEuclideanDistance(node->data, query);
+
+                // If the point is within the radius, add its index to the result
+                if (dist <= radius * radius) 
+                {
+                    indices.push_back(node->index);
+                }
+
+                // Determine which subtree to search first
+                const int axis = node->axis;
+                KDNode<T, N>* good_side = nullptr;
+                KDNode<T, N>* bad_side = nullptr;
+
+                if (query[axis] < node->data[axis]) 
+                {
+                    good_side = node->left;
+                    bad_side = node->right;
+                } 
+                else 
+                {
+                    good_side = node->right;
+                    bad_side = node->left;
+                }
+                
+                // search the good side
+                RadiusSearch(good_side, query, radius, indices);
+
+                // search the bad side if needed
+                const dist_t plane_dist = node->data[axis] - query[axis];
+                if (plane_dist * plane_dist <= radius * radius) 
+                {
+                    RadiusSearch(bad_side, query, radius, indices);
                 }
             }
     };
