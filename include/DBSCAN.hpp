@@ -5,7 +5,7 @@
 namespace qlm
 {
     template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> DBSCAN(
+	Image<ImageFormat::GRAY, T> DBSCAN(
 		const Image<frmt, T>& in,
 		const int eps,
 		const int min_pts = 5

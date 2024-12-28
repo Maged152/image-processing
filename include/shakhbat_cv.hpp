@@ -30,3 +30,4 @@
 #include "Histogram.hpp"
 #include "EqualizeHist.hpp"
 #include "GaussianPyramid.hpp"
+#include "DBSCAN.hpp"
