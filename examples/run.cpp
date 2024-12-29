@@ -19,10 +19,9 @@ int main()
         alpha = false;
 
     const int eps = 10; // Example epsilon value
-    const int min_pts = 5; // Example minimum points value
+    const int min_pts = 15; // Example minimum points value
 
     // Perform DBSCAN
-    std::cout << "in.width = " << in.width << ", in.height = " << in.height << "\n";
     t.Start();
     auto result = qlm::DBSCAN(in, eps, min_pts);
     t.End();
@@ -36,35 +35,31 @@ int main()
         return -1;
     }
 
+    std::cout << "Number of clusters: " << result.num_clusters << "\n";
+    std::cout << "Noise exists: " << (result.noise_exists ? "Yes, and marked as red" : "No") << "\n";
+
     // Construct clusters
     const int num_clusters = result.num_clusters + 1;
 
     std::vector<qlm::Cluster<qlm::ImageFormat::RGB, uint8_t>> clusters(num_clusters);
+    std::vector<qlm::Pixel<qlm::ImageFormat::RGB, float>> pix_avg (num_clusters);
+
     for (int y = 0; y < in.height; ++y)
     {
         for (int x = 0; x < in.width; ++x)
         {
-            int label = result.labels.GetPixel(x, y).v;
-
+            const int label = result.labels.GetPixel(x, y).v;
             clusters[label + 1].pixels.push_back({ x, y });
-            clusters[label + 1].color = clusters[label].color + in.GetPixel(x, y);
+            pix_avg[label + 1] = pix_avg[label + 1] + in.GetPixel(x, y);
         }
     }
-
     // Compute average pixel for each cluster
-    for (auto& cluster : clusters)
+    for (int i = 1; i < num_clusters; ++i)
     {
-        if (!cluster.pixels.empty())
-        {
-            cluster.color = cluster.color / cluster.pixels.size();
-        }
+        clusters[i].color = pix_avg[i] / clusters[i].pixels.size();
     }
-
     // mark noise pixels as red
     clusters[0].color = { 255, 0, 0 };
-
-    std::cout << "Number of clusters: " << result.num_clusters << "\n";
-    std::cout << "Noise exists: " << (result.noise_exists ? "Yes" : "No, and marked as red") << "\n";
 
     // draw clusters
     auto out = qlm::DrawCluster(in, clusters);

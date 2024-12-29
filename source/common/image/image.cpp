@@ -88,6 +88,7 @@ namespace qlm
 	// explicit instantiation
 	template void Image<ImageFormat::GRAY, uint8_t>::create(size_t, size_t, Pixel<ImageFormat::GRAY, uint8_t>, size_t);
 	template void Image<ImageFormat::GRAY, int16_t>::create(size_t, size_t, Pixel<ImageFormat::GRAY, int16_t>, size_t);
+	template void Image<ImageFormat::GRAY, int>::create(size_t, size_t, Pixel<ImageFormat::GRAY, int>, size_t);
 	template void Image<ImageFormat::GRAY, float>::create(size_t, size_t, Pixel<ImageFormat::GRAY, float>, size_t);
 
 	template void Image<ImageFormat::RGB, uint8_t>::create(size_t, size_t, Pixel<ImageFormat::RGB, uint8_t>, size_t);

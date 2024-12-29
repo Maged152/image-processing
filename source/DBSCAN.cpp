@@ -7,13 +7,14 @@ namespace qlm
     DBSCANResult DBSCAN(const Image<frmt, T>& in, const int eps, const int min_pts)
     {
         const int num_points = in.width * in.height;
+        const Pixel<ImageFormat::GRAY, int> unvisited{-2};
 
         DBSCANResult result{};
-        result.labels.create(in.width, in.height, -2); // -2 means unvisited
+        result.labels.create(in.width, in.height, unvisited); // -2 means unvisited
         result.num_clusters = -1;
 
         int num_noise_pixels = 0;
-
+       
         // Convert image pixels to points
         std::vector<std::array<int, 5>> points(num_points);
         
@@ -95,6 +96,7 @@ namespace qlm
             result.noise_exists = true;
         }
 
+        result.num_clusters++; // Increment by 1 to convert to the actual number of clusters
         return result;
     }
 
