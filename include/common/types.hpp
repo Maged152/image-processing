@@ -177,6 +177,13 @@ namespace qlm
 		Pixel<frmt, T> color;
 	};
 
+	struct DBSCANResult
+    {
+        Image<ImageFormat::GRAY, int> labels;
+        int num_clusters;
+        bool noise_exists;
+    };
+
 	template<ImageFormat frmt, typename T>
 	struct Histogram_t 
 	{

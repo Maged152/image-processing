@@ -4,12 +4,15 @@
 namespace qlm
 {
     template <ImageFormat frmt, pixel_t T>
-    Image<ImageFormat::GRAY, T> DBSCAN(const Image<frmt, T>& in, const int eps, const int min_pts)
+    DBSCANResult DBSCAN(const Image<frmt, T>& in, const int eps, const int min_pts)
     {
-        using dist_t = qlm::wider_t<qlm::signed_t<T>>;
         const int num_points = in.width * in.height;
-        std::vector<int> labels(num_points, -2); // -2 means unvisited
-        int cluster_id = 0;
+
+        DBSCANResult result{};
+        result.labels.create(in.width, in.height, -2); // -2 means unvisited
+        result.num_clusters = -1;
+
+        int num_noise_pixels = 0;
 
         // Convert image pixels to points
         std::vector<std::array<int, 5>> points(num_points);
@@ -19,7 +22,7 @@ namespace qlm
             for (int x = 0; x < in.width; ++x)
             {
                 const auto pixel = in.GetPixel(x, y);
-                points[i] = {x, y, pixel.r, pixel.g, pixel.b};
+                points[y * in.width + x] = {x, y, pixel.r, pixel.g, pixel.b};
             }
         }
 
@@ -28,9 +31,9 @@ namespace qlm
         kd_tree.Build(points);
 
         // DBSCAN algorithm
-        for (int i = 0; i < num_points; ++i)
+        for (int i = 0; i < num_points; i++)
         {
-            if (labels[i] != -2) // Skip visited points
+            if (result.labels.GetPixel(i).v != -2) // Skip visited points
             {
                 continue;
             }
@@ -40,20 +43,18 @@ namespace qlm
 
             if (neighbors.size() < min_pts)
             {
-                labels[i] = -1; // Mark as noise
+                result.labels.SetPixel(i, -1); // Mark as noise
+                num_noise_pixels++;
             }
             else
             {
-                cluster_id++;
-                labels[i] = cluster_id;
+                result.num_clusters++;
+                result.labels.SetPixel(i, result.num_clusters);
 
                 std::queue<int> q;
                 for (int neighbor : neighbors)
                 {
-                    if (neighbor != i)
-                    {
-                        q.push(neighbor);
-                    }
+                    q.push(neighbor);
                 }
 
                 while (!q.empty())
@@ -61,24 +62,25 @@ namespace qlm
                     int current = q.front();
                     q.pop();
 
-                    if (labels[current] == -1)
+                    if (result.labels.GetPixel(current).v == -1)
                     {
-                        labels[current] = cluster_id; // Change noise to border point
+                        result.labels.SetPixel(current, result.num_clusters); // Change noise to border point
+                        num_noise_pixels--;
                     }
 
-                    if (labels[current] != -2)
+                    if (result.labels.GetPixel(current).v != -2)
                     {
                         continue;
                     }
 
-                    labels[current] = cluster_id;
+                    result.labels.SetPixel(current, result.num_clusters);
 
                     std::vector<int> current_neighbors = kd_tree.RadiusSearch(points[current], eps);
                     if (current_neighbors.size() >= min_pts)
                     {
                         for (int neighbor : current_neighbors)
                         {
-                            if (labels[neighbor] == -2)
+                            if (result.labels.GetPixel(neighbor).v == -2)
                             {
                                 q.push(neighbor);
                             }
@@ -88,15 +90,13 @@ namespace qlm
             }
         }
 
-        // Create output image with cluster labels
-        Image<ImageFormat::GRAY, T> out(in.width, in.height);
-        for (int i = 0; i < num_points; ++i)
+        if (num_noise_pixels > 0)
         {
-            out.SetPixel(i, labels[i]);
+            result.noise_exists = true;
         }
 
-        return out;
+        return result;
     }
 
-    template Image<ImageFormat::GRAY, uint8_t> DBSCAN<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&, const int, const int);
+    template DBSCANResult DBSCAN<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&, const int, const int);
 }
