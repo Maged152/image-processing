@@ -1,8 +1,85 @@
 #include "DBSCAN.hpp"
-#include <queue>
 
 namespace qlm
 {
+
+    template <ImageFormat frmt, pixel_t T>
+    std::vector<std::array<int, 5>> ConvertImageToPoints(const Image<frmt, T>& in)
+    {
+        constexpr bool insert_row = true;
+        constexpr bool insert_col = false;
+
+        std::vector<std::array<int, 5>> points (in.width * in.height);
+
+        const auto InsertBalanced = []<bool x_axis>(std::vector<int>& points, const int start, const int end, int& index) 
+        {
+            if (start >= end)
+                return;
+
+            const int mid = (start + end) / 2;
+
+            if constexpr (x_axis)
+            {
+                const auto pixel = in.GetPixel(mid, 0);
+                points[index] = {mid, 0, pixel.r, pixel.g, pixel.b};
+            }
+            else
+            {
+                const auto pixel = in.GetPixel(0, mid);
+                points[index] = {0, mid, pixel.r, pixel.g, pixel.b};
+            }
+
+            index += 5;
+            InsertBalanced<x_axis>(points, mid + 1, end, index);  // Right half
+
+            index += 5;
+            InsertBalanced<x_axis>(points, start, mid, index);  // Left half
+        };
+        
+        const bool width_bigger = in.width > in.height;
+        int index;
+
+        if (width_bigger) 
+        {
+            index = 1;
+            insertBalanced<insert_col>(points, 0, in.height, index);
+
+            index = 0;
+            insertBalanced<insert_row>(points, 0, in.width, index);
+        }
+        else
+        {
+            index = 0;
+            insertBalanced<insert_col>(points, 0, in.height, index);
+
+            index = 1;
+            insertBalanced<insert_row>(points, 0, in.width, index);
+        }
+
+        const int abs_diff = std::abs(in.width - in.height);
+        const int min_dim = std::min(in.width, in.height);
+        
+
+        // fill difference in dimensions
+
+        
+        
+
+        int start_x {1}, start_y {1};
+
+
+        for (int y = 1; y < in.height; ++y)
+        {
+            for (int x = 1; x < in.width; ++x)
+            {
+                const auto pixel = in.GetPixel(x, y);
+                points[y * in.width + x] = {x, y, pixel.r, pixel.g, pixel.b};
+            }
+        }
+
+        return points;
+    }
+
     template <ImageFormat frmt, pixel_t T>
     DBSCANResult DBSCAN(const Image<frmt, T>& in, const int eps, const int min_pts)
     {
@@ -16,16 +93,7 @@ namespace qlm
         int num_noise_pixels = 0;
        
         // Convert image pixels to points
-        std::vector<std::array<int, 5>> points(num_points);
-        
-        for (int y = 0; y < in.height; ++y)
-        {
-            for (int x = 0; x < in.width; ++x)
-            {
-                const auto pixel = in.GetPixel(x, y);
-                points[y * in.width + x] = {x, y, pixel.r, pixel.g, pixel.b};
-            }
-        }
+        std::vector<std::array<int, 5>> points = ConvertImageToPoints(in);//(num_points);
 
         // Build KD-Tree with the points
         KDTree<int, 5> kd_tree(num_points);
