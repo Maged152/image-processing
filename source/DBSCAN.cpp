@@ -93,7 +93,7 @@ namespace qlm
         int num_noise_pixels = 0;
        
         // Convert image pixels to points
-        std::vector<std::array<int, 5>> points = ConvertImageToPoints(in);//(num_points);
+        std::vector<std::array<int, 5>> points = ConvertImageToPoints(in);
 
         // Build KD-Tree with the points
         KDTree<int, 5> kd_tree(num_points);
