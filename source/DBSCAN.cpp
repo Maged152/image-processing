@@ -11,7 +11,7 @@ namespace qlm
 
         std::vector<std::array<int, 5>> points (in.width * in.height);
 
-        const auto InsertBalanced = []<bool x_axis>(std::vector<int>& points, const int start, const int end, int& index) 
+        const auto InsertBalanced = []<bool x_axis>(std::vector<int>& points, const int start, const int end, int& index, int& c_index) 
         {
             if (start >= end)
                 return;
@@ -27,54 +27,74 @@ namespace qlm
             {
                 const auto pixel = in.GetPixel(0, mid);
                 points[index] = {0, mid, pixel.r, pixel.g, pixel.b};
+
+                const auto pixel_r = in.GetPixel(1, c_index);
+                const auto pixel_g = in.GetPixel(2, c_index);
+                const auto pixel_b = in.GetPixel(3, c_index);
+
+                points[index + 1] = {1, c_index, pixel_r.r, pixel_r.g, pixel_r.b};
+                points[index + 2] = {2, c_index, pixel_g.r, pixel_g.g, pixel_g.b};
+                points[index + 3] = {3, c_index, pixel_b.r, pixel_b.g, pixel_b.b};
+
+                c_index++;
             }
 
             index += 5;
-            InsertBalanced<x_axis>(points, mid + 1, end, index);  // Right half
+            InsertBalanced<x_axis>(points, mid + 1, end, index, c_index);  // Right half
 
             index += 5;
-            InsertBalanced<x_axis>(points, start, mid, index);  // Left half
+            InsertBalanced<x_axis>(points, start, mid, index, c_index);  // Left half
         };
         
         const bool width_bigger = in.width > in.height;
-        int index;
+        int index = 1, c_index = 0;
 
-        if (width_bigger) 
-        {
-            index = 1;
-            insertBalanced<insert_col>(points, 0, in.height, index);
+        insertBalanced<insert_col>(points, 0, in.height, index, c_index);
 
-            index = 0;
-            insertBalanced<insert_row>(points, 0, in.width, index);
-        }
-        else
-        {
-            index = 0;
-            insertBalanced<insert_col>(points, 0, in.height, index);
-
-            index = 1;
-            insertBalanced<insert_row>(points, 0, in.width, index);
-        }
-
-        const int abs_diff = std::abs(in.width - in.height);
-        const int min_dim = std::min(in.width, in.height);
+        index = 0;
+        insertBalanced<insert_row>(points, 0, in.width, index, c_index);
         
+        // fix double insertion
+        const auto pixel_0 = in.GetPixel(4, 1);
+        const auto pixel_1 = in.GetPixel(5, 1);
+        const auto pixel_2 = in.GetPixel(6, 1);
+        const auto pixel_3 = in.GetPixel(7, 1);
+
+        points[2] = {4, 1, pixel_0.r, pixel_0.g, pixel_0.b};
+        points[3] = {5, 1, pixel_1.r, pixel_1.g, pixel_1.b};
+        points[4] = {6, 1, pixel_2.r, pixel_2.g, pixel_2.b};
+        points[in.width * 5] = {7, 1, pixel_3.r, pixel_3.g, pixel_3.b};
+
+        int start_x = 7, start_y = 1;
 
         // fill difference in dimensions
+        const int abs_diff = std::abs(in.width - in.height);
+        const int min_dim = std::min(in.width, in.height);
 
-        
-        
+        const int remaining = width_bigger ? abs_diff * 4 : abs_diff;
 
-        int start_x {1}, start_y {1};
+        int start_idx = min_dim * 5;
 
-
-        for (int y = 1; y < in.height; ++y)
+        for (int y = start_y; y < in.height; ++y)
         {
-            for (int x = 1; x < in.width; ++x)
+            for (int x = start_x; x < in.width; ++x)
             {
                 const auto pixel = in.GetPixel(x, y);
+                
+                if (remaining > 0)
+                {
+                    
+                }
+                else 
+                {
+
+                }
                 points[y * in.width + x] = {x, y, pixel.r, pixel.g, pixel.b};
+
+                remaining--;
             }
+
+            start_x = 4;
         }
 
         return points;
