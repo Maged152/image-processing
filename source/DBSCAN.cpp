@@ -1,7 +1,43 @@
 #include "DBSCAN.hpp"
-
+#include <queue>
 namespace qlm
 {
+
+    template<ImageFormat frmt, pixel_t T, bool x_axis>
+    void InsertBalanced(const Image<frmt, T>& in, std::vector<int>& points, const int start, const int end, int& index, int& c_index) 
+    {
+        if (start >= end)
+            return;
+
+        const int mid = (start + end) / 2;
+
+        if constexpr (x_axis)
+        {
+            const auto pixel = in.GetPixel(mid, 0);
+            points[index] = {mid, 0, pixel.r, pixel.g, pixel.b};
+        }
+        else
+        {
+            const auto pixel = in.GetPixel(0, mid);
+            points[index] = {0, mid, pixel.r, pixel.g, pixel.b};
+
+            const auto pixel_r = in.GetPixel(1, c_index);
+            const auto pixel_g = in.GetPixel(2, c_index);
+            const auto pixel_b = in.GetPixel(3, c_index);
+
+            points[index + 1] = {1, c_index, pixel_r.r, pixel_r.g, pixel_r.b};
+            points[index + 2] = {2, c_index, pixel_g.r, pixel_g.g, pixel_g.b};
+            points[index + 3] = {3, c_index, pixel_b.r, pixel_b.g, pixel_b.b};
+
+            c_index++;
+        }
+
+        index += 5;
+        InsertBalanced<x_axis>(in, points, mid + 1, end, index, c_index);  // Right half
+
+        index += 5;
+        InsertBalanced<x_axis>(in, points, start, mid, index, c_index);  // Left half
+    }
 
     template <ImageFormat frmt, pixel_t T>
     std::vector<std::array<int, 5>> ConvertImageToPoints(const Image<frmt, T>& in)
@@ -10,49 +46,13 @@ namespace qlm
         constexpr bool insert_col = false;
 
         std::vector<std::array<int, 5>> points (in.width * in.height);
-
-        const auto InsertBalanced = []<bool x_axis>(std::vector<int>& points, const int start, const int end, int& index, int& c_index) 
-        {
-            if (start >= end)
-                return;
-
-            const int mid = (start + end) / 2;
-
-            if constexpr (x_axis)
-            {
-                const auto pixel = in.GetPixel(mid, 0);
-                points[index] = {mid, 0, pixel.r, pixel.g, pixel.b};
-            }
-            else
-            {
-                const auto pixel = in.GetPixel(0, mid);
-                points[index] = {0, mid, pixel.r, pixel.g, pixel.b};
-
-                const auto pixel_r = in.GetPixel(1, c_index);
-                const auto pixel_g = in.GetPixel(2, c_index);
-                const auto pixel_b = in.GetPixel(3, c_index);
-
-                points[index + 1] = {1, c_index, pixel_r.r, pixel_r.g, pixel_r.b};
-                points[index + 2] = {2, c_index, pixel_g.r, pixel_g.g, pixel_g.b};
-                points[index + 3] = {3, c_index, pixel_b.r, pixel_b.g, pixel_b.b};
-
-                c_index++;
-            }
-
-            index += 5;
-            InsertBalanced<x_axis>(points, mid + 1, end, index, c_index);  // Right half
-
-            index += 5;
-            InsertBalanced<x_axis>(points, start, mid, index, c_index);  // Left half
-        };
         
-        const bool width_bigger = in.width > in.height;
         int index = 1, c_index = 0;
 
-        insertBalanced<insert_col>(points, 0, in.height, index, c_index);
+        InsertBalanced<insert_col>(in, points, 0, in.height, index, c_index);
 
         index = 0;
-        insertBalanced<insert_row>(points, 0, in.width, index, c_index);
+        InsertBalanced<insert_row>(in, points, 0, in.width, index, c_index);
         
         // fix double insertion
         const auto pixel_0 = in.GetPixel(4, 1);
@@ -65,36 +65,59 @@ namespace qlm
         points[4] = {6, 1, pixel_2.r, pixel_2.g, pixel_2.b};
         points[in.width * 5] = {7, 1, pixel_3.r, pixel_3.g, pixel_3.b};
 
-        int start_x = 7, start_y = 1;
+        int start_x = 8, start_y = 1;
 
         // fill difference in dimensions
+        const bool width_bigger = in.width > in.height;
         const int abs_diff = std::abs(in.width - in.height);
         const int min_dim = std::min(in.width, in.height);
-
         const int remaining = width_bigger ? abs_diff * 4 : abs_diff;
-
         int start_idx = min_dim * 5;
+        int inc = width_bigger ? 1 : 0;
 
-        for (int y = start_y; y < in.height; ++y)
+        for (int i = 0; i < remaining; ++i)
         {
-            for (int x = start_x; x < in.width; ++x)
+            const auto pixel = in.GetPixel(start_x++, start_y);
+            points[start_idx + inc] = {start_x, start_y, pixel.r, pixel.g, pixel.b};
+
+            if (start_x == in.width)
             {
-                const auto pixel = in.GetPixel(x, y);
-                
-                if (remaining > 0)
-                {
-                    
-                }
-                else 
-                {
-
-                }
-                points[y * in.width + x] = {x, y, pixel.r, pixel.g, pixel.b};
-
-                remaining--;
+                start_x = 4;
+                start_y++;
             }
 
-            start_x = 4;
+            if (width_bigger)
+            {
+                inc++;
+
+                if (inc % 5 == 0)
+                {
+                    inc++;
+                }
+            }
+            else
+            {   
+
+                inc += 5;
+            }
+        }
+        
+        // fill remaining of the row
+        int insert_idx = std::max(in.width, in.height) * 5;
+        for (int x = start_x; x < in.width; ++x)
+        {
+            const auto pixel = in.GetPixel(x, start_y);
+            points[insert_idx++] = {x, start_y, pixel.r, pixel.g, pixel.b};
+        }
+
+        // insert rest of the image
+        for (int y = start_y; y < in.height; ++y)
+        {
+            for (int x = 4; x < in.width; ++x)
+            {
+                const auto pixel = in.GetPixel(x, y);
+                points[insert_idx++] = {x, y, pixel.r, pixel.g, pixel.b};
+            }
         }
 
         return points;
