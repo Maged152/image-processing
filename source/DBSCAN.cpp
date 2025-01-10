@@ -2,9 +2,8 @@
 #include <queue>
 namespace qlm
 {
-
-    template<ImageFormat frmt, pixel_t T, bool x_axis>
-    void InsertBalanced(const Image<frmt, T>& in, std::vector<int>& points, const int start, const int end, int& index, int& c_index) 
+    template<bool x_axis, ImageFormat frmt, pixel_t T>
+    void InsertBalanced(const Image<frmt, T>& in, std::vector<std::array<int, 5>>& points, const int start, const int end, int& index, int& c_index) 
     {
         if (start >= end)
             return;
@@ -49,11 +48,12 @@ namespace qlm
         
         int index = 1, c_index = 0;
 
-        InsertBalanced<insert_col>(in, points, 0, in.height, index, c_index);
+        InsertBalanced<insert_col>(in, points, 0, (int)in.height, index, c_index);
 
         index = 0;
-        InsertBalanced<insert_row>(in, points, 0, in.width, index, c_index);
+        InsertBalanced<insert_row>(in, points, 0, (int)in.width, index, c_index);
         
+
         // fix double insertion
         const auto pixel_0 = in.GetPixel(4, 1);
         const auto pixel_1 = in.GetPixel(5, 1);
@@ -69,7 +69,7 @@ namespace qlm
 
         // fill difference in dimensions
         const bool width_bigger = in.width > in.height;
-        const int abs_diff = std::abs(in.width - in.height);
+        const int abs_diff = std::abs((int)in.width - (int)in.height);
         const int min_dim = std::min(in.width, in.height);
         const int remaining = width_bigger ? abs_diff * 4 : abs_diff;
         int start_idx = min_dim * 5;
@@ -77,8 +77,8 @@ namespace qlm
 
         for (int i = 0; i < remaining; ++i)
         {
-            const auto pixel = in.GetPixel(start_x++, start_y);
-            points[start_idx + inc] = {start_x, start_y, pixel.r, pixel.g, pixel.b};
+            const auto pixel = in.GetPixel(start_x, start_y);
+            points[start_idx + inc] = {start_x++, start_y, pixel.r, pixel.g, pixel.b};
 
             if (start_x == in.width)
             {
@@ -101,7 +101,7 @@ namespace qlm
                 inc += 5;
             }
         }
-        
+
         // fill remaining of the row
         int insert_idx = std::max(in.width, in.height) * 5;
         for (int x = start_x; x < in.width; ++x)
@@ -109,6 +109,7 @@ namespace qlm
             const auto pixel = in.GetPixel(x, start_y);
             points[insert_idx++] = {x, start_y, pixel.r, pixel.g, pixel.b};
         }
+        start_y++;
 
         // insert rest of the image
         for (int y = start_y; y < in.height; ++y)
