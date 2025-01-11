@@ -34,7 +34,6 @@ namespace qlm
         index += 5;
         InsertBalanced<x_axis>(in, points, mid + 1, end, index, c_index);  // Right half
 
-        index += 5;
         InsertBalanced<x_axis>(in, points, start, mid, index, c_index);  // Left half
     }
 
@@ -63,7 +62,7 @@ namespace qlm
         points[2] = {4, 1, pixel_0.r, pixel_0.g, pixel_0.b};
         points[3] = {5, 1, pixel_1.r, pixel_1.g, pixel_1.b};
         points[4] = {6, 1, pixel_2.r, pixel_2.g, pixel_2.b};
-        points[in.width * 5] = {7, 1, pixel_3.r, pixel_3.g, pixel_3.b};
+        points[index - 5] = {7, 1, pixel_3.r, pixel_3.g, pixel_3.b};
 
         int start_x = 8, start_y = 1;
 
