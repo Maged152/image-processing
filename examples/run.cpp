@@ -2,8 +2,10 @@
 
 int main()
 {
+    std::cout << "start example\n";
+
     qlm::Timer<qlm::msec> t{};
-    std::string file_name = "input.jpg"; 
+    std::string file_name = "flower.jpg"; 
 
     // Load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
@@ -18,8 +20,8 @@ int main()
     if (in.NumerOfChannels() == 1)
         alpha = false;
 
-    const int eps = 10; // Example epsilon value
-    const int min_pts = 15; // Example minimum points value
+    const int eps = 10;
+    const int min_pts = 20;
 
     // Perform DBSCAN
     t.Start();
@@ -36,7 +38,7 @@ int main()
     }
 
     std::cout << "Number of clusters: " << result.num_clusters << "\n";
-    std::cout << "Noise exists: " << (result.noise_exists ? "Yes, and marked as red" : "No") << "\n";
+    std::cout << "Noise exists: " << (result.noise_exists ? "Yes, and marked as Cyan" : "No") << "\n";
 
     // Construct clusters
     const int num_clusters = result.num_clusters + 1;
@@ -58,8 +60,8 @@ int main()
     {
         clusters[i].color = pix_avg[i] / clusters[i].pixels.size();
     }
-    // mark noise pixels as red
-    clusters[0].color = { 255, 0, 0 };
+    // mark noise pixels as Cyan
+    clusters[0].color = {0, 255, 255};
 
     // draw clusters
     auto out = qlm::DrawCluster(in, clusters);

@@ -1,5 +1,6 @@
 #include "DBSCAN.hpp"
 #include <queue>
+
 namespace qlm
 {
     template<bool x_axis, ImageFormat frmt, pixel_t T>
@@ -77,7 +78,9 @@ namespace qlm
         for (int i = 0; i < remaining; ++i)
         {
             const auto pixel = in.GetPixel(start_x, start_y);
-            points[start_idx + inc] = {start_x++, start_y, pixel.r, pixel.g, pixel.b};
+            points[start_idx + inc] = {start_x, start_y, pixel.r, pixel.g, pixel.b};
+
+            start_x++;
 
             if (start_x == in.width)
             {
@@ -137,7 +140,19 @@ namespace qlm
        
         // Convert image pixels to points
         std::vector<std::array<int, 5>> points = ConvertImageToPoints(in);
+        // std::vector<std::array<int, 5>> points(num_points);
 
+        // Fill the points vector with pixels in linear order
+        // for (int x = 0; x < in.width; ++x)
+        // {
+        //     for (int y = 0; y < in.height; ++y)
+        //     {
+        //         const auto pixel = in.GetPixel(x, y);
+        //         points[y * in.width + x] = {x, y, pixel.r, pixel.g, pixel.b};
+        //     }
+        // }
+
+        
         // Build KD-Tree with the points
         KDTree<int, 5> kd_tree(num_points);
         kd_tree.Build(points);
@@ -174,25 +189,31 @@ namespace qlm
                     int current = q.front();
                     q.pop();
 
-                    if (result.labels.GetPixel(current).v == -1)
+                    const int x_idx = points[current][0];
+                    const int y_idx = points[current][1];
+
+                    if (result.labels.GetPixel(x_idx, y_idx).v == -1)
                     {
-                        result.labels.SetPixel(current, result.num_clusters); // Change noise to border point
+                        result.labels.SetPixel(x_idx, y_idx, result.num_clusters); // Change noise to border point
                         num_noise_pixels--;
                     }
 
-                    if (result.labels.GetPixel(current).v != -2)
+                    if (result.labels.GetPixel(x_idx, y_idx).v != -2)
                     {
                         continue;
                     }
 
-                    result.labels.SetPixel(current, result.num_clusters);
+                    result.labels.SetPixel(x_idx, y_idx, result.num_clusters);
 
                     std::vector<int> current_neighbors = kd_tree.RadiusSearch(points[current], eps);
                     if (current_neighbors.size() >= min_pts)
                     {
                         for (int neighbor : current_neighbors)
                         {
-                            if (result.labels.GetPixel(neighbor).v == -2)
+                            const int x_idx_n = points[neighbor][0];
+                            const int y_idx_n = points[neighbor][1];
+
+                            if (result.labels.GetPixel(x_idx_n, y_idx_n).v == -2)
                             {
                                 q.push(neighbor);
                             }
