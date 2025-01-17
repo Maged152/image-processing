@@ -25,6 +25,7 @@ Here you can find the implementation of :
     * [FAST](Functions/Features%20Detection/FAST)
     * [KMeans](Functions/Features%20Detection/KMeans)
     * [Match Template](Functions/Features%20Detection/MatchTemplate)
+    * [DBSCAN](Functions/Features%20Detection/DBSCAN)
     * Canny (backlog)
     * Hough circle (backlog)
 * Color Manipulation
