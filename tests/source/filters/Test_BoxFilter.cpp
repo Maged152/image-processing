@@ -11,8 +11,8 @@ TEST(Test_shakhbat_cv, BoxFilter)
 	EXPECT_EQ(load_in, true);
 
 	// do the operation
-	const size_t filter_x_size = 5;
-	const size_t filter_y_size = 5;
+	const int filter_x_size = 5;
+	const int filter_y_size = 5;
 	const bool normalize = true;
 	auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
 	border_mode.border_type = qlm::BorderType::BORDER_REFLECT;

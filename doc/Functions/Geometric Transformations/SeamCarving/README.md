@@ -13,8 +13,8 @@ namespace qlm
     template<ImageFormat frmt, pixel_t T>
     Image<frmt, T> SeamCarving(
         const Image<frmt, T>& in,
-        const size_t width,
-        const size_t height,
+        const int width,
+        const int height,
         const EnergyFlag energy = EnergyFlag::BACKWARD,
         const OrderFlag order = OrderFlag::WIDTH_FIRST);
 }
@@ -25,8 +25,8 @@ namespace qlm
 | Name     | Type         | Description                                            |
 |----------|--------------|--------------------------------------------------------|
 | `in`     | `Image`      | The input image.                                       |
-| `width`  | `size_t`     | The desired width of the output image.                 |
-| `height` | `size_t`     | The desired height of the output image.                |
+| `width`  | `int`     | The desired width of the output image.                 |
+| `height` | `int`     | The desired height of the output image.                |
 | `energy` | `EnergyFlag` | The energy function to use (BACKWARD or FORWARD).      |
 | `order`  | `OrderFlag`  | The order of resizing (WIDTH_FIRST or HEIGHT_FIRST).   |
 
@@ -50,8 +50,8 @@ The function returns an image of type `Image<frmt, T>`.
     if (in.NumerOfChannels() == 3)
         alpha = false;
 
-    const size_t target_width = in.width - 500;
-    const size_t target_height =  in.height + 200;
+    const int target_width = in.width - 500;
+    const int target_height =  in.height + 200;
 
     const qlm::EnergyFlag energy = qlm::EnergyFlag::BACKWARD;
     const qlm::OrderFlag order = qlm::OrderFlag::WIDTH_FIRST;

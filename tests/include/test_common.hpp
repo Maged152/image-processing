@@ -172,7 +172,7 @@ namespace test
         // Read the size and histogram data element by element
         for (auto& channel : histogram.hist)
         {
-            size_t size = 0;
+            int size = 0;
             file >> size;  // Read the size of the channel
 
             // Resize the vector to hold the data

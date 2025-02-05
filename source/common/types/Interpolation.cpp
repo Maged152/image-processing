@@ -50,8 +50,8 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Pixel<frmt, T> BicubicInterpolation(const Image<frmt, T>& src, float x, float y, const BorderMode<frmt, T>& border_mode)
 	{
-		size_t x1 = std::floor(x);
-		size_t y1 = std::floor(y);
+		int x1 = std::floor(x);
+		int y1 = std::floor(y);
 		// offsets
 		float xoff = x - x1;
 		float yoff = y - y1;

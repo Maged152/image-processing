@@ -9,8 +9,8 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> Flip(const Image<frmt, T>& in, const FlipFlag Flip_code)
 	{
-		const size_t img_width = in.width;
-		const size_t img_height = in.height;
+		const int img_width = in.width;
+		const int img_height = in.height;
 		// output image
 		Image<frmt, T> out = Image<frmt, T>{};
 		out.create(img_width, img_height);
@@ -39,7 +39,7 @@ namespace qlm
 		};
 		// function type
 		std::function<void(int, int)> Flip_fun;
-		size_t width{ img_width }, height{ img_height };
+		int width{ img_width }, height{ img_height };
 
 		if (Flip_code == FlipFlag::FLIP_VERTICAL_AXIS)
 		{

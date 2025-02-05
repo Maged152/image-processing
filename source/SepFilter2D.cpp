@@ -7,8 +7,8 @@ namespace qlm
 		const SepKernel& kernel,
 		const BorderMode<frmt, src_t>& border_mode)
 	{
-		size_t img_width = in.width;
-		size_t img_height = in.height;
+		int img_width = in.width;
+		int img_height = in.height;
 
 		// create the output image
 		Image<frmt, dst_t> out;

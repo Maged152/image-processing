@@ -6,7 +6,7 @@
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	std::vector<Cluster<frmt, T>> KMeans(const Image<frmt, T>& in, const size_t k, const KMeansInit init, const int seed, const int max_iter, const T tol)
+	std::vector<Cluster<frmt, T>> KMeans(const Image<frmt, T>& in, const int k, const KMeansInit init, const int seed, const int max_iter, const T tol)
 	{
 		using dist_t = qlm::wider_t<qlm::signed_t<T>>;
 
@@ -30,7 +30,7 @@ namespace qlm
 		{
 			// KMeans++ initialization
 			// Calculate distances to nearest centroids for remaining iterations
-			const size_t num_points{ in.width * in.height };
+			const int num_points{ in.width * in.height };
 			std::vector<dist_t> distances(num_points);
 
 			for (int i = 1; i < k; i++)
@@ -127,7 +127,7 @@ namespace qlm
 
 	template std::vector<Cluster<ImageFormat::RGB, uint8_t>>
 	KMeans<ImageFormat::RGB, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&,
-		const size_t, const KMeansInit, const int, const int, const uint8_t);
+		const int, const KMeansInit, const int, const int, const uint8_t);
 
 
 }

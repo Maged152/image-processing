@@ -8,11 +8,11 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in,
 						       const qlm::InterpolationFlag inter, const float scale_x, const float scale_y,
 							   const BorderMode<frmt, T>& border_mode)
 {
-	size_t width = in.width;
-	size_t height = in.height;
+	int width = in.width;
+	int height = in.height;
 	// create image with the new size
-	size_t new_width = width * scale_x;
-	size_t new_height = height * scale_y;
+	int new_width = width * scale_x;
+	int new_height = height * scale_y;
 
 	qlm::Image<frmt, T> out;
 	out.create(new_width, new_height, border_mode.border_pixel);

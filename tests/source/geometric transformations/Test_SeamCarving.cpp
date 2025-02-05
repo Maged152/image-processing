@@ -15,8 +15,8 @@ TEST(Test_shakhbat_cv, SeamCarving)
 	if (in.NumerOfChannels() == 1)
 		alpha = false;
 
-	const size_t target_width = in.width - 500;
-	const size_t target_height =  in.height + 200;
+	const int target_width = in.width - 500;
+	const int target_height =  in.height + 200;
 
 	const qlm::EnergyFlag energy = qlm::EnergyFlag::BACKWARD;
 	const qlm::OrderFlag order = qlm::OrderFlag::WIDTH_FIRST;

@@ -54,8 +54,8 @@ namespace qlm
         
 
     template<ImageFormat frmt, pixel_t T>
-    void GetAspectRatio(const size_t width, const size_t height, const Image<frmt, T>& in, 
-                              size_t& dx, size_t& dy, bool& dec_x, bool& dec_y)
+    void GetAspectRatio(const int width, const int height, const Image<frmt, T>& in, 
+                              int& dx, int& dy, bool& dec_x, bool& dec_y)
     {
         if (width <= in.width)
         {
@@ -367,7 +367,7 @@ namespace qlm
 
     template<ImageFormat frmt, pixel_t T>
     Image<frmt, T> SeamCarving(const Image<frmt, T>& in, 
-        const size_t width, const size_t height,
+        const int width, const int height,
         const EnergyFlag energy, const OrderFlag order)
     {
         Image<frmt, T> out{ width , height };
@@ -375,7 +375,7 @@ namespace qlm
         Image<ImageFormat::GRAY, T> gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(in);
         energy_t energy_map;
 
-        const size_t max_d = std::max(std::max(width, in.width), std::max(height, in.height));
+        const int max_d = std::max(std::max(width, in.width), std::max(height, in.height));
         Image<frmt, T> temp { max_d, max_d };
         temp.height = in.height;
         temp.width = in.width;
@@ -383,7 +383,7 @@ namespace qlm
 
         
         // how much to remove/insert
-        size_t dx, dy;
+        int dx, dy;
         bool dec_x, dec_y;
         GetAspectRatio(width, height, in, dx, dy, dec_x, dec_y);
 
@@ -440,6 +440,6 @@ namespace qlm
     }
 
     template Image<ImageFormat::RGB, uint8_t> SeamCarving(const Image<ImageFormat::RGB, uint8_t>&,
-        const size_t, const size_t,
+        const int, const int,
         const EnergyFlag, const OrderFlag);
 }

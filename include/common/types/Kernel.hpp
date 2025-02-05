@@ -7,11 +7,11 @@ namespace qlm
 	{
 	private:
 		float* data;
-		const size_t width;
-		const size_t height;
+		const int width;
+		const int height;
 	public:
 		// Constructor
-		Kernel(size_t M, size_t N) :width(M), height(N)
+		Kernel(int M, int N) :width(M), height(N)
 		{
 			data = new float[height * width];
 		}
@@ -31,8 +31,8 @@ namespace qlm
 		{
 			if (this != &other)
 			{
-				const_cast<size_t&>(width) = other.width;
-				const_cast<size_t&>(height) = other.height;
+				const_cast<int&>(width) = other.width;
+				const_cast<int&>(height) = other.height;
 				data = other.data;
 				other.data = nullptr;
 			}
@@ -43,8 +43,8 @@ namespace qlm
 		{
 			if (this != &other)
 			{
-				const_cast<size_t&>(width) = other.width;
-				const_cast<size_t&>(height) = other.height;
+				const_cast<int&>(width) = other.width;
+				const_cast<int&>(height) = other.height;
 				if (data != nullptr)
 					delete[] data;
 				data = new float[height * width];
@@ -76,12 +76,12 @@ namespace qlm
 			}
 		}
 
-		size_t Width() const
+		int Width() const
 		{
 			return width;
 		}
 
-		size_t Height() const
+		int Height() const
 		{
 			return height;
 		}
@@ -91,10 +91,10 @@ namespace qlm
 	class Kernel1D : private Kernel
 	{
 	private:
-		const size_t length;
+		const int length;
 	public:
 		// Constructor
-		Kernel1D(size_t length) : Kernel(1u, length), length(length)
+		Kernel1D(int length) : Kernel(1u, length), length(length)
 		{}
 		// Copy Constructor
 		Kernel1D(const Kernel1D& other) : Kernel(other), length(other.length)
@@ -110,7 +110,7 @@ namespace qlm
 			if (this != &other)
 			{
 				Kernel::operator=(other);
-				const_cast<size_t&>(length) = other.length;
+				const_cast<int&>(length) = other.length;
 			}
 			return *this;
 		}
@@ -120,7 +120,7 @@ namespace qlm
 			if (this != &other)
 			{
 				Kernel::operator=(std::move(other));
-				const_cast<size_t&>(length) = other.length;
+				const_cast<int&>(length) = other.length;
 			}
 			return *this;
 		}
@@ -137,7 +137,7 @@ namespace qlm
 			Kernel::Set(0, idx, value);
 		}
 
-		size_t Length() const
+		int Length() const
 		{
 			return length;
 		}
@@ -150,7 +150,7 @@ namespace qlm
 		Kernel1D x_ker;
 		Kernel1D y_ker;
 	public:
-		SepKernel(size_t len_x, size_t len_y) : x_ker(len_x), y_ker(len_y)
+		SepKernel(int len_x, int len_y) : x_ker(len_x), y_ker(len_y)
 		{}
 	};
 }

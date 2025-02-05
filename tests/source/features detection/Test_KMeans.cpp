@@ -15,7 +15,7 @@ TEST(Test_shakhbat_cv, KMeans)
 	if (in.NumerOfChannels() == 1)
 		alpha = false;
 
-	const size_t k = 4;
+	const int k = 4;
 	const qlm::KMeansInit init = qlm::KMeansInit::KMEANS_PLUS_PLUS;
 
 	// do the operation

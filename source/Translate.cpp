@@ -5,8 +5,8 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> Translate(const Image<frmt, T>& in, const Point<int>& displacement, const Pixel<frmt, T>& pix)
 	{
-		size_t img_width = in.width;
-		size_t img_height = in.height;
+		int img_width = in.width;
+		int img_height = in.height;
 		// output image
 		Image<frmt, T> out = Image<frmt, T>{};
 		out.create(img_width, img_height, pix);

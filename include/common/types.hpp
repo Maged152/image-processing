@@ -1,6 +1,6 @@
 #pragma once
 
-#include "image.hpp"
+#include "PixelImage.hpp"
 #include "types/TransformationMatrix.hpp"
 #include "types/Kernel.hpp"
 #include "types/Interpolation.hpp"
@@ -73,8 +73,8 @@ namespace qlm
 	struct Rectangle
 	{
 		Point<int> top_left;
-		size_t width;
-		size_t height;
+		int width;
+		int height;
 	};
 
 	template<class T>
@@ -111,7 +111,7 @@ namespace qlm
 	public:
 		SobelDerivatives() : angle(nullptr), sobel_x(), sobel_y(), magnitude()
 		{}
-		SobelDerivatives(size_t width, size_t height) : sobel_x(width, height), sobel_y(width, height), magnitude(width, height)
+		SobelDerivatives(int width, int height) : sobel_x(width, height), sobel_y(width, height), magnitude(width, height)
 		{
 			angle = new float[width * height];
 		}
@@ -189,10 +189,10 @@ namespace qlm
 	{
 		static constexpr int num_channels = (frmt == ImageFormat::GRAY) ? 1 : 3;
 		// Dynamically calculate the number of elements based on T
-    	static constexpr size_t tot_elements = static_cast<size_t>(std::numeric_limits<T>::max() - std::numeric_limits<T>::lowest()) + 1;
+    	static constexpr int tot_elements = static_cast<int>(std::numeric_limits<T>::max() - std::numeric_limits<T>::lowest()) + 1;
 
 		// Histogram data: dynamically allocated based on channel count
-		std::array<std::vector<size_t>, num_channels> hist;
+		std::array<std::vector<int>, num_channels> hist;
 
 		// Constructor to initialize the histogram arrays
 		Histogram_t()
@@ -211,7 +211,7 @@ namespace qlm
 			for (int c = 0; c < num_channels; ++c)
 			{
 				cumsum.hist[c][0] = hist[c][0];
-				for (size_t i = 1; i < tot_elements; ++i)
+				for (int i = 1; i < tot_elements; ++i)
 				{
 					cumsum.hist[c][i] = cumsum.hist[c][i - 1] + hist[c][i];
 				}
@@ -234,12 +234,12 @@ namespace qlm
 	struct Pyramid
 	{
 		std::vector<Image<frmt, T>> layers;
-		size_t num_layers;
+		int num_layers;
 		float scale;
-		size_t filter_size;
+		int filter_size;
 		float sigma;
 
-		Pyramid(const size_t num_layers, const float scale, const size_t filter_size,const float sigma) :
+		Pyramid(const int num_layers, const float scale, const int filter_size,const float sigma) :
 			num_layers(num_layers), scale(scale), filter_size(filter_size), sigma(sigma), layers(num_layers)
 			{}
 	};

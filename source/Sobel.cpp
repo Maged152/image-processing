@@ -10,7 +10,7 @@
 namespace qlm
 {
 	// change sobel image from S16 to U8
-	Image<ImageFormat::GRAY, uint8_t> ConvertSobelDepth(Image < ImageFormat::GRAY, int16_t>& in, size_t filter_size)
+	Image<ImageFormat::GRAY, uint8_t> ConvertSobelDepth(Image < ImageFormat::GRAY, int16_t>& in, int filter_size)
 	{
 		constexpr uint8_t max_value = std::numeric_limits<uint8_t>::max();
 		constexpr uint8_t min_value = std::numeric_limits<uint8_t>::lowest();
@@ -45,7 +45,7 @@ namespace qlm
 		return out;
 	}
 	// generate derivative kernel
-	Kernel1D GetDerivKernel(size_t filter_size, int order)
+	Kernel1D GetDerivKernel(int filter_size, int order)
 	{
 		Kernel1D out{ filter_size };
 		std::vector<int> ker(filter_size + 1, 0);
@@ -83,7 +83,7 @@ namespace qlm
 		return out;
 	}
 	// generate coefficients for Sobel X
-	SepKernel GetDerivXKernel(size_t filter_size)
+	SepKernel GetDerivXKernel(int filter_size)
 	{
 		SepKernel out(filter_size, filter_size);
 		// check kernel size
@@ -99,7 +99,7 @@ namespace qlm
 		return out;
 	}
 	// generate coefficients for Sobel Y
-	SepKernel GetDerivYKernel(size_t filter_size)
+	SepKernel GetDerivYKernel(int filter_size)
 	{
 		SepKernel out(filter_size, filter_size);
 		// check kernel size
@@ -116,7 +116,7 @@ namespace qlm
 	}
 	// Sobel X operation
 	template<pixel_t in_t, pixel_t out_t>
-	Image<ImageFormat::GRAY, out_t> SobelX(const Image<ImageFormat::GRAY, in_t>& in, const size_t kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
+	Image<ImageFormat::GRAY, out_t> SobelX(const Image<ImageFormat::GRAY, in_t>& in, const int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
 	{
 		auto ker = GetDerivXKernel(kernel_size);
 
@@ -124,14 +124,14 @@ namespace qlm
 	}
 	// Sobel Y operation
 	template<pixel_t in_t, pixel_t out_t>
-	Image<ImageFormat::GRAY, out_t> SobelY(const Image<ImageFormat::GRAY, in_t>& in, const size_t kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
+	Image<ImageFormat::GRAY, out_t> SobelY(const Image<ImageFormat::GRAY, in_t>& in, const int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
 	{
 		auto ker = GetDerivYKernel(kernel_size);
 		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker, border_mode);
 	}
 	// Sobel operation
 	template<pixel_t in_t, pixel_t out_t>
-	SobelDerivatives<in_t, out_t> Sobel(const Image<ImageFormat::GRAY, in_t>& in, const size_t kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
+	SobelDerivatives<in_t, out_t> Sobel(const Image<ImageFormat::GRAY, in_t>& in, const int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
 	{
 		const in_t min_value = std::numeric_limits<in_t>::lowest();
 		const in_t max_value = std::numeric_limits<in_t>::max();
@@ -180,13 +180,13 @@ namespace qlm
 // Explicit instantiation for  uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::SobelX<uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
-	size_t,
+	int,
 	const BorderMode<ImageFormat::GRAY, uint8_t>&);
 
 // Explicit instantiation for  uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::SobelY<uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
-	size_t,
+	int,
 	const BorderMode<ImageFormat::GRAY, uint8_t>&);
 
 
@@ -194,5 +194,5 @@ qlm::SobelY<uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&
 template qlm::SobelDerivatives<uint8_t, int16_t>
    qlm::Sobel<uint8_t, int16_t>(
 	const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
-	const size_t,
+	const int,
 	const BorderMode<qlm::ImageFormat::GRAY, uint8_t>&);

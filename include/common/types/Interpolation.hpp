@@ -1,5 +1,5 @@
 #pragma once
-#include "common/image.hpp"
+#include "PixelImage.hpp"
 
 namespace qlm
 {

@@ -8,10 +8,10 @@
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	std::vector<KeyPoint<int>> HarrisCorner(const Image<frmt, T>& in, const size_t block_size, const size_t filter_size, float k, float threshold, const  BorderMode<frmt, T>& border_mode)
+	std::vector<KeyPoint<int>> HarrisCorner(const Image<frmt, T>& in, const int block_size, const int filter_size, float k, float threshold, const  BorderMode<frmt, T>& border_mode)
 	{
-		const size_t width = in.width;
-		const size_t height = in.height;
+		const int width = in.width;
+		const int height = in.height;
 		// normalization factor
 		float scale = (1 << (filter_size - 1)) * block_size * std::numeric_limits<T>::max();
 		scale = 1.0 / scale;
@@ -203,6 +203,6 @@ namespace qlm
 	}
 
 	template std::vector<KeyPoint<int>>
-	HarrisCorner<ImageFormat::GRAY, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, const size_t, const size_t, float, float, const BorderMode<ImageFormat::GRAY, uint8_t>&);
+	HarrisCorner<ImageFormat::GRAY, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, const int, const int, float, float, const BorderMode<ImageFormat::GRAY, uint8_t>&);
 	
 }

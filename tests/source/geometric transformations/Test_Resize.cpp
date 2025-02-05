@@ -15,8 +15,8 @@ TEST(Test_shakhbat_cv, Resize)
 	if (in.NumerOfChannels() == 1)
 		alpha = false;
 
-	size_t width = 960u;
-	size_t height = 540u;
+	int width = 960u;
+	int height = 540u;
 
 	// do the operation
 	t.Start();

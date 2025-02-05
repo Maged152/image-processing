@@ -8,7 +8,7 @@ namespace qlm
 		T min_val = std::numeric_limits<T>::max();
 		T max_val = std::numeric_limits<T>::lowest();
 
-		const size_t len = in.width * in.height;
+		const int len = in.width * in.height;
 
 		// find min and max value
 		for (int y = 0; y < in.height; y++)

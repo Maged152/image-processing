@@ -18,7 +18,7 @@ TEST(Test_shakhbat_cv, Sobel)
 	// RGB to GRAY
 	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 
-	size_t filter_size = 3;
+	int filter_size = 3;
 	t.Start();
 	auto out = qlm::Sobel<uint8_t, int16_t>(gray, filter_size);
 	t.End();

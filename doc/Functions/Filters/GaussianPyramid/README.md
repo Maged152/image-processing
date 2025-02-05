@@ -12,9 +12,9 @@ You can check the implementation [here](../../../../source/GaussianPyramid.cpp)
 	template<ImageFormat frmt, pixel_t T>
 	Pyramid<frmt, T> GaussianPyramid(
 		const Image<frmt, T>& in,
-        const size_t num_layers,
+        const int num_layers,
 		const float scale = 0.5f,
-		const size_t filter_size = 5,
+		const int filter_size = 5,
 		const float sigma = 1.0f,
 		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{}
 	)
@@ -24,9 +24,9 @@ You can check the implementation [here](../../../../source/GaussianPyramid.cpp)
 | Name          | Type           | Description                                                                                              |
 |---------------|----------------|----------------------------------------------------------------------------------------------------------|
 | `in`          | `Image`        | The input image.                                                                                         |
-| `num_layers`  | `size_t`       | The number of layers to generate in the pyramid.                                                         |
+| `num_layers`  | `int`       | The number of layers to generate in the pyramid.                                                         |
 | `scale`       | `float`        | The down sampling scale factor between consecutive layers (default is 0.5).                              |
-| `filter_size` | `size_t`       | The kernel size for the Gaussian filter to be applied at each layer (default is 5)                       |
+| `filter_size` | `int`       | The kernel size for the Gaussian filter to be applied at each layer (default is 5)                       |
 | `sigma`       | `float`        | The standard deviation for the Gaussian filter (default is 1.0).                                         |
 | `border_mode` | `BorderMode`   | The pixel extrapolation method.                                                                          |
 
@@ -46,7 +46,7 @@ The function returns a pyramid of type `Pyramid<frmt, T>`.
         return -1;
     }
 
-    const size_t num_layers = 5;
+    const int num_layers = 5;
 
     t.Start();
     auto pyr = qlm::GaussianPyramid(in, num_layers);

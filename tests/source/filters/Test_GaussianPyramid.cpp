@@ -10,7 +10,7 @@ TEST(Test_shakhbat_cv, GaussianPyramid)
 	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
 
 	// do the operation
-	const size_t num_layers = 5;
+	const int num_layers = 5;
 
     t.Start();
     auto pyr = qlm::GaussianPyramid(in, num_layers);
