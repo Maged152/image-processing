@@ -35,7 +35,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/dependencies>
     $<INSTALL_INTERFACE:${INSTALL_INC_DIR}>
 )
-target_link_libraries(${PROJECT_NAME} qlm::ThreadPool)
+target_link_libraries(${PROJECT_NAME} qlm::ThreadPool qlm::PixelImage)
 
 add_library(qlm::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
