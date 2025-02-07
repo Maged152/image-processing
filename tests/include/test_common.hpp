@@ -28,7 +28,7 @@
 #define COUT_GTEST_RED_SLOW COUT_GTEST_SLOW << ANSI_TXT_RED
 namespace test
 {
-    const std::string example_folder = "doc/Functions/";
+    const std::string example_folder = std::string(LIBRARY_PATH) + "/doc/Functions/";
 
     void PrintTime(const qlm::Timer<qlm::usec>& time)
 	{
