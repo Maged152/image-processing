@@ -7,7 +7,7 @@ TEST(Test_shakhbat_cv, EqualizeHist)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.png");
+	const bool load_in = in.LoadFromFile(folder_path + "input.ppg");
 	EXPECT_EQ(load_in, true);
 
 	// do the operation
