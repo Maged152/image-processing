@@ -4,7 +4,7 @@ Implementation of some image processing algorithms in c++.
 For more details about the supported functions and examples read the [documentation](./doc).
 
 # Dependencies
-- [stb](https://github.com/nothings/stb): A header-only library to read/write images in various formats.
+- [PixelImage](https://github.com/Maged152/PixelImage): A library to deal with images in various formats.
 - [ThreadPool](https://github.com/Maged152/ThreadPool): A simple thread pool library for multi-threading support.
 
 # Build & Targets
