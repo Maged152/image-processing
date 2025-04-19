@@ -7,6 +7,7 @@
 #include "types/matrix.hpp"
 #include "types/enums.hpp"
 #include "types/KDTree.hpp"
+#include "types/HuffmanTree.hpp"
 #include <vector>
 #include <limits>
 #include <array>
