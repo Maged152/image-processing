@@ -1,8 +1,16 @@
 #pragma once
-
+#include <string>
+#include <unordered_map>
 
 namespace qlm
 {
+    template<ImageFormat frmt, pixel_t T>
+    struct Huffman_t
+    {
+        std::unordered_map<T, std::string> table;
+        std::string code;
+    };
+
     template <typename T>
     struct HuffmanNode 
     {
@@ -24,22 +32,17 @@ namespace qlm
     };
   
 
-    template <typename T>
+    template<ImageFormat frmt, pixel_t T>
     class HuffmanTree 
     {
         private:
             HuffmanNode<T>* root = nullptr;
             std::vector<HuffmanNode<T>*> nodes;
-            int occupied = 0;
-            int capacity = 0;
 
         public:
-            HuffmanTree(const int size) : capacity(size), nodes(size) 
-            {}
+            HuffmanTree(const Image<frmt, T>& in ,const Histogram_t<frmt, T>& hist);
+            ~HuffmanTree();
 
-            ~HuffmanTree() 
-            {
-                Clear();
-            }
-        };
+            Huffman_t Encode() const;
+    };
 }
