@@ -11,6 +11,7 @@
 #include <vector>
 #include <limits>
 #include <array>
+#include <unordered_map>
 
 namespace qlm
 {
@@ -244,4 +245,11 @@ namespace qlm
 			num_layers(num_layers), scale(scale), filter_size(filter_size), sigma(sigma), layers(num_layers)
 			{}
 	};
+
+	template<ImageFormat frmt, pixel_t T>
+    struct Huffman_t
+    {
+        std::unordered_map<T, std::string> table;
+        std::string code;
+    };
 }
