@@ -249,7 +249,9 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
     struct Huffman_t
     {
-        std::unordered_map<T, std::string> table;
-        std::string code;
+		static constexpr int num_channels = (frmt == ImageFormat::GRAY) ? 1 : 3;
+
+        std::unordered_map<T, std::string> table[num_channels];
+        std::string code[num_channels];
     };
 }

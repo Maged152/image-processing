@@ -16,7 +16,7 @@ namespace qlm
         HuffmanNode() : data(0), frequency(0), left(nullptr), right(nullptr) 
         {}
 
-        HuffmanNode(const T& data, const int frequency) : data(data), frequency(frequency), left(nullptr), right(nullptr) 
+        HuffmanNode(const T& data, const int frequency,  HuffmanNode* left = nullptr, HuffmanNode* right = nullptr) : data(data), frequency(frequency), left(left), right(right) 
         {}
 
         bool operator<(const HuffmanNode& other) const 
@@ -32,29 +32,38 @@ namespace qlm
         const auto freq =  Histogram(in);
        
         // Create nodes for each unique pixel value and push them into the priority queue
-        std::priority_queue<HuffmanNode> huffman_queue;
+        constexpr int num_codes = freq.num_channels;
+        std::priority_queue<HuffmanNode> huffman_queue[num_codes];
 
-        for (const auto& pair : frequencyMap) {
-            nodes.push_back(new HuffmanNode<T>(pair.first, pair.second));
+        for (int i = 0; i < num_codes; i++) 
+        {
+            for (int e = 0; e < freq.tot_elements; e++) 
+            {
+                huffman_queue[i].push(HuffmanNode(e, freq.hist[i][e]));
+            }
         }
 
         // Build the Huffman tree using a priority queue (min-heap)
-        std::priority_queue<HuffmanNode<T>*, std::vector<HuffmanNode<T>*>, std::greater<HuffmanNode<T>*>> minHeap(nodes.begin(), nodes.end());
+        Huffman_t<frmt, T> out;
+        HuffmanNode* root[out.num_channels];
+        
+        for (int i = 0; i < num_codes; i++) 
+        {
+            while (huffman_queue[i].size() > 1)
+            {
+                HuffmanNode<T> left = huffman_queue[i].top();
+                huffman_queue[i].pop();
 
-        while (minHeap.size() > 1) {
-            HuffmanNode<T>* left = minHeap.top();
-            minHeap.pop();
-            HuffmanNode<T>* right = minHeap.top();
-            minHeap.pop();
+                HuffmanNode<T> right = huffman_queue[i].top();
+                huffman_queue[i].pop();
 
-            HuffmanNode<T>* newNode = new HuffmanNode<T>(0, left->frequency + right->frequency);
-            newNode->left = left;
-            newNode->right = right;
+                huffman_queue[i].push(HuffmanNode((0, left.frequency + right.frequency, &left, &right)));
+            }
 
-            minHeap.push(newNode);
+            root[i] = huffman_queue[i].top(); // The root of the tree
         }
 
-        root = minHeap.top(); // The root of the tree
+        // Generate the Huffman codes by traversing the tree
     }
 
 }
