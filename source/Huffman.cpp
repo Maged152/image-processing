@@ -25,6 +25,21 @@ namespace qlm
         }
     };
 
+    template <typename T>
+    void Encode(const HuffmanNode *const  current, const std::string str, std::unordered_map<T, string> &huffmanCode)
+    {
+        if (current == nullptr)
+            return;
+
+        // found a leaf node
+        if (current->left == nullptr && current->right == nullptr)
+            huffmanCode[current->data] = str;
+        
+
+        Encode(current->left, str + "0", huffmanCode);
+        Encode(current->right, str + "1", huffmanCode);
+    }
+
     template<ImageFormat frmt, pixel_t T>
     Huffman_t<frmt, T> HuffmanEncode(const Image<frmt, T>& in)
     {
@@ -64,6 +79,23 @@ namespace qlm
         }
 
         // Generate the Huffman codes by traversing the tree
+        for (int i = 0; i < num_codes; i++) 
+        {
+            Encode(root[i], "", out.table[i]);
+        }
+
+        // Create the encoded string for each channel
+        for (int i = 0; i < num_codes; i++) 
+        {
+            for (int e = 0; e < freq.tot_elements; e++) 
+            {
+                out.code[i] += out.table[i][e];
+            }
+        }
+
+        return out;
     }
 
+    template Huffman_t<ImageFormat::RGB, uint8_t> HuffmanEncode(const Image<ImageFormat::RGB, uint8_t>&);
+	template Huffman_t<ImageFormat::GRAY, uint8_t> HuffmanEncode(const Image<ImageFormat::GRAY, uint8_t>&);
 }
