@@ -31,3 +31,4 @@
 #include "EqualizeHist.hpp"
 #include "GaussianPyramid.hpp"
 #include "DBSCAN.hpp"
+#include "Huffman.hpp"

@@ -26,7 +26,7 @@ namespace qlm
     };
 
     template <typename T>
-    void Encode(const HuffmanNode *const  current, const std::string str, std::unordered_map<T, string> &huffmanCode)
+    void Encode(const HuffmanNode<T> *const  current, const std::string str, std::unordered_map<T, std::string> &huffmanCode)
     {
         if (current == nullptr)
             return;
@@ -48,19 +48,19 @@ namespace qlm
        
         // Create nodes for each unique pixel value and push them into the priority queue
         constexpr int num_codes = freq.num_channels;
-        std::priority_queue<HuffmanNode> huffman_queue[num_codes];
+        std::priority_queue<HuffmanNode<T>> huffman_queue[num_codes];
 
         for (int i = 0; i < num_codes; i++) 
         {
             for (int e = 0; e < freq.tot_elements; e++) 
             {
-                huffman_queue[i].push(HuffmanNode(e, freq.hist[i][e]));
+                huffman_queue[i].push(HuffmanNode<T>(e, freq.hist[i][e]));
             }
         }
 
         // Build the Huffman tree using a priority queue (min-heap)
         Huffman_t<frmt, T> out;
-        HuffmanNode* root[out.num_channels];
+        HuffmanNode<T> root[out.num_channels];
         
         for (int i = 0; i < num_codes; i++) 
         {
@@ -72,7 +72,7 @@ namespace qlm
                 HuffmanNode<T> right = huffman_queue[i].top();
                 huffman_queue[i].pop();
 
-                huffman_queue[i].push(HuffmanNode((0, left.frequency + right.frequency, &left, &right)));
+                huffman_queue[i].push(HuffmanNode<T>(0, left.frequency + right.frequency, &left, &right));
             }
 
             root[i] = huffman_queue[i].top(); // The root of the tree
@@ -81,7 +81,7 @@ namespace qlm
         // Generate the Huffman codes by traversing the tree
         for (int i = 0; i < num_codes; i++) 
         {
-            Encode(root[i], "", out.table[i]);
+            Encode(&root[i], "", out.table[i]);
         }
 
         // Create the encoded string for each channel
