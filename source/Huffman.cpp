@@ -59,7 +59,9 @@ namespace qlm
         {
             for (int e = 0; e < freq.tot_elements; e++) 
             {
-                huffman_queue[i].push(new HuffmanNode<T>(e, freq.hist[i][e]));
+                const int hist_value = freq.hist[i][e];
+                if (hist_value)
+                    huffman_queue[i].push(new HuffmanNode<T>(e, hist_value));
             }
         }
 
@@ -92,7 +94,7 @@ namespace qlm
         // Create the encoded string for each channel
         for (int i = 0; i < num_codes; i++) 
         {
-            for (int e = 0; e < freq.tot_elements; e++) 
+            for (int e = 0; e < out.table[i].size(); e++) 
             {
                 out.code[i] += out.table[i][e];
             }
