@@ -32,3 +32,4 @@
 #include "GaussianPyramid.hpp"
 #include "DBSCAN.hpp"
 #include "Huffman.hpp"
+#include "Canny.hpp"
