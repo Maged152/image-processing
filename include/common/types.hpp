@@ -108,28 +108,18 @@ namespace qlm
 		Image<ImageFormat::GRAY, drv> sobel_x;
 		Image<ImageFormat::GRAY, drv> sobel_y;
 		Image<ImageFormat::GRAY, mag> magnitude;
-		float* angle;
+		Image<ImageFormat::GRAY, float> angle;
 	public:
-		SobelDerivatives() : angle(nullptr), sobel_x(), sobel_y(), magnitude()
+		SobelDerivatives() : sobel_x(), sobel_y(), magnitude(), angle()
 		{}
-		SobelDerivatives(int width, int height) : sobel_x(width, height), sobel_y(width, height), magnitude(width, height)
-		{
-			angle = new float[width * height];
-		}
+		SobelDerivatives(int width, int height) : sobel_x(width, height), sobel_y(width, height), magnitude(width, height), angle(width, height)
+		{}
 		// Copy constructor
-		SobelDerivatives(const SobelDerivatives& other): sobel_x(other.sobel_x), sobel_y(other.sobel_y), magnitude(other.magnitude), angle(nullptr)
-		{
-			if (other.angle != nullptr) 
-			{
-				angle = new float[other.sobel_x.get_width() * other.sobel_x.get_height()];
-				std::copy(other.angle, other.angle + other.sobel_x.width * other.sobel_x.height, angle);
-			}
-		}
+		SobelDerivatives(const SobelDerivatives& other): sobel_x(other.sobel_x), sobel_y(other.sobel_y), magnitude(other.magnitude), angle(other.angle)
+		{}
 		// Move constructor
-		SobelDerivatives(SobelDerivatives&& other) noexcept : sobel_x(std::move(other.sobel_x)), sobel_y(std::move(other.sobel_y)), magnitude(std::move(other.magnitude)), angle(other.angle)
-		{
-			other.angle = nullptr;
-		}
+		SobelDerivatives(SobelDerivatives&& other) noexcept : sobel_x(std::move(other.sobel_x)), sobel_y(std::move(other.sobel_y)), magnitude(std::move(other.magnitude)), angle(std::move(other.angle))
+		{}
 		// Copy assignment operator
 		SobelDerivatives& operator=(const SobelDerivatives& other)
 		{
@@ -138,14 +128,7 @@ namespace qlm
 				sobel_x = other.sobel_x;
 				sobel_y = other.sobel_y;
 				magnitude = other.magnitude;
-
-				delete[] angle;
-				angle = nullptr;
-				if (other.angle != nullptr)
-				{
-					angle = new float[other.sobel_x.get_width() * other.sobel_x.get_height()];
-					std::copy(other.angle, other.angle + other.sobel_x.width * other.sobel_x.height, angle);
-				}
+				angle = other.angle;
 			}
 			return *this;
 		}
@@ -157,18 +140,12 @@ namespace qlm
 				sobel_x = std::move(other.sobel_x);
 				sobel_y = std::move(other.sobel_y);
 				magnitude = std::move(other.magnitude);
-
-				delete[] angle;
-				angle = other.angle;
-				other.angle = nullptr;
+				angle = std::move(other.angle);
 			}
 			return *this;
 		}
 		// Destructor
-		~SobelDerivatives() 
-		{
-			delete[] angle;
-		}
+		~SobelDerivatives() {}
 	};
 
 	template<ImageFormat frmt, pixel_t T>

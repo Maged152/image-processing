@@ -23,5 +23,8 @@ To know the existing presets
 ## Build
     $ cmake --build <build_dir>
 
+## Run Test Cases
+    $ cmake --build <build_dir> --target test
+
 ## Install
     $ cmake --install <build_dir> --prefix <install_dir>

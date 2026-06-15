@@ -157,20 +157,23 @@ namespace qlm
 			// input X, Y pixels
 			x_pix = sobel_x.GetPixel(i);
 			y_pix = sobel_y.GetPixel(i);
+
 			// calculate the magnitude
 			v = std::sqrt(std::pow(x_pix.v, 2) + std::pow(y_pix.v, 2));
 			a = std::sqrt(std::pow(x_pix.a, 2) + std::pow(y_pix.a, 2));
+
 			// normalize value
 			v = (v - min_value) / (float)(max_mag - min_value);
 			a = (a - min_value) / (float)(max_mag - min_value);
+
 			// denormalize
 			out_pix.v = static_cast<in_t>(v * (max_value - min_value) + min_value);
 			out_pix.a = static_cast<in_t>(a * (max_value - min_value) + min_value);
-			// store
 			out.magnitude.SetPixel(i, out_pix);
+
 			// calculate the angle
 			angle = std::atan2(out.sobel_y.GetPixel(i).v, out.sobel_x.GetPixel(i).v) * 180.0f / M_PI;
-			out.angle[i] = angle;
+			out.angle.SetPixel(i, Pixel<ImageFormat::GRAY, float>(angle));
 		}
 
 		return out;
