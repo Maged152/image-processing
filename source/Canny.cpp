@@ -2,9 +2,10 @@
 #include "Sobel.hpp"
 #include <cmath>
 #include <limits>
+#include <cassert>
 
 template <qlm::pixel_t T>
-qlm::Image<qlm::ImageFormat::GRAY, T> Canny(const qlm::Image<qlm::ImageFormat::GRAY, T> &in, 
+qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageFormat::GRAY, T> &in, 
                                             const int threshold_low, const int threshold_high, 
                                             const int filter_size, const bool l2_gradient, 
                                             const qlm::BorderMode<qlm::ImageFormat::GRAY, T> &border_mode)
@@ -64,7 +65,7 @@ qlm::Image<qlm::ImageFormat::GRAY, T> Canny(const qlm::Image<qlm::ImageFormat::G
                     neighbor1_idx = (h + 1) * in.stride + (w + 1); // bottom-right
                     break;
                 default:
-                    static_assert(false, "Invalid angle quantization");
+                    assert(false && "Invalid angle quantization");
             }
 
             // check if the current pixel is a local maximum
@@ -135,6 +136,11 @@ qlm::Image<qlm::ImageFormat::GRAY, T> Canny(const qlm::Image<qlm::ImageFormat::G
             }
         }
     }
-    
+
     return out;
 }
+
+// Explicit instantiation for  uint8_t
+template qlm::Image<qlm::ImageFormat::GRAY, uint8_t> qlm::Canny<uint8_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t> &,
+                                            const int, const int, const int, const bool,
+                                            const qlm::BorderMode<qlm::ImageFormat::GRAY, uint8_t> &);
