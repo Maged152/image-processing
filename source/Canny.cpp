@@ -1,6 +1,7 @@
 #include "Canny.hpp"
 #include "Sobel.hpp"
 #include <cmath>
+#include <limits>
 
 template <qlm::pixel_t T>
 qlm::Image<qlm::ImageFormat::GRAY, T> Canny(const qlm::Image<qlm::ImageFormat::GRAY, T> &in, 
@@ -8,6 +9,10 @@ qlm::Image<qlm::ImageFormat::GRAY, T> Canny(const qlm::Image<qlm::ImageFormat::G
                                             const int filter_size, const bool l2_gradient, 
                                             const qlm::BorderMode<qlm::ImageFormat::GRAY, T> &border_mode)
 {
+    qlm::Image<qlm::ImageFormat::GRAY, T> out(in.width, in.height);
+    constexpr T strong_edge = std::numeric_limits<T>::max();
+    constexpr T weak_edge = std::numeric_limits<T>::max() / 2;
+
     // stage 1: Gradient calculation using Sobel operator
     auto gradient = qlm::Sobel(in, filter_size, border_mode);
 
@@ -70,5 +75,66 @@ qlm::Image<qlm::ImageFormat::GRAY, T> Canny(const qlm::Image<qlm::ImageFormat::G
             }
         }
     }
-    return qlm::Image<qlm::ImageFormat::GRAY, T>();
+
+    // stage 3: Double thresholding and edge tracking by hysteresis
+    for (int h = 0; h < in.height; h++)
+    {
+        for (int w = 0; w < in.width; w++)
+        {
+            const int mag = gradient.magnitude.GetPixel(w, h).v;
+            if (mag >= threshold_high)
+            {
+                out.SetPixel(w, h, strong_edge); // strong edge
+            }
+            else if (mag >= threshold_low)
+            {
+                out.SetPixel(w, h, weak_edge); // weak edge
+            }
+            else
+            {
+                out.SetPixel(w, h, 0); // non-edge
+            }
+        }
+    }
+
+    for (int h = 0; h < in.height; h++)
+    {
+        for (int w = 0; w < in.width; w++)
+        {
+            if (out.GetPixel(w, h).v == weak_edge) // weak edge
+            {
+                // check if any of the 8-connected neighbors is a strong edge
+                bool connected_to_strong_edge = false;
+
+                for (int dh = -1; dh <= 1; dh++)
+                {
+                    for (int dw = -1; dw <= 1; dw++)
+                    {
+                        if (dh == 0 && dw == 0)
+                            continue;
+
+                        int nh = h + dh;
+                        int nw = w + dw;
+                        if (nh >= 0 && nh < in.height && nw >= 0 && nw < in.width)
+                        {
+                            if (out.GetPixel(nw, nh).v == strong_edge) // strong edge
+                            {
+                                connected_to_strong_edge = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (connected_to_strong_edge)
+                        break;
+                }
+
+                if (!connected_to_strong_edge)
+                {
+                    out.SetPixel(w, h, 0); // suppress weak edge not connected to strong edge
+                }
+            }
+        }
+    }
+    
+    return out;
 }
