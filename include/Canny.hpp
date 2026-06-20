@@ -4,13 +4,12 @@
 
 namespace qlm
 {
-	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> Canny(
-		const Image<frmt, T>& in,
+	template<pixel_t T>
+	Image<ImageFormat::GRAY, T> Canny(
+		const Image<ImageFormat::GRAY, T>& in,
 		const int threshold_low, const int threshold_high,
 		const int filter_size = 3,
 		const bool l2_gradient = false ,
-		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{}
+		const BorderMode<ImageFormat::GRAY, T>& border_mode = BorderMode<ImageFormat::GRAY, T>{}
 	);
-
 }
