@@ -33,3 +33,4 @@
 #include "DBSCAN.hpp"
 #include "Huffman.hpp"
 #include "Canny.hpp"
+#include "Magnitude.hpp"
