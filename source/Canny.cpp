@@ -1,5 +1,6 @@
 #include "Canny.hpp"
 #include "Sobel.hpp"
+#include "Magnitude.hpp"
 #include <cmath>
 #include <limits>
 #include <cassert>
@@ -11,15 +12,23 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
                                             const qlm::BorderMode<qlm::ImageFormat::GRAY, T> &border_mode)
 {
     qlm::Image<qlm::ImageFormat::GRAY, T> out(in.width, in.height);
-    constexpr T strong_edge = std::numeric_limits<T>::max();
-    constexpr T weak_edge = std::numeric_limits<T>::max() / 2;
+    constexpr int strong_edge = std::numeric_limits<T>::max();
+    constexpr int weak_edge = std::numeric_limits<T>::max() / 2;
 
     // stage 1: Gradient calculation using Sobel operator
-    auto gradient = qlm::Sobel(in, filter_size, border_mode);
+    const auto sobel_x = qlm::SobelX(in, filter_size, border_mode);
+    const auto sobel_y = qlm::SobelY(in, filter_size, border_mode);
+
+    auto gradient = qlm::Magnitude(sobel_x, sobel_y, l2_gradient);
 
     // stage 2: Non-maximum suppression
-    const auto QuantizeAngle = [](float angle)
+    const auto CalcQuantizedAngle = [&](const int x, const int y)
     {
+        // calculate the angle
+        double angle = std::atan2(static_cast<double>(sobel_y.GetPixel(x, y).v), 
+                                  static_cast<double>(sobel_x.GetPixel(x, y).v)) * 180.0 / M_PI;
+
+        // quantize the angle to one of four directions [0, 45, 90, 135] degrees
         angle = std::round(angle / 45) * 45;
         if (angle < 0)
             angle += 180;
@@ -30,95 +39,94 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
         return static_cast<int>(angle);
     };
 
-    const auto IsValidIndex = [&](const int idx)
+    // helper to check coordinate bounds
+    const auto IsValidCoord = [&](const int x, const int y)
     {
-        return idx >= 0 && idx < in.height * in.stride;
+        return x >= 0 && x < in.width && y >= 0 && y < in.height;
     };
 
-    for (int h = 0; h < in.height; h++)
+    for (int y = 0; y < in.height; y++)
     {
-        for (int w = 0; w < in.width; w++)
+        for (int x = 0; x < in.width; x++)
         {
             // get the current pixel's gradient magnitude and angle
-            const int mag = gradient.magnitude.GetPixel(w, h).v;
-            // quantize the gradient angle into one of four directions [0, 45, 90, 135] degrees
-            const int angle = QuantizeAngle(gradient.angle.GetPixel(w, h).v);
+            const auto mag = gradient.GetPixel(x, y).v;
+            const auto angle = CalcQuantizedAngle(x, y);
 
             // determine the two neighboring pixels to compare with based on the quantized angle
-            int neighbor0_idx, neighbor1_idx;
+            qlm::Point neighbor1, neighbor2;
             switch (angle)
             {
                 case 0:
-                    neighbor0_idx = h * in.stride + (w + 1); // right
-                    neighbor1_idx = h * in.stride + (w - 1); // left
+                    neighbor1 = qlm::Point(x + 1, y); // right
+                    neighbor2 = qlm::Point(x - 1, y); // left
                     break;
                 case 45:
-                    neighbor0_idx = (h - 1) * in.stride + (w + 1); // top-right
-                    neighbor1_idx = (h + 1) * in.stride + (w - 1); // bottom-left
+                    neighbor1 = qlm::Point(x - 1, y - 1); // top-left
+                    neighbor2 = qlm::Point(x + 1, y + 1); // bottom-right                    
                     break;
                 case 90:
-                    neighbor0_idx = (h - 1) * in.stride + w; // top
-                    neighbor1_idx = (h + 1) * in.stride + w; // bottom
+                    neighbor1 = qlm::Point(x, y - 1); // top
+                    neighbor2 = qlm::Point(x, y + 1); // bottom
                     break;
                 case 135:
-                    neighbor0_idx = (h - 1) * in.stride + (w - 1); // top-left
-                    neighbor1_idx = (h + 1) * in.stride + (w + 1); // bottom-right
+                    neighbor1 = qlm::Point(x + 1, y - 1); // top-right
+                    neighbor2 = qlm::Point(x - 1, y + 1); // bottom-left
                     break;
                 default:
                     assert(false && "Invalid angle quantization");
             }
 
-            // check if the current pixel is a local maximum
-            if ((IsValidIndex(neighbor1_idx) && gradient.magnitude.GetPixel(neighbor1_idx).v > mag) ||
-                (IsValidIndex(neighbor0_idx) && gradient.magnitude.GetPixel(neighbor0_idx).v > mag))
+            // check if the current pixel is a local maximum using coordinate-safe checks
+            const bool n0_valid = IsValidCoord(neighbor1.x, neighbor1.y);
+            const bool n1_valid = IsValidCoord(neighbor2.x, neighbor2.y);
+
+            if ((n1_valid && gradient.GetPixel(neighbor2.x, neighbor2.y).v > mag) ||
+                (n0_valid && gradient.GetPixel(neighbor1.x, neighbor1.y).v > mag))
             {
-                gradient.magnitude.SetPixel(w, h, 0); // suppress non-maximum pixel
+                gradient.SetPixel(x, y, 0); // suppress non-maximum pixel
             }
         }
     }
 
     // stage 3: Double thresholding and edge tracking by hysteresis
-    for (int h = 0; h < in.height; h++)
+    for (int y = 0; y < out.height; y++)
     {
-        for (int w = 0; w < in.width; w++)
+        for (int x = 0; x < out.width; x++)
         {
-            const int mag = gradient.magnitude.GetPixel(w, h).v;
+            const int mag = gradient.GetPixel(x, y).v;
             if (mag >= threshold_high)
             {
-                out.SetPixel(w, h, strong_edge); // strong edge
+                out.SetPixel(x, y, strong_edge); // strong edge
             }
             else if (mag >= threshold_low)
             {
-                out.SetPixel(w, h, weak_edge); // weak edge
+                out.SetPixel(x, y, weak_edge); // weak edge
             }
             else
             {
-                out.SetPixel(w, h, 0); // non-edge
+                out.SetPixel(x, y, 0); // non-edge
             }
         }
     }
 
-    for (int h = 0; h < in.height; h++)
+    for (int y = 0; y < out.height; y++)
     {
-        for (int w = 0; w < in.width; w++)
+        for (int x = 0; x < out.width; x++)
         {
-            if (out.GetPixel(w, h).v == weak_edge) // weak edge
+            if (out.GetPixel(x, y).v == weak_edge) // weak edge
             {
                 // check if any of the 8-connected neighbors is a strong edge
                 bool connected_to_strong_edge = false;
 
-                for (int dh = -1; dh <= 1; dh++)
+                for (int dy = -1; dy <= 1; dy++)
                 {
-                    for (int dw = -1; dw <= 1; dw++)
+                    for (int dx = -1; dx <= 1; dx++)
                     {
-                        if (dh == 0 && dw == 0)
-                            continue;
-
-                        int nh = h + dh;
-                        int nw = w + dw;
-                        if (nh >= 0 && nh < in.height && nw >= 0 && nw < in.width)
+                        const qlm::Point neighbor(x + dx, y + dy);
+                        if (neighbor.y >= 0 && neighbor.y < out.height && neighbor.x >= 0 && neighbor.x < out.width)
                         {
-                            if (out.GetPixel(nw, nh).v == strong_edge) // strong edge
+                            if (out.GetPixel(neighbor.x, neighbor.y).v == strong_edge) // strong edge
                             {
                                 connected_to_strong_edge = true;
                                 break;
@@ -129,9 +137,13 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
                         break;
                 }
 
-                if (!connected_to_strong_edge)
+                if (connected_to_strong_edge)
                 {
-                    out.SetPixel(w, h, 0); // suppress weak edge not connected to strong edge
+                    out.SetPixel(x, y, strong_edge);
+                }
+                else
+                {
+                    out.SetPixel(x, y, 0); // suppress weak edge not connected to strong edge
                 }
             }
         }
