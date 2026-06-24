@@ -78,11 +78,11 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
             }
 
             // check if the current pixel is a local maximum using coordinate-safe checks
-            const bool n0_valid = IsValidCoord(neighbor1.x, neighbor1.y);
-            const bool n1_valid = IsValidCoord(neighbor2.x, neighbor2.y);
+            const bool n1_valid = IsValidCoord(neighbor1.x, neighbor1.y);
+            const bool n2_valid = IsValidCoord(neighbor2.x, neighbor2.y);
 
-            if ((n1_valid && gradient.GetPixel(neighbor2.x, neighbor2.y).v > mag) ||
-                (n0_valid && gradient.GetPixel(neighbor1.x, neighbor1.y).v > mag))
+            if ((n1_valid && gradient.GetPixel(neighbor1.x, neighbor1.y).v > mag) ||
+                (n2_valid && gradient.GetPixel(neighbor2.x, neighbor2.y).v > mag))
             {
                 gradient.SetPixel(x, y, 0); // suppress non-maximum pixel
             }
