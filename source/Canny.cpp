@@ -46,7 +46,10 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
         return static_cast<int>(angle);
     };
 
-    auto suppressed = gradient; // copy before NMS loop
+    std::vector<qlm::Point<int>> stack; // Pre-allocate stack with a reasonable reserve to avoid reallocations
+    stack.reserve(static_cast<size_t>(in.width) * in.height / 4);
+
+
     for (int y = 0; y < in.height; y++)
     {
         for (int x = 0; x < in.width; x++)
@@ -83,21 +86,9 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
             if ((IsValidCoord(neighbor1) && gradient.GetPixel(neighbor1.x, neighbor1.y).v > mag) ||
                 (IsValidCoord(neighbor2) && gradient.GetPixel(neighbor2.x, neighbor2.y).v > mag))
             {
-                suppressed.SetPixel(x, y, 0); // suppress non-maximum pixel
+                out.SetPixel(x, y, 0); // suppress non-maximum pixel
             }
-        }
-    }
-
-    // stage 3: Double thresholding and edge tracking by hysteresis
-    std::vector<qlm::Point<int>> stack; // Pre-allocate stack with a reasonable reserve to avoid reallocations
-    stack.reserve(static_cast<size_t>(in.width) * in.height / 4);
-
-    for (int y = 0; y < out.height; y++)
-    {
-        for (int x = 0; x < out.width; x++)
-        {
-            const int mag = suppressed.GetPixel(x, y).v;
-            if (mag >= threshold_high)
+            else if (mag >= threshold_high)
             {
                 out.SetPixel(x, y, strong_edge); // strong edge
                 stack.push_back(qlm::Point(x, y));
@@ -113,6 +104,7 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
         }
     }
 
+    // stage 3: Double thresholding and edge tracking by hysteresis
     // propagate strong edges through connected weak edges (DFS flood fill)
     while (!stack.empty())
     {
@@ -126,14 +118,12 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
                 if (dx == 0 && dy == 0) continue;
 
                 const qlm::Point neighbor(cx + dx, cy + dy);
-                if (IsValidCoord(neighbor)) // remove check
+                // GetPixel returns 0 for out-of-bounds coords, which never equals weak_edge, so no explicit bounds check needed
+                if (out.GetPixel(neighbor.x, neighbor.y).v == weak_edge)
                 {
-                    if (out.GetPixel(neighbor.x, neighbor.y).v == weak_edge)
-                    {
-                        out.SetPixel(neighbor.x, neighbor.y, strong_edge);
-                        stack.push_back(neighbor);
-                    }
-                }
+                    out.SetPixel(neighbor.x, neighbor.y, strong_edge);
+                    stack.push_back(neighbor);
+                }   
             }
         }
     }
