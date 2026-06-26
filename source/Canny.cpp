@@ -63,8 +63,8 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
             switch (angle)
             {
                 case 0:
-                    neighbor1 = qlm::Point(x + 1, y); // right
-                    neighbor2 = qlm::Point(x - 1, y); // left
+                    neighbor1 = qlm::Point(x - 1, y); // left 
+                    neighbor2 = qlm::Point(x + 1, y); // right
                     break;
                 case 45:
                     neighbor1 = qlm::Point(x - 1, y - 1); // top-left
@@ -83,17 +83,17 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
             }
 
             // check if the current pixel is a local maximum using coordinate-safe checks
-            if ((IsValidCoord(neighbor1) && gradient.GetPixel(neighbor1.x, neighbor1.y).v > mag) ||
+            if ((IsValidCoord(neighbor1) && gradient.GetPixel(neighbor1.x, neighbor1.y).v >= mag) ||
                 (IsValidCoord(neighbor2) && gradient.GetPixel(neighbor2.x, neighbor2.y).v > mag))
             {
                 out.SetPixel(x, y, 0); // suppress non-maximum pixel
             }
-            else if (mag >= threshold_high)
+            else if (mag > threshold_high)
             {
                 out.SetPixel(x, y, strong_edge); // strong edge
                 stack.push_back(qlm::Point(x, y));
             }
-            else if (mag >= threshold_low)
+            else if (mag > threshold_low)
             {
                 out.SetPixel(x, y, weak_edge); // weak edge
             }
