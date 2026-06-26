@@ -26,7 +26,7 @@ Here you can find the implementation of :
     * [KMeans](Functions/Features%20Detection/KMeans)
     * [Match Template](Functions/Features%20Detection/MatchTemplate)
     * [DBSCAN](Functions/Features%20Detection/DBSCAN)
-    * Canny (backlog)
+    * [Canny](Functions/Features%20Detection/Canny)
     * Hough circle (backlog)
 * Color Manipulation
     * [Color Conversion](Functions/Color%20Manipulation/ColorConvert)
