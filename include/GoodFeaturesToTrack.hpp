@@ -10,8 +10,8 @@ namespace qlm
 		const int max_corners,
 		const double quality_level, 
 		const double min_distance,
-		// mask
 		const int block_size = 3,
+		const int  gradient_size = 3,
 		const bool use_harris_detector = false,
 		const double k = 0.04,
 		const BorderMode<ImageFormat::GRAY, T>& border_mode = BorderMode<ImageFormat::GRAY, T>{}
