@@ -43,4 +43,10 @@ namespace qlm
 		FORWARD,
 		BACKWARD
 	};
+
+	enum class OverFlowFlag 
+	{
+		SATURATE,
+		WRAP
+	};
 }

@@ -35,3 +35,4 @@
 #include "Canny.hpp"
 #include "Magnitude.hpp"
 #include "GoodFeaturesToTrack.hpp"
+#include "Multiply.hpp"
