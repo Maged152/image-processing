@@ -8,7 +8,7 @@ namespace qlm
     Image<frmt, TO> Multiply(
         const Image<frmt, T1> &in1,
         const Image<frmt, T2> &in2,
-        const double scale = 1.0,
+        const float scale = 1.0f,
         const OverFlowFlag &over_flow = OverFlowFlag::SATURATE
     );
 }
