@@ -66,3 +66,10 @@ qlm::BoxFilter<qlm::ImageFormat::GRAY, int16_t, int16_t>(const qlm::Image<qlm::I
 	const int filter_y_size,
 	const bool normalize,
 	const BorderMode<qlm::ImageFormat::GRAY, int16_t>&);
+// Explicit instantiation for GRAY, float, float
+template qlm::Image<qlm::ImageFormat::GRAY, float>
+qlm::BoxFilter<qlm::ImageFormat::GRAY, float, float>(const qlm::Image<qlm::ImageFormat::GRAY, float>&,
+	const int filter_x_size,
+	const int filter_y_size,
+	const bool normalize,
+	const BorderMode<qlm::ImageFormat::GRAY, float>&);

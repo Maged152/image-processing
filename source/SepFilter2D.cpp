@@ -97,5 +97,10 @@ namespace qlm
 		SepFilter2D<ImageFormat::GRAY, uint8_t, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&,
 			const SepKernel&,
 			const BorderMode<ImageFormat::GRAY, uint8_t>&);
+		// Explicit instantiation for GRAY , uint8_t, float
+	template Image<ImageFormat::GRAY, float>
+		SepFilter2D<ImageFormat::GRAY, float, float>(const Image<ImageFormat::GRAY, float>&,
+			const SepKernel&,
+			const BorderMode<ImageFormat::GRAY, float>&);
 
 }

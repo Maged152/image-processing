@@ -66,8 +66,8 @@ namespace qlm
         const OverFlowFlag &);
 
     template Image<ImageFormat::GRAY, float> Multiply(
-        const Image<ImageFormat::GRAY, float> &,
-        const Image<ImageFormat::GRAY, float> &,
+        const Image<ImageFormat::GRAY, int16_t> &,
+        const Image<ImageFormat::GRAY, int16_t> &,
         const float,
         const OverFlowFlag &);
 }
