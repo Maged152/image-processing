@@ -37,6 +37,7 @@ Here you can find the implementation of :
     * [MinMax Location](Functions/Pixel-Wise/MinMaxLoc)
     * [Histogram](Functions/Pixel-Wise/Histogram)
     * [Histogram Equalization](Functions/Pixel-Wise/EqualizeHist)
+    * [Multiply](Functions/Pixel-Wise/Multiply)
 * Get Functions
     * [Get Kernel](Functions/Get%20functions/Get%20Kernel)
     * [Get Transformation Matrix](Functions/Get%20functions/Get%20Transformation%20Matrix)
