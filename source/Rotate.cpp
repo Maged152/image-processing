@@ -41,14 +41,14 @@ namespace qlm
 		if (rotate_code == RotateFlag::ROTATE_180)
 		{
 			// 180 degrees
-			out.create(img_width, img_height);
+			out.Create(img_width, img_height);
 
 			rotate_fun = rotate_180_lambda;
 		}
 		else
 		{
 			// 90 or 270 degrees, swap width , height
-			out.create(img_height, img_width);
+			out.Create(img_height, img_width);
 
 			if (rotate_code == RotateFlag::ROTATE_90_CLOCKWISE)
 			{

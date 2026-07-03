@@ -11,7 +11,7 @@ namespace qlm
 	{
 		// create the output image
 		Image<frmt, T> out;
-		out.create(dst_width, dst_height, border_mode.border_pixel);
+		out.Create(dst_width, dst_height, border_mode.border_pixel);
 		// transformation matrix inverse
 		PerspectiveMatrix mat_inv{};
 

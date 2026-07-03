@@ -157,7 +157,7 @@ namespace qlm
     Image<frmt, T> DrawCluster(const Image<frmt, T>& in, const std::vector<Cluster<frmt, T>>& clusters)
     {
         Image<frmt, T> out;
-        out.create(in.width, in.height);
+        out.Create(in.width, in.height);
 
         for (int c = 0; c < clusters.size(); c++)
         {

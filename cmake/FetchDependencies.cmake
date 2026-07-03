@@ -16,7 +16,7 @@ FetchContent_MakeAvailable(thread_pool)
 FetchContent_Declare(
   pixel_image
   GIT_REPOSITORY https://github.com/Maged152/PixelImage.git
-  GIT_TAG v1.1.0 
+  GIT_TAG 4dec8c926aa35a324ad7c4b31b3eb35713efe42c 
 
 )
 

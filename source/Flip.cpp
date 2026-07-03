@@ -13,7 +13,7 @@ namespace qlm
 		const int img_height = in.height;
 		// output image
 		Image<frmt, T> out = Image<frmt, T>{};
-		out.create(img_width, img_height);
+		out.Create(img_width, img_height);
 		// output location
 		int x_n{ 0 }, y_n{ 0 };
 		// Flip vertical 

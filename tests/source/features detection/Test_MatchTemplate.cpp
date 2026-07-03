@@ -21,7 +21,7 @@ TEST(Test_shakhbat_cv, MatchTemplate)
 	EXPECT_EQ(load_temp, true);
 
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> mask{};
-	mask.create(templ.width, templ.height, qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t> {1});
+	mask.Create(templ.width, templ.height, qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t> {1});
 
 	t.Start();
 	auto out = qlm::MatchTemplate(in, templ, qlm::TemplateMatchFlag::SQDIFF, mask);

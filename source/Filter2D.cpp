@@ -8,7 +8,7 @@ qlm::Image<frmt, T> qlm::Filter2D(const qlm::Image<frmt, T>& in, const qlm::Kern
 
 	// create the output image
 	qlm::Image<frmt, T> out;
-	out.create(img_width, img_height, qlm::Pixel<frmt, T>{});
+	out.Create(img_width, img_height, qlm::Pixel<frmt, T>{});
 
 	int pad_width = kernel.Width() / 2;
 	int pad_height = kernel.Height() / 2;

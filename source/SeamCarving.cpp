@@ -388,7 +388,7 @@ namespace qlm
         GetAspectRatio(width, height, in, dx, dy, dec_x, dec_y);
 
         // allocate proper memory for energy_map
-        energy_map.create(max_d, max_d);
+        energy_map.Create(max_d, max_d);
         energy_map.width = gray.width;
         energy_map.height = gray.height;
 

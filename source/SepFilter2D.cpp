@@ -12,7 +12,7 @@ namespace qlm
 
 		// create the output image
 		Image<frmt, dst_t> out;
-		out.create(img_width, img_height);
+		out.Create(img_width, img_height);
 
 		int x_padding_length = kernel.x_ker.Length() / 2;
 		int y_padding_length = kernel.y_ker.Length() / 2;
@@ -21,7 +21,7 @@ namespace qlm
 
 		// temp_pixel_array to hold y_kernel values
 		Image<frmt, float> temp_y_filter;
-		temp_y_filter.create(img_width, 1);
+		temp_y_filter.Create(img_width, 1);
 
 		auto border_mode_f = BorderMode<frmt, float>{};
 		border_mode_f.border_type = border_mode.border_type;

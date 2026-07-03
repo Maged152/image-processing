@@ -15,7 +15,7 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in,
 	int new_height = height * scale_y;
 
 	qlm::Image<frmt, T> out;
-	out.create(new_width, new_height, border_mode.border_pixel);
+	out.Create(new_width, new_height, border_mode.border_pixel);
 
 	for (int x = 0; x < new_width; x++)
 	{

@@ -9,7 +9,7 @@ namespace qlm
 		int img_height = in.height;
 		// output image
 		Image<frmt, T> out = Image<frmt, T>{};
-		out.create(img_width, img_height, pix);
+		out.Create(img_width, img_height, pix);
 		// temp out pixel
 		Pixel<frmt, T> out_pix;
 		// location after rotation

@@ -11,7 +11,7 @@ namespace qlm
         int height = in.height;
         // create the output image
         Image<dst_frmt, dst_t> out;
-        out.create(width, height);
+        out.Create(width, height);
         // check if they are the same format & same data type
         if constexpr (dst_frmt == src_frmt && std::is_same_v<src_t, dst_t>)
         {

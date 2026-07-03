@@ -133,7 +133,7 @@ namespace qlm
         const Pixel<ImageFormat::GRAY, int> unvisited{-2};
 
         DBSCANResult result{};
-        result.labels.create(in.width, in.height, unvisited); // -2 means unvisited
+        result.labels.Create(in.width, in.height, unvisited); // -2 means unvisited
         result.num_clusters = -1;
 
         int num_noise_pixels = 0;

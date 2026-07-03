@@ -78,7 +78,7 @@ between the template and the corresponding region in the input image.
     }
 
     qlm::Image<qlm::ImageFormat::GRAY, uint8_t> mask{};
-    mask.create(templ.width, templ.height, 1);
+    mask.Create(templ.width, templ.height, 1);
 
     t.Start();
     auto out = qlm::MatchTemplate(in, templ, qlm::TemplateMatchFlag::SQDIFF, mask);
