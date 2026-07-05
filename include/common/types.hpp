@@ -36,9 +36,9 @@ namespace qlm
 		T x;
 		T y;
 	public:
-		Point() : x(0), y(0)
+		constexpr Point() : x(0), y(0)
 		{}
-		Point(T x, T y) : x(x), y(y)
+		constexpr Point(T x, T y) : x(x), y(y)
 		{}
 	public:
 		// addition operator

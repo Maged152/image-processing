@@ -17,7 +17,9 @@ namespace qlm
         const double k, 
         const BorderMode<ImageFormat::GRAY, T> &border_mode)
     {
+        std::vector<KeyPoint<int>> out;
         constexpr float neg_inf = std::numeric_limits<float>::lowest();
+
         // stage 1: compute the gradient of the image
         const Image<ImageFormat::GRAY, int16_t> sobel_x = qlm::SobelX(in, gradient_size, border_mode);
         const Image<ImageFormat::GRAY, int16_t> sobel_y = qlm::SobelY(in, gradient_size, border_mode);
@@ -79,8 +81,74 @@ namespace qlm
                 }
             }
         }
-       
 
-        return std::vector<KeyPoint<int>>();
+        // stage 5: non-maximum suppression
+        std::vector<KeyPoint<int>> corners;
+        constexpr int num_neighbors = 8;
+        constexpr qlm::Point<int> neighbor_idx[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+
+        for (int y = 0; y < response.height; y++)
+        {
+            for (int x = 0; x < response.width; x++)
+            {
+                const float response_value = response.GetPixel(x, y).v;
+                if (response_value == neg_inf)
+                {
+                    continue;
+                }
+
+                bool is_local_maximum = true;
+                for (int i = 0; i < num_neighbors; i++)
+                {
+                    const int neighbor_x = x + neighbor_idx[i].x;
+                    const int neighbor_y = y + neighbor_idx[i].y;
+
+                    if (neighbor_x >= 0 && neighbor_x < response.width && neighbor_y >= 0 && neighbor_y < response.height)
+                    {
+                        const float neighbor_response_value = response.GetPixel(neighbor_x, neighbor_y).v;
+                        if (neighbor_response_value > response_value)
+                        {
+                            is_local_maximum = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (is_local_maximum)
+                {
+                    corners.emplace_back(Point<int>(x, y), response_value, 1.0f); // use scale to track if the corner is removed or not : 1 -> exists, 0 -> removed 
+                }
+            }
+        }
+
+        // stage 6: radius NMS
+        std::sort(corners.begin(), corners.end(), [](const KeyPoint<int>& a, const KeyPoint<int>& b) {
+            return a.response > b.response;
+        });
+
+        const auto distance = [](const KeyPoint<int>& a, const KeyPoint<int>& b) {
+            return std::sqrt(std::pow(a.point.x - b.point.x, 2) + std::pow(a.point.y - b.point.y, 2));
+        };
+
+        for (int i = 0; i < corners.size(); i++)
+        {
+            if (corners[i].scale)
+            {
+                // add corner to the output list
+                out.push_back(corners[i]);
+
+                // remove corners within the min_distance
+                for (size_t j = i + 1; j < corners.size(); j++)
+                {
+                    if (corners[i].scale)
+                    {
+                        if (distance(corners[i], corners[j]) < min_distance)
+                            corners[j].scale = 0; // Mark as removed
+                    }
+                }
+            }
+        }
+
+        return out;
     }
 }
