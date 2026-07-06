@@ -2,6 +2,7 @@
 #include "Sobel.hpp"
 #include "BoxFilter.hpp"
 #include "Multiply.hpp"
+#include <cassert>
 
 namespace qlm
 {
@@ -17,8 +18,19 @@ namespace qlm
         const double k, 
         const BorderMode<ImageFormat::GRAY, T> &border_mode)
     {
+        // validate the input parameters
+        assert(min_distance >= 0);
+        assert(quality_level > 0);
+        assert(quality_level <= 1);
+        assert(block_size % 2 == 1);
+        assert(gradient_size % 2 == 1);
+
+        const int max_num_corners = max_corners <= 0 ? in.width * in.height : max_corners;
+
         std::vector<KeyPoint<int>> out;
         constexpr float neg_inf = std::numeric_limits<float>::lowest();
+        const double min_distance_squared = min_distance * min_distance;
+        const int valid_distance = block_size / 2 + gradient_size / 2;
 
         // stage 1: compute the gradient of the image
         const Image<ImageFormat::GRAY, int16_t> sobel_x = qlm::SobelX(in, gradient_size, border_mode);
@@ -38,9 +50,9 @@ namespace qlm
         Pixel<ImageFormat::GRAY, float> response_pixel;
         float max_response_pixel = neg_inf;
 
-        for (int y = 0; y < in.height; y++)
+        for (int y = valid_distance; y < in.height - valid_distance; y++)
         {
-            for (int x = 0; x < in.width; x++)
+            for (int x = valid_distance; x < in.width - valid_distance; x++)
             {
                 const float ixx = Ixx_sum.GetPixel(x, y).v;
                 const float ixy = Ixy_sum.GetPixel(x, y).v;
@@ -54,10 +66,12 @@ namespace qlm
                 }
                 else
                 {
-                    response_pixel.v = (ixx + iyy - std::sqrt((ixx - iyy) * (ixx - iyy) + 4.0f * ixy * ixy)) * 0.5f;
+                    float d = (ixx - iyy) * (ixx - iyy) + 4.0f * ixy * ixy;
+                    d = std::max(d, 0.0f); // Ensure non-negative value for sqrt
+                    response_pixel.v = (ixx + iyy - std::sqrt(d)) * 0.5f;
                 }
 
-                // find max score value for Shi-Tomasi corner detection
+                // Find maximum response value.
                 if (response_pixel.v > max_response_pixel)
                 {
                     max_response_pixel = response_pixel.v;
@@ -70,9 +84,9 @@ namespace qlm
         // stage 4: threshold the response and find corners
         const float threshold = max_response_pixel * quality_level;
 
-        for (int y = 0; y < response.height; y++)
+        for (int y = valid_distance; y < response.height - valid_distance; y++)
         {
-            for (int x = 0; x < response.width; x++)
+            for (int x = valid_distance; x < response.width - valid_distance; x++)
             {
                 const float response_value = response.GetPixel(x, y).v;
                 if (response_value < threshold)
@@ -85,11 +99,11 @@ namespace qlm
         // stage 5: non-maximum suppression
         std::vector<KeyPoint<int>> corners;
         constexpr int num_neighbors = 8;
-        constexpr qlm::Point<int> neighbor_idx[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+        static constexpr qlm::Point<int> neighbor_idx[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
 
-        for (int y = 0; y < response.height; y++)
+        for (int y = valid_distance; y < response.height - valid_distance; y++)
         {
-            for (int x = 0; x < response.width; x++)
+            for (int x = valid_distance; x < response.width - valid_distance; x++)
             {
                 const float response_value = response.GetPixel(x, y).v;
                 if (response_value == neg_inf)
@@ -103,7 +117,8 @@ namespace qlm
                     const int neighbor_x = x + neighbor_idx[i].x;
                     const int neighbor_y = y + neighbor_idx[i].y;
 
-                    if (neighbor_x >= 0 && neighbor_x < response.width && neighbor_y >= 0 && neighbor_y < response.height)
+                    if (neighbor_x >= valid_distance && neighbor_x < response.width - valid_distance && 
+                        neighbor_y >= valid_distance && neighbor_y < response.height - valid_distance)
                     {
                         const float neighbor_response_value = response.GetPixel(neighbor_x, neighbor_y).v;
                         if (neighbor_response_value > response_value)
@@ -127,7 +142,9 @@ namespace qlm
         });
 
         const auto distance = [](const KeyPoint<int>& a, const KeyPoint<int>& b) {
-            return std::sqrt(std::pow(a.point.x - b.point.x, 2) + std::pow(a.point.y - b.point.y, 2));
+            const int dx = a.point.x - b.point.x;
+            const int dy = a.point.y - b.point.y;
+            return dx * dx + dy * dy;
         };
 
         for (int i = 0; i < corners.size(); i++)
@@ -140,12 +157,15 @@ namespace qlm
                 // remove corners within the min_distance
                 for (size_t j = i + 1; j < corners.size(); j++)
                 {
-                    if (corners[i].scale)
+                    if (corners[j].scale)
                     {
-                        if (distance(corners[i], corners[j]) < min_distance)
+                        if (distance(corners[i], corners[j]) < min_distance_squared)
                             corners[j].scale = 0; // Mark as removed
                     }
                 }
+
+                if (out.size() == max_num_corners)
+                    break;
             }
         }
 
