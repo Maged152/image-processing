@@ -31,6 +31,7 @@ namespace qlm
         constexpr float neg_inf = std::numeric_limits<float>::lowest();
         const double min_distance_squared = min_distance * min_distance;
         const int valid_distance = block_size / 2 + gradient_size / 2;
+        const BorderMode<ImageFormat::GRAY, float> border_mode_f{border_mode.border_type, border_mode.border_pixel.v};
 
         // stage 1: compute the gradient of the image
         const Image<ImageFormat::GRAY, int16_t> sobel_x = qlm::SobelX(in, gradient_size, border_mode);
@@ -41,9 +42,9 @@ namespace qlm
         const Image<ImageFormat::GRAY, float> Iyy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(sobel_y, sobel_y, 1.0f, OverFlowFlag::WRAP);
         const Image<ImageFormat::GRAY, float> Ixy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(sobel_x, sobel_y, 1.0f, OverFlowFlag::WRAP);
 
-        Image<ImageFormat::GRAY, float> Ixx_sum = BoxFilter<ImageFormat::GRAY, float, float>(Ixx, block_size, block_size, false, border_mode);
-		Image<ImageFormat::GRAY, float> Iyy_sum = BoxFilter<ImageFormat::GRAY, float, float>(Iyy, block_size, block_size, false, border_mode);
-		Image<ImageFormat::GRAY, float> Ixy_sum = BoxFilter<ImageFormat::GRAY, float, float>(Ixy, block_size, block_size, false, border_mode);
+        Image<ImageFormat::GRAY, float> Ixx_sum = BoxFilter<ImageFormat::GRAY, float, float>(Ixx, block_size, block_size, false, border_mode_f);
+		Image<ImageFormat::GRAY, float> Iyy_sum = BoxFilter<ImageFormat::GRAY, float, float>(Iyy, block_size, block_size, false, border_mode_f);
+		Image<ImageFormat::GRAY, float> Ixy_sum = BoxFilter<ImageFormat::GRAY, float, float>(Ixy, block_size, block_size, false, border_mode_f);
 
         // stage 3: compute the corner response
         Image<ImageFormat::GRAY, float> response (in.width, in.height);
@@ -171,4 +172,11 @@ namespace qlm
 
         return out;
     }
+
+    template std::vector<KeyPoint<int>> 
+    qlm::GoodFeaturesToTrack<uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, 
+        const int, const double, 
+        const double, const int, 
+        const int, const bool, 
+        const double, const BorderMode<ImageFormat::GRAY, uint8_t>&);
 }
