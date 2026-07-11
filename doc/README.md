@@ -27,6 +27,7 @@ Here you can find the implementation of :
     * [Match Template](Functions/Features%20Detection/MatchTemplate)
     * [DBSCAN](Functions/Features%20Detection/DBSCAN)
     * [Canny](Functions/Features%20Detection/Canny)
+    * [Good Features To Track](Functions/Features%20Detection/GoodFeaturesToTrack)
     * Hough circle (backlog)
 * Color Manipulation
     * [Color Conversion](Functions/Color%20Manipulation/ColorConvert)
