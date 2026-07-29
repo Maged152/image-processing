@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstring>
+#include <utility>
+
 namespace qlm
 {
 	// 2d kernel
