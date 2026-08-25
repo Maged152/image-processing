@@ -37,4 +37,5 @@
 #include "GoodFeaturesToTrack.hpp"
 #include "Multiply.hpp"
 #include "Subtract.hpp"
+#include "Shift.hpp"
 #include "OpticalFlowPyrLK.hpp"
