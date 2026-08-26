@@ -8,8 +8,8 @@ namespace qlm
     std::vector<KeyPoint<float>> OpticalFlowPyrLK(
         const Image<ImageFormat::GRAY, T>& prev_img,
         const Image<ImageFormat::GRAY, T>& next_img,
-        const std::vector<KeyPoint<int>>& prev_pts,
-        const std::vector<KeyPoint<int>>& initial_guess,
+        const std::vector<KeyPoint<float>>& prev_pts,
+        const std::vector<KeyPoint<float>>& initial_guess,
         const Size& win_size = Size(21, 21),
         const TermCriteria& criteria = TermCriteria(30, 0.01),
         const int max_level = 3,
