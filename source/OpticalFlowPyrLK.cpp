@@ -4,6 +4,7 @@
 #include "BoxFilter.hpp"
 #include "Subtract.hpp"
 #include "Translate.hpp"
+#include "Multiply.hpp"
 
 namespace qlm
 {
@@ -26,33 +27,36 @@ namespace qlm
             const Image<ImageFormat::GRAY, T> img_prev_l = pyr_prev_img.layers[level];
             const Image<ImageFormat::GRAY, T> img_next_l = pyr_next_img.layers[level];
 
-            Image<ImageFormat::GRAY, int16_t> I_x = SobelX<uint8_t, int16_t>(img_prev_l, sobel_kernel_size);
-		    Image<ImageFormat::GRAY, int16_t> I_y = SobelY<uint8_t, int16_t>(img_prev_l, sobel_kernel_size);
+            const Image<ImageFormat::GRAY, int16_t> I_x = SobelX<uint8_t, int16_t>(img_prev_l, sobel_kernel_size);
+		    const Image<ImageFormat::GRAY, int16_t> I_y = SobelY<uint8_t, int16_t>(img_prev_l, sobel_kernel_size);
 
             const Image<ImageFormat::GRAY, float> I_xx = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_x, 1.0f, OverFlowFlag::WRAP);
             const Image<ImageFormat::GRAY, float> I_yy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_y, 1.0f, OverFlowFlag::WRAP);
             const Image<ImageFormat::GRAY, float> I_xy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_y, 1.0f, OverFlowFlag::WRAP);
 
-            Image<ImageFormat::GRAY, float> S_xx = BoxFilter<ImageFormat::GRAY, float, float>(I_xx, win_size.width, win_size.height, false);
-            Image<ImageFormat::GRAY, float> S_yy = BoxFilter<ImageFormat::GRAY, float, float>(I_yy, win_size.width, win_size.height, false);
-            Image<ImageFormat::GRAY, float> S_xy = BoxFilter<ImageFormat::GRAY, float, float>(I_xy, win_size.width, win_size.height, false);
+            const Image<ImageFormat::GRAY, float> S_xx = BoxFilter<ImageFormat::GRAY, float, float>(I_xx, win_size.width, win_size.height, false);
+            const Image<ImageFormat::GRAY, float> S_yy = BoxFilter<ImageFormat::GRAY, float, float>(I_yy, win_size.width, win_size.height, false);
+            const Image<ImageFormat::GRAY, float> S_xy = BoxFilter<ImageFormat::GRAY, float, float>(I_xy, win_size.width, win_size.height, false);
 
             const float level_scale = static_cast<float>(1 << level);
 
             for (int i = 0; i < prev_pts.size(); i++)
             {
-                const int x_loc = static_cast<int>(next_pts[i].point.x / level_scale);
-                const int y_loc = static_cast<int>(next_pts[i].point.y / level_scale);
+                const Point<float> prev_pt_loc = prev_pts[i].point / level_scale;
+                const Point<float> next_pt_loc = next_pts[i].point / level_scale;
+
+                const int x_loc = static_cast<int>(prev_pt_loc.x);
+                const int y_loc = static_cast<int>(prev_pt_loc.y);
 
                 // initial guess for the next point
-                float u = (initial_guess[i].point.x - next_pts[i].point.x) / level_scale;
-                float v = (initial_guess[i].point.y - next_pts[i].point.y) / level_scale;
+                float u = next_pt_loc.x - prev_pt_loc.x;
+                float v = next_pt_loc.y - prev_pt_loc.y;
 
                 // Iterative Newton-Raphson
                 for(int k = 0; k < criteria.max_count; k++)
                 {
                     // displacement for the current iteration
-                    const Image<ImageFormat::GRAY, uint8_t> img_nex_k = Translate(img_next_l, (static_cast<int>(u), static_cast<int>(v)));
+                    const Image<ImageFormat::GRAY, uint8_t> img_nex_k = Translate(img_next_l,  Point<float>{u, v});
                     const Image<ImageFormat::GRAY, int16_t> I_t = Subtract<uint8_t, int16_t>(img_nex_k, img_prev_l);
 
                     const Image<ImageFormat::GRAY, float> I_xt = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_t, 1.0f, OverFlowFlag::WRAP);
@@ -64,20 +68,25 @@ namespace qlm
                     /*
                         estimate the optical flow :-
 
-                        u = (S_Ixy * S_Iyt - S_Iyy * S_Ixt) / (S_Ixx * S_Iyy - S_Ixy * S_Ixy)
-                        v = (S_Ixy * S_Ixt - S_Ixx * S_Iyt) / (S_Ixx * S_Iyy - S_Ixy * S_Ixy)
+                        u = (S_xy * S_yt - S_yy * S_xt) / (S_xx * S_yy - S_xy * S_xy)
+                        v = (S_xy * S_xt - S_xx * S_yt) / (S_xx * S_yy - S_xy * S_xy)
                     */
-                    const float denominator = (S_Ixx.GetPixel(x_loc, y_loc).v * S_Iyy.GetPixel(x_loc, y_loc).v - S_Ixy.GetPixel(x_loc, y_loc).v * S_Ixy.GetPixel(x_loc, y_loc).v);
+                    const float denominator = (S_xx.GetPixel(x_loc, y_loc).v * S_yy.GetPixel(x_loc, y_loc).v - S_xy.GetPixel(x_loc, y_loc).v * S_xy.GetPixel(x_loc, y_loc).v);
                 
-                    const float du = (S_Ixy.GetPixel(x_loc, y_loc).v * S_Iyt.GetPixel(x_loc, y_loc).v - S_Iyy.GetPixel(x_loc, y_loc).v * S_Ixt.GetPixel(x_loc, y_loc).v) / denominator;
-                    const float dv = (S_Ixy.GetPixel(x_loc, y_loc).v * S_Ixt.GetPixel(x_loc, y_loc).v - S_Ixx.GetPixel(x_loc, y_loc).v * S_Iyt.GetPixel(x_loc, y_loc).v) / denominator;
+                    const float du = (S_xy.GetPixel(x_loc, y_loc).v * S_yt.GetPixel(x_loc, y_loc).v - S_yy.GetPixel(x_loc, y_loc).v * S_xt.GetPixel(x_loc, y_loc).v) / denominator;
+                    const float dv = (S_xy.GetPixel(x_loc, y_loc).v * S_xt.GetPixel(x_loc, y_loc).v - S_xx.GetPixel(x_loc, y_loc).v * S_yt.GetPixel(x_loc, y_loc).v) / denominator;
 
                     // guess for the next iteration
                     u += du;
                     v += dv;
+
+                    if (du * du + dv * dv < criteria.epsilon * criteria.epsilon)
+                    {
+                        break;
+                    }
                 }
                
-                // final optical for the current level
+                // final optical flow for the current level
                 next_pts[i].point.x += u * level_scale;
                 next_pts[i].point.y += v * level_scale;
             }

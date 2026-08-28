@@ -56,6 +56,11 @@ namespace qlm
 		{
 			return Point<T>(x - other.x, y - other.y);
 		}
+
+		Point<T> operator/(const float scalar) const
+		{
+			return Point<T>(x / scalar, y / scalar);
+		}
 	};
 
     /**********************************************************/
