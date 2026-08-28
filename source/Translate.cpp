@@ -21,21 +21,21 @@ namespace qlm
 			for (int x = 0; x < img_width; x++)
 			{
 				// translate the pixel coordinates by the displacement vector
-				S x_n = x + displacement.x;
-				S y_n = y + displacement.y;
+				S in_x = x - displacement.x;
+				S in_y = y - displacement.y;
 
 				// Check if the new coordinates are within the bounds of the output image.
-				if (x_n < img_width && x_n >= 0 && y_n < img_height && y_n >= 0)
+				if (in_x < img_width && in_x >= 0 && in_y < img_height && in_y >= 0)
 				{
 					Pixel<frmt, T> out_pix;
 					if constexpr(std::is_same_v<S, int>)
 					{
-						out_pix = in.GetPixel(x_n, y_n);
+						out_pix = in.GetPixel(in_x, in_y);
 					}
 					else
 					{
 						// Perform bilinear interpolation
-						out_pix = BilinearInterpolation(in, x_n, y_n, BorderMode<frmt, T>{});
+						out_pix = BilinearInterpolation(in, in_x, in_y, BorderMode<frmt, T>{});
 					}
 
 					out.SetPixel(x, y, out_pix);
@@ -47,13 +47,9 @@ namespace qlm
 	}
 
 
-	template Image<ImageFormat::RGB, uint8_t, int>  Translate(const Image<ImageFormat::RGB, uint8_t>&, const Point<int>&, const Pixel< ImageFormat::RGB, uint8_t >&);
-	template Image<ImageFormat::GRAY, uint8_t, int> Translate(const Image<ImageFormat::GRAY, uint8_t>&, const Point<int>&, const Pixel<ImageFormat::GRAY, uint8_t>&);
-	template Image<ImageFormat::RGB, int16_t, int>  Translate(const Image<ImageFormat::RGB, int16_t>&, const Point<int>&, const Pixel<ImageFormat::RGB, int16_t>&);
-	template Image<ImageFormat::GRAY, int16_t, int> Translate(const Image<ImageFormat::GRAY, int16_t>&, const Point<int>&, const Pixel<ImageFormat::GRAY, int16_t>&);
+	template Image<ImageFormat::RGB, uint8_t>  Translate(const Image<ImageFormat::RGB, uint8_t>&, const Point<int>&, const Pixel< ImageFormat::RGB, uint8_t >&);
+	template Image<ImageFormat::GRAY, uint8_t> Translate(const Image<ImageFormat::GRAY, uint8_t>&, const Point<int>&, const Pixel<ImageFormat::GRAY, uint8_t>&);
 
-	template Image<ImageFormat::RGB, uint8_t, float>  Translate(const Image<ImageFormat::RGB, uint8_t>&, const Point<float>&, const Pixel< ImageFormat::RGB, uint8_t >&);
-	template Image<ImageFormat::GRAY, uint8_t, float> Translate(const Image<ImageFormat::GRAY, uint8_t>&, const Point<float>&, const Pixel<ImageFormat::GRAY, uint8_t>&);
-	template Image<ImageFormat::RGB, int16_t, float>  Translate(const Image<ImageFormat::RGB, int16_t>&, const Point<float>&, const Pixel<ImageFormat::RGB, int16_t>&);
-	template Image<ImageFormat::GRAY, int16_t, float> Translate(const Image<ImageFormat::GRAY, int16_t>&, const Point<float>&, const Pixel<ImageFormat::GRAY, int16_t>&);
+	template Image<ImageFormat::RGB, uint8_t>  Translate(const Image<ImageFormat::RGB, uint8_t>&, const Point<float>&, const Pixel< ImageFormat::RGB, uint8_t >&);
+	template Image<ImageFormat::GRAY, uint8_t> Translate(const Image<ImageFormat::GRAY, uint8_t>&, const Point<float>&, const Pixel<ImageFormat::GRAY, uint8_t>&);
 }

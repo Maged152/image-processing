@@ -9,10 +9,10 @@ You can check the implementation [here](../../../../source/Translate.cpp)
 ```c++
 namespace qlm
 {
-	template<ImageFormat frmt, pixel_t T>
+	template<ImageFormat frmt, pixel_t T, typename S>
 	Image<frmt, T> Translate(
 		const Image<frmt, T>& in,
-		const Point<int>& displacement,
+		const Point<S>& displacement,
 		const Pixel<frmt, T>& pix = Pixel<frmt, T>{});
 }
 ```
@@ -22,8 +22,15 @@ namespace qlm
 | Name          | Type         | Description                                                         |
 |---------------|--------------|---------------------------------------------------------------------|
 | `in`          | `Image`      | The input image.                                                    |
-| `displacement`| `Point`      | displacement                                                        |
+| `displacement`| `Point<S>`   | displacement                                                        |
 | `pix`         | `Pixel`      | The pixel used to fill the background                               |
+
+The template type `S` controls how the image is sampled while translating:
+
+| Type    | Description                                                          |
+|---------|----------------------------------------------------------------------|
+| `int`   | Uses nearest-neighbor sampling (`GetPixel`).                         |
+| `float` | Uses bilinear interpolation for smoother sub-pixel displacement.     |
 
 ## Return Value
 The function returns an image of type `Image<frmt, T>`.
@@ -45,7 +52,7 @@ The function returns an image of type `Image<frmt, T>`.
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	qlm::Point displacement{ 50 ,50 };
+	qlm::Point<int> displacement{ 50 ,50 };
 	// do the operation
 	t.Start();
 	auto out = qlm::Translate(in, displacement);

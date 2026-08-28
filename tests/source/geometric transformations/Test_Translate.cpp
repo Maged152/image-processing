@@ -16,7 +16,7 @@ TEST(Test_shakhbat_cv, Translate)
 		alpha = false;
 
 
-	qlm::Point displacement{ 50 ,50 };
+	qlm::Point<int> displacement{ 50 ,50 };
 	// do the operation
 	t.Start();
 	auto out = qlm::Translate(in, displacement);
