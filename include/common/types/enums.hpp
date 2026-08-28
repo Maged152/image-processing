@@ -49,4 +49,10 @@ namespace qlm
 		SATURATE,
 		WRAP
 	};
+
+	enum class KPStatusFlag
+	{
+		TRACKED,
+		UNTRACKED
+	};
 }

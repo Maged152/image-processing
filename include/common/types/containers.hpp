@@ -96,12 +96,12 @@ namespace qlm
 		float angle;
 		float response;
 		float error;
-		int status;
+		KPStatusFlag status;
 		int level;
 		int class_id;
 
 		// Constructor
-		KeyPoint(Point<T> _pt, float _response = 0, float _scale = 0, float _angle = -1, int _level = 0, int _class_id = -1, float _error = -1, int _status = -1)
+		KeyPoint(Point<T> _pt, float _response = 0, float _scale = 0, float _angle = -1, int _level = 0, int _class_id = -1, float _error = -1, KPStatusFlag _status = KPStatusFlag::TRACKED)
 			: point(_pt), scale(_scale), angle(_angle), response(_response), error(_error), status(_status), level(_level), class_id(_class_id)
 		{}
 	};
