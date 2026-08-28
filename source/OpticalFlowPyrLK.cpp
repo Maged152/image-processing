@@ -27,8 +27,8 @@ namespace qlm
             const Image<ImageFormat::GRAY, T> img_prev_l = pyr_prev_img.layers[level];
             const Image<ImageFormat::GRAY, T> img_next_l = pyr_next_img.layers[level];
 
-            const Image<ImageFormat::GRAY, int16_t> I_x = SobelX<uint8_t, int16_t>(img_prev_l, sobel_kernel_size);
-		    const Image<ImageFormat::GRAY, int16_t> I_y = SobelY<uint8_t, int16_t>(img_prev_l, sobel_kernel_size);
+            const Image<ImageFormat::GRAY, int16_t> I_x = SobelX<T, int16_t>(img_prev_l, sobel_kernel_size);
+		    const Image<ImageFormat::GRAY, int16_t> I_y = SobelY<T, int16_t>(img_prev_l, sobel_kernel_size);
 
             const Image<ImageFormat::GRAY, float> I_xx = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_x, 1.0f, OverFlowFlag::WRAP);
             const Image<ImageFormat::GRAY, float> I_yy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_y, 1.0f, OverFlowFlag::WRAP);
@@ -45,8 +45,28 @@ namespace qlm
                 const Point<float> prev_pt_loc = prev_pts[i].point / level_scale;
                 const Point<float> next_pt_loc = next_pts[i].point / level_scale;
 
-                const int x_loc = static_cast<int>(prev_pt_loc.x);
-                const int y_loc = static_cast<int>(prev_pt_loc.y);
+                const int x_loc = std::round(prev_pt_loc.x);
+                const int y_loc = std::round(prev_pt_loc.y);
+
+                if (next_pts[i].status == KPStatusFlag::UNTRACKED)
+                {
+                    continue;
+                }
+
+                //  calculates the minimum eigen value
+                const float ixx = S_xx.GetPixel(x_loc, y_loc).v;
+                const float ixy = S_xy.GetPixel(x_loc, y_loc).v;
+                const float iyy = S_yy.GetPixel(x_loc, y_loc).v;
+
+                float d = (ixx - iyy) * (ixx - iyy) + 4.0f * ixy * ixy;
+                d = std::max(d, 0.0f); // Ensure non-negative value for sqrt
+                const float min_eigenvalue =( (ixx + iyy - std::sqrt(d)) * 0.5f) / (win_size.width * win_size.height);
+
+                if (min_eigenvalue < min_eig_threshold)
+                {
+                    next_pts[i].status = KPStatusFlag::UNTRACKED;
+                    continue;
+                }
 
                 // initial guess for the next point
                 float u = next_pt_loc.x - prev_pt_loc.x;
@@ -56,8 +76,8 @@ namespace qlm
                 for(int k = 0; k < criteria.max_count; k++)
                 {
                     // displacement for the current iteration
-                    const Image<ImageFormat::GRAY, uint8_t> img_nex_k = Translate(img_next_l,  Point<float>{u, v});
-                    const Image<ImageFormat::GRAY, int16_t> I_t = Subtract<uint8_t, int16_t>(img_nex_k, img_prev_l);
+                    const Image<ImageFormat::GRAY, T> img_nex_k = Translate(img_next_l,  Point<float>{u, v});
+                    const Image<ImageFormat::GRAY, int16_t> I_t = Subtract<ImageFormat::GRAY, T, int16_t>(img_nex_k, img_prev_l);
 
                     const Image<ImageFormat::GRAY, float> I_xt = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_t, 1.0f, OverFlowFlag::WRAP);
                     const Image<ImageFormat::GRAY, float> I_yt = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_t, 1.0f, OverFlowFlag::WRAP);
@@ -87,11 +107,22 @@ namespace qlm
                 }
                
                 // final optical flow for the current level
-                next_pts[i].point.x += u * level_scale;
-                next_pts[i].point.y += v * level_scale;
+                next_pts[i].point.x = prev_pts[i].point.x + u * level_scale;
+                next_pts[i].point.y = prev_pts[i].point.y + v * level_scale;
+
+                // check if the next point is within the image bounds
+                if (next_pts[i].point.x < 0 || next_pts[i].point.x >= next_img.width || next_pts[i].point.y < 0 || next_pts[i].point.y >= next_img.height)
+                {
+                    next_pts[i].status = KPStatusFlag::UNTRACKED;
+                }
             }
         }
 
         return next_pts;
     }
+
+    template std::vector<KeyPoint<float>> OpticalFlowPyrLK<uint8_t>(
+        const Image<ImageFormat::GRAY, uint8_t> &prev_img, const Image<ImageFormat::GRAY, uint8_t> &next_img, 
+        const std::vector<KeyPoint<float>> &prev_pts, const std::vector<KeyPoint<float>> &initial_guess, 
+        const Size &win_size, const TermCriteria &criteria, const int max_level, const double min_eig_threshold);
 } 
