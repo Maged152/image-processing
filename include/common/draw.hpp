@@ -138,6 +138,54 @@ namespace qlm
     }
 
     template<ImageFormat frmt, pixel_t T>
+    Image<frmt, T> DrawArrowedLine(const Image<frmt, T>& in, const Line& line, const Pixel<frmt, T>& c, double tipLength = 0.1)
+    {
+        Image<frmt, T> out = in;
+
+        constexpr double PI = 3.14159265358979323846;
+
+        // Start and end (tip) points of the arrow
+        const int x0 = line.x0;
+        const int y0 = line.y0;
+        const int x1 = line.x1;
+        const int y1 = line.y1;
+
+        // 1. Draw the main body of the arrow
+        out = DrawLine(out, line, c);
+
+        // Length of the arrow shaft (double to avoid integer overflow on wide images)
+        const double line_length = std::sqrt(double(x1 - x0) * double(x1 - x0) +
+                                             double(y1 - y0) * double(y1 - y0));
+
+        // Degenerate cases: no line, or no tip requested
+        if (line_length <= 0.0 || tipLength <= 0.0)
+        {
+            return out;
+        }
+
+        // Size of the arrow head as a fraction of the total length
+        const double tip_size = line_length * tipLength;
+
+        // Angle of the arrow (points from the start toward the tip); range [-PI, PI]
+        const double angle = std::atan2(double(y0) - double(y1), double(x0) - double(x1));
+
+        constexpr double offset = PI / 4.0; // 45 degrees (matching OpenCV)
+
+        // Compute the two wing points of the arrow head
+        const int wx1 = int(x1 + tip_size * std::cos(angle + offset));
+        const int wy1 = int(y1 + tip_size * std::sin(angle + offset));
+
+        const int wx2 = int(x1 + tip_size * std::cos(angle - offset));
+        const int wy2 = int(y1 + tip_size * std::sin(angle - offset));
+
+        // 2. Draw the two wings of the arrow head
+        out = DrawLine(out, Line(x1, y1, wx1, wy1), c);
+        out = DrawLine(out, Line(x1, y1, wx2, wy2), c);
+
+        return out;
+    }
+
+    template<ImageFormat frmt, pixel_t T>
     Image<frmt, T> DrawRectangle(const Image<frmt, T>& in, const Rectangle& rec, const Pixel<frmt, T>& c) 
     {
         // Copy the input image to avoid modifying it
