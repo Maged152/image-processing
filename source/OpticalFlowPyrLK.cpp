@@ -12,7 +12,7 @@ namespace qlm
     std::vector<KeyPoint<float>> OpticalFlowPyrLK(
         const Image<ImageFormat::GRAY, T> &prev_img, const Image<ImageFormat::GRAY, T> &next_img, 
         const std::vector<KeyPoint<float>> &prev_pts, const std::vector<KeyPoint<float>> &initial_guess, 
-        const Size &win_size, const TermCriteria &criteria, const int max_level, const double min_eig_threshold)
+        const Size &win_size, const int max_level, const TermCriteria &criteria,const double min_eig_threshold)
     {
         std::vector<KeyPoint<float>> next_pts = (prev_pts.size() == initial_guess.size()) ? initial_guess : prev_pts;
         
@@ -124,5 +124,5 @@ namespace qlm
     template std::vector<KeyPoint<float>> OpticalFlowPyrLK<uint8_t>(
         const Image<ImageFormat::GRAY, uint8_t> &prev_img, const Image<ImageFormat::GRAY, uint8_t> &next_img, 
         const std::vector<KeyPoint<float>> &prev_pts, const std::vector<KeyPoint<float>> &initial_guess, 
-        const Size &win_size, const TermCriteria &criteria, const int max_level, const double min_eig_threshold);
+        const Size &win_size, const int max_level, const TermCriteria &criteria, const double min_eig_threshold);
 } 

@@ -11,8 +11,8 @@ namespace qlm
         const std::vector<KeyPoint<float>>& prev_pts,
         const std::vector<KeyPoint<float>>& initial_guess,
         const Size& win_size = Size(21, 21),
-        const TermCriteria& criteria = TermCriteria(30, 0.01),
         const int max_level = 3,
+        const TermCriteria& criteria = TermCriteria(30, 0.01),
         const double min_eig_threshold = 1e-4
     );
 }
