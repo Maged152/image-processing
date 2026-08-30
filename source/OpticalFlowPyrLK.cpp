@@ -14,6 +14,7 @@ namespace qlm
         const std::vector<KeyPoint<float>> &prev_pts, const std::vector<KeyPoint<float>> &initial_guess, 
         const Size &win_size, const int max_level, const TermCriteria &criteria,const double min_eig_threshold)
     {
+        constexpr float FLT_EPSILON = 1e-6f;
         std::vector<KeyPoint<float>> next_pts = (prev_pts.size() == initial_guess.size()) ? initial_guess : prev_pts;
         
         // create image pyramid for the input frames
@@ -60,13 +61,28 @@ namespace qlm
 
                 float d = (ixx - iyy) * (ixx - iyy) + 4.0f * ixy * ixy;
                 d = std::max(d, 0.0f); // Ensure non-negative value for sqrt
-                const float min_eigenvalue =( (ixx + iyy - std::sqrt(d)) * 0.5f) / (win_size.width * win_size.height);
+                const float min_eigenvalue = ((ixx + iyy - std::sqrt(d)) * 0.5f) / (win_size.width * win_size.height);
 
+                // Sobel + non-normalized box-sum produce λ_min in raw (gradient^2) units, not
+                // OpenCV's FLT_SCALE-adjusted units. So min_eig_threshold must be chosen in these units.
+                // e.g. min_eig_threshold ≈ 1e3 when win = 21x21 (matches OpenCV's 1e-4 behavior).
                 if (min_eigenvalue < min_eig_threshold)
                 {
-                    next_pts[i].status = KPStatusFlag::UNTRACKED;
-                    continue;
+                    if (level == 0) next_pts[i].status = KPStatusFlag::UNTRACKED;
+                    continue;  // coarser levels just skip, keep point
                 }
+
+                const float denominator = ixx * iyy - ixy * ixy;
+
+                // Ill-conditioned structure tensor: flat region or single-direction edge.
+                // Inverting it would blow up the Newton step, so abandon this point.
+                if (std::abs(denominator) < FLT_EPSILON)
+                {
+                    if (level == 0) next_pts[i].status = KPStatusFlag::UNTRACKED;
+                    continue;                 // skip this keypoint entirely at this level
+                }
+
+                const float inv_denom = 1.0f / denominator;
 
                 // initial guess for the next point
                 float u = next_pt_loc.x - prev_pt_loc.x;
@@ -76,7 +92,7 @@ namespace qlm
                 for(int k = 0; k < criteria.max_count; k++)
                 {
                     // displacement for the current iteration
-                    const Image<ImageFormat::GRAY, T> img_nex_k = Translate(img_next_l,  Point<float>{u, v});
+                    const Image<ImageFormat::GRAY, T> img_nex_k = Translate(img_next_l,  Point<float>{-u, -v});
                     const Image<ImageFormat::GRAY, int16_t> I_t = Subtract<ImageFormat::GRAY, T, int16_t>(img_nex_k, img_prev_l);
 
                     const Image<ImageFormat::GRAY, float> I_xt = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_t, 1.0f, OverFlowFlag::WRAP);
@@ -91,10 +107,12 @@ namespace qlm
                         u = (S_xy * S_yt - S_yy * S_xt) / (S_xx * S_yy - S_xy * S_xy)
                         v = (S_xy * S_xt - S_xx * S_yt) / (S_xx * S_yy - S_xy * S_xy)
                     */
-                    const float denominator = (S_xx.GetPixel(x_loc, y_loc).v * S_yy.GetPixel(x_loc, y_loc).v - S_xy.GetPixel(x_loc, y_loc).v * S_xy.GetPixel(x_loc, y_loc).v);
                 
-                    const float du = (S_xy.GetPixel(x_loc, y_loc).v * S_yt.GetPixel(x_loc, y_loc).v - S_yy.GetPixel(x_loc, y_loc).v * S_xt.GetPixel(x_loc, y_loc).v) / denominator;
-                    const float dv = (S_xy.GetPixel(x_loc, y_loc).v * S_xt.GetPixel(x_loc, y_loc).v - S_xx.GetPixel(x_loc, y_loc).v * S_yt.GetPixel(x_loc, y_loc).v) / denominator;
+                    const float ixt = S_xt.GetPixel(x_loc, y_loc).v;
+                    const float iyt = S_yt.GetPixel(x_loc, y_loc).v;
+
+                    const float du = (ixy * iyt - iyy * ixt) * inv_denom;
+                    const float dv = (ixy * ixt - ixx * iyt) * inv_denom;
 
                     // guess for the next iteration
                     u += du;
