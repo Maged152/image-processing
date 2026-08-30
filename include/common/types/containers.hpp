@@ -105,11 +105,14 @@ namespace qlm
 			: point(_pt), scale(_scale), angle(_angle), response(_response), error(_error), status(_status), level(_level), class_id(_class_id)
 		{}
 
+		KeyPoint()
+		{}
+
 		// cast operator
 		template<typename T2>
         operator KeyPoint<T2>() const
 		{
-			KeyPoint<T2> result {Point<T2>{point.x, point.y}, response, scale, angle, level, class_id, error, status};
+			KeyPoint<T2> result {Point<T2>{(T2)point.x, (T2)point.y}, response, scale, angle, level, class_id, error, status};
 
 			return result;
 		}

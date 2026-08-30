@@ -7,7 +7,7 @@
 namespace qlm
 {
     template <pixel_t T>
-    std::vector<KeyPoint<int>> qlm::GoodFeaturesToTrack(
+    std::vector<KeyPoint<float>> qlm::GoodFeaturesToTrack(
         const Image<ImageFormat::GRAY, T> &in, 
         const int max_corners, 
         const double quality_level, 
@@ -27,7 +27,7 @@ namespace qlm
 
         const int max_num_corners = max_corners <= 0 ? in.width * in.height : max_corners;
 
-        std::vector<KeyPoint<int>> out;
+        std::vector<KeyPoint<float>> out;
         constexpr float neg_inf = std::numeric_limits<float>::lowest();
         const double min_distance_squared = min_distance * min_distance;
         const int valid_distance = block_size / 2 + gradient_size / 2;
@@ -98,7 +98,7 @@ namespace qlm
         }
 
         // stage 5: non-maximum suppression
-        std::vector<KeyPoint<int>> corners;
+        std::vector<KeyPoint<float>> corners;
         constexpr int num_neighbors = 8;
         static constexpr qlm::Point<int> neighbor_idx[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
 
@@ -132,13 +132,13 @@ namespace qlm
 
                 if (is_local_maximum)
                 {
-                    corners.emplace_back(Point<int>(x, y), response_value, 1.0f); // use scale to track if the corner is removed or not : 1 -> exists, 0 -> removed 
+                    corners.emplace_back(Point<float>(x, y), response_value, 1.0f); // use scale to track if the corner is removed or not : 1 -> exists, 0 -> removed 
                 }
             }
         }
 
         // stage 6: radius NMS
-        std::sort(corners.begin(), corners.end(), [](const KeyPoint<int>& a, const KeyPoint<int>& b) {
+        std::sort(corners.begin(), corners.end(), [](const KeyPoint<float>& a, const KeyPoint<float>& b) {
             return a.response > b.response;
         });
 
@@ -173,7 +173,7 @@ namespace qlm
         return out;
     }
 
-    template std::vector<KeyPoint<int>> 
+    template std::vector<KeyPoint<float>> 
     qlm::GoodFeaturesToTrack<uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&, 
         const int, const double, 
         const double, const int, 

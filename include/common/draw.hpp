@@ -4,8 +4,8 @@
 
 namespace qlm
 {
-    template<ImageFormat frmt, pixel_t T>
-    Image<frmt, T> DrawCircle(const Image<frmt, T>& in, const Circle<int>& circle, const Pixel<frmt, T>& color, int thickness = 1)
+    template<ImageFormat frmt, pixel_t T, pixel_t T2>
+    Image<frmt, T> DrawCircle(const Image<frmt, T>& in, const Circle<T2>& circle, const Pixel<frmt, T>& color, int thickness = 1)
     {
         Image<frmt, T> out = in;
 

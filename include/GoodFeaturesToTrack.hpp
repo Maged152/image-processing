@@ -5,7 +5,7 @@
 namespace qlm
 {
 	template<pixel_t T = uint8_t>
-	std::vector<KeyPoint<int>> GoodFeaturesToTrack(
+	std::vector<KeyPoint<float>> GoodFeaturesToTrack(
 		const Image<ImageFormat::GRAY, T>& in,
 		const int max_corners,
 		const double quality_level, 

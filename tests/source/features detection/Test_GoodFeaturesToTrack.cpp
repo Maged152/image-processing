@@ -72,7 +72,7 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
     t.End();
 
     // draw corners
-    qlm::Circle<int> circle = { .radius = 3 };
+    qlm::Circle<float> circle = { .radius = 3 };
     qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{255, 0, 255};
 
     for (auto& i : out)
@@ -82,8 +82,6 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
     }
 
     test::PrintTime(t);
-
-    in.SaveToFile("result2.jpg", false);
 
     // reread output image
     in = test::ReReadImage(in);
