@@ -13,7 +13,23 @@ namespace qlm
         const int center_y = circle.center.y;
         const int radius = circle.radius;
 
-        if (thickness <= 0) {
+        if (thickness < 0)
+        {
+            // Filled disk
+            for (int dy = -radius; dy <= radius; dy++)
+            {
+                for (int dx = -radius; dx <= radius; dx++)
+                {
+                    if (dx * dx + dy * dy <= radius * radius)
+                    {
+                        out.SetPixel(center_x + dx, center_y + dy, color);
+                    }
+                }
+            }
+            return out;
+        }
+
+        if (thickness == 0) {
             return out;
         }
 

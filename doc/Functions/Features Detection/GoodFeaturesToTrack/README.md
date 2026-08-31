@@ -10,7 +10,7 @@ You can check the implementation [here](../../../../source/GoodFeaturesToTrack.c
 namespace qlm
 {
     template<pixel_t T = uint8_t>
-    std::vector<KeyPoint<int>> GoodFeaturesToTrack(
+    std::vector<KeyPoint<float>> GoodFeaturesToTrack(
         const Image<ImageFormat::GRAY, T>& in,
         const int max_corners,
         const double quality_level,
@@ -39,7 +39,7 @@ namespace qlm
 | `border_mode`        | `BorderMode`    | Pixel extrapolation method used for derivative filtering.                                                |
 
 ## Return Value
-The function returns a vector of key-points(corners) of type `std::vector<KeyPoint<int>>`.
+The function returns a vector of key-points(corners) of type `std::vector<KeyPoint<float>>`.
 
 ## Example
 
@@ -80,7 +80,7 @@ The function returns a vector of key-points(corners) of type `std::vector<KeyPoi
     std::cout << "Time = " << t.ElapsedString() << "\n";
 
     // Draw the detected corners on the input image.
-    qlm::Circle<int> circle{ .radius = 3 };
+    qlm::Circle<float> circle{ .radius = 3 };
     qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{255, 0, 255};
 
     for (const auto& corner : corners)
