@@ -18,12 +18,12 @@ namespace qlm
         std::vector<KeyPoint<float>> next_pts = (prev_pts.size() == initial_guess.size()) ? initial_guess : prev_pts;
         
         // create image pyramid for the input frames
-        const Pyramid<ImageFormat::GRAY, T> pyr_prev_img = GaussianPyramid(prev_img, max_level);
-        const Pyramid<ImageFormat::GRAY, T> pyr_next_img = GaussianPyramid(next_img, max_level);
+        const Pyramid<ImageFormat::GRAY, T> pyr_prev_img = GaussianPyramid(prev_img, max_level + 1);
+        const Pyramid<ImageFormat::GRAY, T> pyr_next_img = GaussianPyramid(next_img, max_level + 1);
 
         constexpr int sobel_kernel_size = 3;
 
-        for (int level = max_level - 1; level >= 0; level--)
+        for (int level = max_level; level >= 0; level--)
         {
             const Image<ImageFormat::GRAY, T> img_prev_l = pyr_prev_img.layers[level];
             const Image<ImageFormat::GRAY, T> img_next_l = pyr_next_img.layers[level];
