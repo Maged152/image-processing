@@ -19,19 +19,24 @@ TEST(Test_shakhbat_cv, Scharr)
 	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 
 	t.Start();
-	auto out = qlm::Scharr<uint8_t, int16_t>(gray);
+	auto out_x = qlm::ScharrX<uint8_t, int16_t>(gray);
+    auto out_y= qlm::ScharrY<uint8_t, int16_t>(gray);
 	t.End();
 
+	// calculate magnitude
+    auto mag = qlm::Magnitude(out_x, out_y, true);
+
 	// S16 to U8
-	auto x = qlm::ConvertScharrDepth(out.scharr_x);
-	auto y = qlm::ConvertScharrDepth(out.scharr_y);
+	auto x = qlm::ConvertScharrDepth(out_x);
+	auto y = qlm::ConvertScharrDepth(out_y);
+    auto m = qlm::ConvertBitDepth<qlm::ImageFormat::GRAY, uint16_t, uint8_t>(mag);
 
 	test::PrintTime(t);
 
 	// reread output image
 	x = test::ReReadImage(x);
 	y = test::ReReadImage(y);
-	auto m = test::ReReadImage(out.magnitude);
+	m = test::ReReadImage(m);
 
 	// read reference image
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> ref;

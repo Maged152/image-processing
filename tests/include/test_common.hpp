@@ -113,6 +113,8 @@ namespace test
         // check the dimensions
         EXPECT_EQ(in1.width, in2.width);
         EXPECT_EQ(in1.height, in2.height);
+
+        bool is_correct = true;
        
         // check the pixels
         for (int y = 0; y < in1.height; y++)
@@ -120,9 +122,21 @@ namespace test
             for (int x = 0; x < in1.width; x++)
             {
                 const bool res = ComparePixels(in1.GetPixel(x, y), in2.GetPixel(x, y), threshold);
-                EXPECT_EQ(res, true);
+                if (!res)
+                {
+                    is_correct = false;
+                    std::cout << "Pixel mismatch at (" << x << ", " << y << ")" << ANSI_TXT_DFT << std::endl;
+                    break;
+                }
+            }
+
+            if (!is_correct)
+            {
+                break;
             }
         }
+
+        EXPECT_EQ(is_correct, true);
     }
 
     template <qlm::ImageFormat frmt, typename T>
