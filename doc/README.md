@@ -9,6 +9,7 @@ Here you can find the implementation of :
     * [Gaussian](Functions/Filters/Gaussian)
     * [Box Filter](Functions/Filters/BoxFilter)
     * [Gaussian Pyramid](Functions/Filters/GaussianPyramid)
+    * [Scharr](Functions/Filters/Scharr)
 * Geometric Transformations:
     * [Scale](Functions/Geometric%20Transformations/Scale)
     * [Resize](Functions/Geometric%20Transformations/Resize)

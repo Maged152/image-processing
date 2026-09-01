@@ -21,7 +21,7 @@ To know the existing presets
     $ cmake -S <source_dir> --list-presets
 
 ## Build
-    $ cmake --build <build_dir>
+    $ cmake --build <build_dir> --parallel <num_jobs>
 
 ## Run Test Cases
     $ cmake --build <build_dir> --target test
