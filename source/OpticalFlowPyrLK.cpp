@@ -21,15 +21,15 @@ namespace qlm
         const Pyramid<ImageFormat::GRAY, T> pyr_prev_img = GaussianPyramid(prev_img, max_level + 1);
         const Pyramid<ImageFormat::GRAY, T> pyr_next_img = GaussianPyramid(next_img, max_level + 1);
 
-        constexpr int sobel_kernel_size = 3;
+        constexpr int gradient_size = 3;
 
         for (int level = max_level; level >= 0; level--)
         {
             const Image<ImageFormat::GRAY, T> img_prev_l = pyr_prev_img.layers[level];
             const Image<ImageFormat::GRAY, T> img_next_l = pyr_next_img.layers[level];
 
-            const Image<ImageFormat::GRAY, int16_t> I_x = SobelX<T, int16_t>(img_prev_l, sobel_kernel_size);
-		    const Image<ImageFormat::GRAY, int16_t> I_y = SobelY<T, int16_t>(img_prev_l, sobel_kernel_size);
+            const Image<ImageFormat::GRAY, int16_t> I_x = SobelX<T, int16_t>(img_prev_l, gradient_size);
+		    const Image<ImageFormat::GRAY, int16_t> I_y = SobelY<T, int16_t>(img_prev_l, gradient_size);
 
             const Image<ImageFormat::GRAY, float> I_xx = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_x, 1.0f, OverFlowFlag::WRAP);
             const Image<ImageFormat::GRAY, float> I_yy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_y, 1.0f, OverFlowFlag::WRAP);
@@ -43,16 +43,13 @@ namespace qlm
 
             for (int i = 0; i < prev_pts.size(); i++)
             {
+                if (next_pts[i].status == KPStatusFlag::UNTRACKED) continue;
+
                 const Point<float> prev_pt_loc = prev_pts[i].point / level_scale;
                 const Point<float> next_pt_loc = next_pts[i].point / level_scale;
 
                 const int x_loc = std::round(prev_pt_loc.x);
                 const int y_loc = std::round(prev_pt_loc.y);
-
-                if (next_pts[i].status == KPStatusFlag::UNTRACKED)
-                {
-                    continue;
-                }
 
                 //  calculates the minimum eigen value
                 const float ixx = S_xx.GetPixel(x_loc, y_loc).v;

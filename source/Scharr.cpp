@@ -3,7 +3,6 @@
 #include "Scharr.hpp"
 #include "SepFilter2D.hpp"
 #include <cmath>
-#include <vector>
 
 
 namespace qlm
