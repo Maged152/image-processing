@@ -7,7 +7,17 @@
 
 namespace qlm
 {
-	// Gaussian elimination 
+	// Minimum eigen value of the 2x2 structure tensor [[ixx, ixy], [ixy, iyy]].
+	// This is the Shi-Tomasi corner response
+	inline float MinEigenValue(const float ixx, const float ixy,
+	                           const float iyy, const float normalize_to = 0.0f)
+	{
+		const float d = std::max((ixx - iyy) * (ixx - iyy) + 4.0f * ixy * ixy, 0.0f);
+		const float lam_min = (ixx + iyy - std::sqrt(d)) * 0.5f;
+		return normalize_to > 0.0f ? lam_min / normalize_to : lam_min;
+	}
+
+	// Gaussian elimination
 	inline void Solve(Matrix& aug_mat, Matrix& sol)
 	{
 		// check the dimensions

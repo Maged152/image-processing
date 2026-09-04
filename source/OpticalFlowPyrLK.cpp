@@ -1,4 +1,5 @@
 #include "OpticalFlowPyrLK.hpp"
+#include "common/solve.hpp"
 #include "GaussianPyramid.hpp"
 #include "Sobel.hpp"
 #include "BoxFilter.hpp"
@@ -62,23 +63,27 @@ namespace qlm
 
                 const Point<float> prev_pt_loc = prev_pts[i].point / level_scale;
 
-                //  calculates the minimum eigen value
+                // unified skip: at the finest level the point is abandoned,
+                // at coarser levels the flow estimate is carried to the next level
+                auto skip_point = [&]()
+                {
+                    if (level == 0) next_pts[i].status = KPStatusFlag::UNTRACKED;
+                    else { flow[i].x *= 2.0f; flow[i].y *= 2.0f; }
+                };
+
+                // calculates the minimum eigen value
                 const float ixx = BilinearInterpolation(S_xx, prev_pt_loc.x, prev_pt_loc.y, border_mode_f).v;
                 const float ixy = BilinearInterpolation(S_xy, prev_pt_loc.x, prev_pt_loc.y, border_mode_f).v;
                 const float iyy = BilinearInterpolation(S_yy, prev_pt_loc.x, prev_pt_loc.y, border_mode_f).v;
 
-                float d = (ixx - iyy) * (ixx - iyy) + 4.0f * ixy * ixy;
-                d = std::max(d, 0.0f); // Ensure non-negative value for sqrt
-                const float min_eigenvalue = ((ixx + iyy - std::sqrt(d)) * 0.5f) / (win_size.width * win_size.height);
-
                 // Sobel + non-normalized box-sum produce λ_min in raw (gradient^2) units, not
                 // OpenCV's FLT_SCALE-adjusted units. So min_eig_threshold must be chosen in these units.
                 // e.g. min_eig_threshold ≈ 1e3 when win = 21x21 (matches OpenCV's 1e-4 behavior).
+                const float min_eigenvalue = MinEigenValue(ixx, ixy, iyy, static_cast<float>(win_size.width * win_size.height));
                 if (min_eigenvalue < min_eig_threshold)
                 {
-                    if (level == 0) next_pts[i].status = KPStatusFlag::UNTRACKED;
-                    else flow[i] = flow[i] * 2.0f;  // coarser levels just skip, keep point
-                    continue;  // coarser levels just skip, keep point
+                    skip_point();
+                    continue;
                 }
 
                 const float denominator = ixx * iyy - ixy * ixy;
@@ -87,9 +92,8 @@ namespace qlm
                 // Inverting it would blow up the Newton step, so abandon this point.
                 if (std::abs(denominator) < FLT_EPSILON)
                 {
-                    if (level == 0) next_pts[i].status = KPStatusFlag::UNTRACKED;
-                    else flow[i] = flow[i] * 2.0f;
-                    continue;                 // skip this keypoint entirely at this level
+                    skip_point();
+                    continue;
                 }
 
                 const float inv_denom = 1.0f / denominator;

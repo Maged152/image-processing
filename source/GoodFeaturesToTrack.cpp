@@ -1,4 +1,5 @@
 #include "GoodFeaturesToTrack.hpp"
+#include "common/solve.hpp"
 #include "Sobel.hpp"
 #include "BoxFilter.hpp"
 #include "Multiply.hpp"
@@ -67,9 +68,7 @@ namespace qlm
                 }
                 else
                 {
-                    float d = (ixx - iyy) * (ixx - iyy) + 4.0f * ixy * ixy;
-                    d = std::max(d, 0.0f); // Ensure non-negative value for sqrt
-                    response_pixel.v = (ixx + iyy - std::sqrt(d)) * 0.5f;
+                    response_pixel.v = MinEigenValue(ixx, ixy, iyy);
                 }
 
                 // Find maximum response value.
@@ -138,8 +137,11 @@ namespace qlm
         }
 
         // stage 6: radius NMS
+        // deterministic sort: response desc, then y asc, then x asc
         std::sort(corners.begin(), corners.end(), [](const KeyPoint<float>& a, const KeyPoint<float>& b) {
-            return a.response > b.response;
+            if (a.response != b.response) return a.response > b.response;
+            if (a.point.y != b.point.y)   return a.point.y < b.point.y;
+            return a.point.x < b.point.x;
         });
 
         const auto distance = [](const KeyPoint<int>& a, const KeyPoint<int>& b) {
