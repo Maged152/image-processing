@@ -75,10 +75,7 @@ namespace qlm
                 const float ixx = BilinearInterpolation(S_xx, prev_pt_loc.x, prev_pt_loc.y, border_mode_f).v;
                 const float ixy = BilinearInterpolation(S_xy, prev_pt_loc.x, prev_pt_loc.y, border_mode_f).v;
                 const float iyy = BilinearInterpolation(S_yy, prev_pt_loc.x, prev_pt_loc.y, border_mode_f).v;
-
-                // Sobel + non-normalized box-sum produce λ_min in raw (gradient^2) units, not
-                // OpenCV's FLT_SCALE-adjusted units. So min_eig_threshold must be chosen in these units.
-                // e.g. min_eig_threshold ≈ 1e3 when win = 21x21 (matches OpenCV's 1e-4 behavior).
+                
                 const float min_eigenvalue = MinEigenValue(ixx, ixy, iyy, static_cast<float>(win_size.width * win_size.height));
                 if (min_eigenvalue < min_eig_threshold)
                 {

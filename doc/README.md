@@ -30,6 +30,8 @@ Here you can find the implementation of :
     * [Canny](Functions/Features%20Detection/Canny)
     * [Good Features To Track](Functions/Features%20Detection/GoodFeaturesToTrack)
     * Hough circle (backlog)
+* Optical Flow
+    * [Lucas-Kanade Pyramidal Optical Flow](Functions/Optical%20Flow/OpticalFlowPyrLK)
 * Color Manipulation
     * [Color Conversion](Functions/Color%20Manipulation/ColorConvert)
     * [Convert Bit Depth](Functions/Color%20Manipulation/ConvertBitDepth)
