@@ -1,15 +1,14 @@
 #include "shakhbat_cv.hpp"
-#include <fstream>
 
 int main()
 {
     std::cout << "start example\n";
 
     qlm::Timer<qlm::msec> t{};
-    std::string frame0 = "other-data-gray/MiniCooper/frame10.png";
-    std::string frame1 = "other-data-gray/MiniCooper/frame11.png";
+    std::string frame0 = "./doc/Functions/Optical Flow/OpticalFlowPyrLK/Walking_frame0.png";
+    std::string frame1 = "./doc/Functions/Optical Flow/OpticalFlowPyrLK/Walking_frame1.png";
 
-    // Load the input image.
+    // Load the input images.
     qlm::Image<qlm::ImageFormat::GRAY, uint8_t> prev_img, next_img;
     if (!prev_img.LoadFromFile(frame0))
     {
@@ -53,15 +52,15 @@ int main()
 
     std::cout << "Found " << prev_corners.size() << " corners\n";
 
-
     // ============================================================
     // Lucas-Kanade Optical Flow
     // ============================================================
 
-    const qlm::Size wind_size = {21, 21};
-    const int max_level = 3;
-    const qlm::TermCriteria criteria = {30, 0.01};
-    std::vector<qlm::KeyPoint<float>> init_guess;
+    const qlm::Size win_size = { 11, 11 };
+    const int max_level = 5;
+    const qlm::TermCriteria criteria = { 10, 0.1 };
+    const double min_eig_threshold = 1e-4 * (1 << 20);
+    std::vector<qlm::KeyPoint<float>> initial_guess;
 
     t.Start();
 
@@ -69,60 +68,28 @@ int main()
         prev_img,
         next_img,
         prev_corners,
-        init_guess,
-        wind_size,
+        initial_guess,
+        win_size,
         max_level,
-        criteria
+        criteria,
+        min_eig_threshold
     );
 
     t.End();
 
     std::cout << "Time = " << t.ElapsedString() << "\n";
-    std::cout << "Found next_corners " << next_corners.size() << " corners\n";
-
-
-    // ============================================================
-    // Write optical flow results to CSV
-    //
-    // Format:
-    // frame0_x,frame0_y,frame1_x,frame1_y
-    // ============================================================
-
-    std::ofstream csv("optical_flow_cpp.csv");
-
-    if (!csv.is_open())
-    {
-        std::cout << "Failed to open optical_flow_cpp.csv\n";
-        return -1;
-    }
-
-    csv << "frame0_x,frame0_y,frame1_x,frame1_y\n";
-
-    // Use the same precision as the Python/OpenCV reference.
-    csv << std::fixed << std::setprecision(8);
-
-    for (size_t i = 0; i < next_corners.size(); ++i)
-    {
-        if (next_corners[i].status == qlm::KPStatusFlag::TRACKED)
-        {
-            csv << prev_corners[i].point.x << ","
-                << prev_corners[i].point.y << ","
-                << next_corners[i].point.x << ","
-                << next_corners[i].point.y << "\n";
-        }
-    }
-
-    csv.close();
-
-    std::cout << "Saved optical_flow_cpp.csv\n";
-
 
     // ============================================================
     // Draw optical flow
+    //
+    // Only key-points with a displacement larger than the flow
+    // threshold are drawn.
     // ============================================================
 
-    qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> green{0, 255, 0};
-    qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> red{0, 0, 255};
+    const float flow_threshold = 1.0f; // px
+
+    qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
+    qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> red{ 0, 0, 255 };
 
     auto next_rgb = qlm::ColorConvert<qlm::ImageFormat::GRAY, uint8_t, qlm::ImageFormat::RGB, uint8_t>(next_img);
 
@@ -131,6 +98,12 @@ int main()
         if (next_corners[i].status == qlm::KPStatusFlag::TRACKED)
         {
             const qlm::Point<float> displacement = next_corners[i].point - prev_corners[i].point;
+
+            // keep only key-points with meaningful motion
+            if (displacement.x * displacement.x + displacement.y * displacement.y < flow_threshold * flow_threshold)
+            {
+                continue;
+            }
 
             const qlm::Line l =
             {
@@ -158,17 +131,16 @@ int main()
         }
     }
 
-
     // ============================================================
     // Save result image
     // ============================================================
 
-    if (!next_rgb.SaveToFile("result_cpp.jpg", alpha))
+    if (!next_rgb.SaveToFile("Walking_result.png", alpha))
     {
-        std::cout << "Failed to write result_cpp.jpg\n";
+        std::cout << "Failed to write Walking_result.png\n";
     }
     else
     {
-        std::cout << "Saved result_cpp.jpg\n";
+        std::cout << "Saved Walking_result.png\n";
     }
 }

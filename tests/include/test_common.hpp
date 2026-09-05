@@ -30,7 +30,8 @@ namespace test
 {
     const std::string example_folder = std::string(LIBRARY_PATH) + "/doc/Functions/";
 
-    void PrintTime(const qlm::Timer<qlm::usec>& time)
+    template <typename T>
+    void PrintTime(const qlm::Timer<T>& time)
 	{
 		std::cout << COUT_GTEST_MGT_TIME << "Time"
 			                             << " = "
@@ -39,18 +40,20 @@ namespace test
     }
 
     template<qlm::ImageFormat frmt, qlm::pixel_t T>
-    qlm::Image<frmt, T> ReReadImage(qlm::Image<frmt, T>& out)
+    qlm::Image<frmt, T> ReReadImage(qlm::Image<frmt, T>& out, const std::string& extension = "jpg")
     {
-        const bool save_out = out.SaveToFile("out.jpg");
+        const std::string file_name = "out." + extension;
+
+        const bool save_out = out.SaveToFile(file_name);
         EXPECT_EQ(save_out, true);
 
         // read output image
         qlm::Image<frmt, T> cur;
-        const bool reread_out = cur.LoadFromFile("out.jpg");
+        const bool reread_out = cur.LoadFromFile(file_name);
         EXPECT_EQ(reread_out, true);
 
         // delete output image
-        const bool remove_out = std::filesystem::remove("out.jpg");
+        const bool remove_out = std::filesystem::remove(file_name);
         EXPECT_EQ(remove_out, true);
 
         return cur;
