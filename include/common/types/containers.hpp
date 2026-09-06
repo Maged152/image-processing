@@ -69,11 +69,25 @@ namespace qlm
 	};
 
     /**********************************************************/
-    struct Rectangle
+	template<class T = int>
+	struct Rectangle
 	{
-		Point<int> top_left;
-		int width;
-		int height;
+		Point<T> top_left = {0, 0};
+		int width = -1;
+		int height = -1;
+
+		Rectangle<T> ValidROI(const int img_width, const int img_height) const
+		{
+			Rectangle<T> valid_roi;
+
+			valid_roi.top_left.x = std::max(top_left.x, 0);
+			valid_roi.top_left.y = std::max(top_left.y, 0);
+
+			valid_roi.width = (width  <= 0 || width  > img_width  - valid_roi.top_left.x) ? img_width  - valid_roi.top_left.x : width;
+        	valid_roi.height = (height <= 0 || height > img_height - valid_roi.top_left.y) ? img_height - valid_roi.top_left.y : height;
+
+			return valid_roi;
+		}
 	};
 
     /**********************************************************/

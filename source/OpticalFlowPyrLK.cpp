@@ -55,6 +55,8 @@ namespace qlm
             const Image<ImageFormat::GRAY, float> S_yy = BoxFilter<ImageFormat::GRAY, float, float>(I_yy, win_size.width, win_size.height, false);
             const Image<ImageFormat::GRAY, float> S_xy = BoxFilter<ImageFormat::GRAY, float, float>(I_xy, win_size.width, win_size.height, false);
 
+            Image<ImageFormat::GRAY, int16_t> I_t {img_prev_l.width, img_prev_l.height};
+
             const float level_scale = static_cast<float>(1 << level);
 
             for (int i = 0; i < prev_pts.size(); i++)
@@ -100,7 +102,7 @@ namespace qlm
                 {
                     // displacement for the current iteration
                     const Image<ImageFormat::GRAY, T> img_nex_k = Translate(img_next_l,  Point<float>{-flow[i].x, -flow[i].y});
-                    const Image<ImageFormat::GRAY, int16_t> I_t = Subtract<ImageFormat::GRAY, T, int16_t>(img_nex_k, img_prev_l);
+                    Subtract<ImageFormat::GRAY, T, int16_t>(img_nex_k, img_prev_l, I_t);
 
                     const Image<ImageFormat::GRAY, float> I_xt = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_t, 1.0f, OverFlowFlag::WRAP);
                     const Image<ImageFormat::GRAY, float> I_yt = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_t, 1.0f, OverFlowFlag::WRAP);

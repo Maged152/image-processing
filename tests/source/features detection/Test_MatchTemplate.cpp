@@ -32,7 +32,7 @@ TEST(Test_shakhbat_cv, MatchTemplate)
 	auto [min_loc, max_loc] = qlm::MinMaxLoc(out);
 
 	qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
-	qlm::Rectangle rec{ {0, 0}, templ.width, templ.height };
+	qlm::Rectangle<int> rec{ {0, 0}, templ.width, templ.height };
 
 	for (auto& p : min_loc)
 	{

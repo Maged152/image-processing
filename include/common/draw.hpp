@@ -202,7 +202,7 @@ namespace qlm
     }
 
     template<ImageFormat frmt, pixel_t T>
-    Image<frmt, T> DrawRectangle(const Image<frmt, T>& in, const Rectangle& rec, const Pixel<frmt, T>& c) 
+    Image<frmt, T> DrawRectangle(const Image<frmt, T>& in, const Rectangle<int>& rec, const Pixel<frmt, T>& c) 
     {
         // Copy the input image to avoid modifying it
         Image<frmt, T> out = in;
