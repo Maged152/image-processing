@@ -59,6 +59,7 @@ namespace qlm
             Image<ImageFormat::GRAY, int16_t> I_t {img_prev_l.width, img_prev_l.height};
             Image<ImageFormat::GRAY, float> I_xt {img_prev_l.width, img_prev_l.height}, I_yt {img_prev_l.width, img_prev_l.height};
             Image<ImageFormat::GRAY, T> img_nex_k {img_prev_l.width, img_prev_l.height};
+            Image<ImageFormat::GRAY, float> S_xt {img_prev_l.width, img_prev_l.height}, S_yt {img_prev_l.width, img_prev_l.height};
 
             const float level_scale = static_cast<float>(1 << level);
 
@@ -110,8 +111,8 @@ namespace qlm
                     qlm::Multiply(I_x, I_t, I_xt, 1.0f, OverFlowFlag::WRAP);
                     qlm::Multiply(I_y, I_t, I_yt, 1.0f, OverFlowFlag::WRAP);
 
-                    const Image<ImageFormat::GRAY, float> S_xt = BoxFilter<ImageFormat::GRAY, float, float>(I_xt, win_size.width, win_size.height, false);
-                    const Image<ImageFormat::GRAY, float> S_yt = BoxFilter<ImageFormat::GRAY, float, float>(I_yt, win_size.width, win_size.height, false);
+                    BoxFilter(I_xt, S_xt, win_size.width, win_size.height, false);
+                    BoxFilter(I_yt, S_yt, win_size.width, win_size.height, false);
 
                     /*
                         estimate the optical flow :-

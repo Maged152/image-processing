@@ -1,18 +1,28 @@
 #include "SepFilter2D.hpp"
+#include <cassert>
 
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
-	Image<frmt, dst_t> SepFilter2D(const Image<frmt, src_t>& in,
+	void SepFilter2D(const Image<frmt, src_t>& in,
+		Image<frmt, dst_t>& out,
 		const SepKernel& kernel,
-		const BorderMode<frmt, src_t>& border_mode)
+		const BorderMode<frmt, src_t>& border_mode,
+		const Rectangle<int>& roi)
 	{
-		int img_width = in.width;
-		int img_height = in.height;
+		const int img_width = in.width;
+		const int img_height = in.height;
 
-		// create the output image
-		Image<frmt, dst_t> out;
-		out.Create(img_width, img_height);
+		// validate that the output has the same dimensions as the input
+		assert(in.width == out.width && in.height == out.height);
+
+		const Rectangle<int> valid_roi = roi.ValidROI(img_width, img_height);
+
+		const int start_x = valid_roi.top_left.x;
+		const int start_y = valid_roi.top_left.y;
+
+		const int end_x = start_x + valid_roi.width;
+		const int end_y = start_y + valid_roi.height;
 
 		int x_padding_length = kernel.x_ker.Length() / 2;
 		int y_padding_length = kernel.y_ker.Length() / 2;
@@ -27,10 +37,15 @@ namespace qlm
 		border_mode_f.border_type = border_mode.border_type;
 		border_mode_f.border_pixel = border_mode.border_pixel;
 
-		for (int y = 0; y < img_height; y++)
+		// the x-kernel pass reads the y-filtered values in a window extended
+		// by the x padding, so the y-kernel pass only needs those columns
+		const int temp_start_x = start_x - x_padding_length > 0 ? start_x - x_padding_length : 0;
+		const int temp_end_x = end_x + x_padding_length < img_width ? end_x + x_padding_length : img_width;
+
+		for (int y = start_y; y < end_y; y++)
 		{
-			// y-kernel
-			for (int x = 0; x < img_width; x++)
+			// y-kernel (only the columns needed by the x-kernel pass)
+			for (int x = temp_start_x; x < temp_end_x; x++)
 			{
 				// Reset the weight_sum array
 				weight_sum.Set(0.0f);
@@ -45,8 +60,8 @@ namespace qlm
 				// store the output
 				temp_y_filter.SetPixel(x, weight_sum);
 			}
-			// x-kernel
-			for (int x = 0; x < img_width; x++)
+			// x-kernel (working area only)
+			for (int x = start_x; x < end_x; x++)
 			{
 				// Reset
 				weight_sum.Set(0.0f);
@@ -62,6 +77,18 @@ namespace qlm
 				out.SetPixel(x, y, weight_sum);
 			}
 		}
+	}
+
+	template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
+	Image<frmt, dst_t> SepFilter2D(const Image<frmt, src_t>& in,
+		const SepKernel& kernel,
+		const BorderMode<frmt, src_t>& border_mode,
+		const Rectangle<int>& roi)
+	{
+		// create the output image
+		Image<frmt, dst_t> out (in.width, in.height);
+
+		SepFilter2D(in, out, kernel, border_mode, roi);
 
 		return out;
 	}
@@ -71,36 +98,85 @@ namespace qlm
 	template Image<ImageFormat::RGB, uint8_t>
 		SepFilter2D<ImageFormat::RGB, uint8_t, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&,
 			const SepKernel&,
-			const BorderMode<ImageFormat::RGB, uint8_t>&);
+			const BorderMode<ImageFormat::RGB, uint8_t>&,
+			const Rectangle<int>&);
+	template void
+		SepFilter2D<ImageFormat::RGB, uint8_t, uint8_t>(const Image<ImageFormat::RGB, uint8_t>&,
+			Image<ImageFormat::RGB, uint8_t>&,
+			const SepKernel&,
+			const BorderMode<ImageFormat::RGB, uint8_t>&,
+			const Rectangle<int>&);
 	// Explicit instantiation for RGB , uint8_t, int16_t
 	template Image<ImageFormat::RGB, int16_t>
 		SepFilter2D<ImageFormat::RGB, uint8_t, int16_t>(const Image<ImageFormat::RGB, uint8_t>&,
 			const SepKernel&,
-			const BorderMode<ImageFormat::RGB, uint8_t>&);
+			const BorderMode<ImageFormat::RGB, uint8_t>&,
+			const Rectangle<int>&);
+	template void
+		SepFilter2D<ImageFormat::RGB, uint8_t, int16_t>(const Image<ImageFormat::RGB, uint8_t>&,
+			Image<ImageFormat::RGB, int16_t>&,
+			const SepKernel&,
+			const BorderMode<ImageFormat::RGB, uint8_t>&,
+			const Rectangle<int>&);
 	// Explicit instantiation for RGB , int16_t, int16_t
 	template Image<ImageFormat::RGB, int16_t>
 		SepFilter2D<ImageFormat::RGB, int16_t, int16_t>(const Image<ImageFormat::RGB, int16_t>&,
 			const SepKernel&,
-			const BorderMode<ImageFormat::RGB, int16_t>&);
+			const BorderMode<ImageFormat::RGB, int16_t>&,
+			const Rectangle<int>&);
+	template void
+		SepFilter2D<ImageFormat::RGB, int16_t, int16_t>(const Image<ImageFormat::RGB, int16_t>&,
+			Image<ImageFormat::RGB, int16_t>&,
+			const SepKernel&,
+			const BorderMode<ImageFormat::RGB, int16_t>&,
+			const Rectangle<int>&);
 	// Explicit instantiation for GRAY , uint8_t, int16_t
 	template Image<ImageFormat::GRAY, int16_t>
 		SepFilter2D<ImageFormat::GRAY, uint8_t, int16_t>(const Image<ImageFormat::GRAY, uint8_t>&,
 			const SepKernel&,
-			const BorderMode<ImageFormat::GRAY, uint8_t>&);
+			const BorderMode<ImageFormat::GRAY, uint8_t>&,
+			const Rectangle<int>&);
+	template void
+		SepFilter2D<ImageFormat::GRAY, uint8_t, int16_t>(const Image<ImageFormat::GRAY, uint8_t>&,
+			Image<ImageFormat::GRAY, int16_t>&,
+			const SepKernel&,
+			const BorderMode<ImageFormat::GRAY, uint8_t>&,
+			const Rectangle<int>&);
 	// Explicit instantiation for GRAY , int16_t, int16_t
 	template Image<ImageFormat::GRAY, int16_t>
 		SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(const Image<ImageFormat::GRAY, int16_t>&,
 			const SepKernel&,
-			const BorderMode<ImageFormat::GRAY, int16_t>&);
+			const BorderMode<ImageFormat::GRAY, int16_t>&,
+			const Rectangle<int>&);
+	template void
+		SepFilter2D<ImageFormat::GRAY, int16_t, int16_t>(const Image<ImageFormat::GRAY, int16_t>&,
+			Image<ImageFormat::GRAY, int16_t>&,
+			const SepKernel&,
+			const BorderMode<ImageFormat::GRAY, int16_t>&,
+			const Rectangle<int>&);
 	// Explicit instantiation for GRAY , uint8_t, uint8_t
 	template Image<ImageFormat::GRAY, uint8_t>
 		SepFilter2D<ImageFormat::GRAY, uint8_t, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&,
 			const SepKernel&,
-			const BorderMode<ImageFormat::GRAY, uint8_t>&);
+			const BorderMode<ImageFormat::GRAY, uint8_t>&,
+			const Rectangle<int>&);
+	template void
+		SepFilter2D<ImageFormat::GRAY, uint8_t, uint8_t>(const Image<ImageFormat::GRAY, uint8_t>&,
+			Image<ImageFormat::GRAY, uint8_t>&,
+			const SepKernel&,
+			const BorderMode<ImageFormat::GRAY, uint8_t>&,
+			const Rectangle<int>&);
 		// Explicit instantiation for GRAY , uint8_t, float
 	template Image<ImageFormat::GRAY, float>
 		SepFilter2D<ImageFormat::GRAY, float, float>(const Image<ImageFormat::GRAY, float>&,
 			const SepKernel&,
-			const BorderMode<ImageFormat::GRAY, float>&);
+			const BorderMode<ImageFormat::GRAY, float>&,
+			const Rectangle<int>&);
+	template void
+		SepFilter2D<ImageFormat::GRAY, float, float>(const Image<ImageFormat::GRAY, float>&,
+			Image<ImageFormat::GRAY, float>&,
+			const SepKernel&,
+			const BorderMode<ImageFormat::GRAY, float>&,
+			const Rectangle<int>&);
 
 }
