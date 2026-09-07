@@ -5,10 +5,19 @@
 namespace qlm
 {
     template<ImageFormat frmt, pixel_t T1, pixel_t T2, pixel_t TO>
+    void Multiply(
+        const Image<frmt, T1> &in1,
+        const Image<frmt, T2> &in2,
+              Image<frmt, TO> &out,
+        const float scale = 1.0f,
+        const OverFlowFlag &over_flow = OverFlowFlag::SATURATE,
+        const Rectangle<int> &roi = Rectangle<int>{});
+
+    template<ImageFormat frmt, pixel_t T1, pixel_t T2, pixel_t TO>
     Image<frmt, TO> Multiply(
         const Image<frmt, T1> &in1,
         const Image<frmt, T2> &in2,
         const float scale = 1.0f,
-        const OverFlowFlag &over_flow = OverFlowFlag::SATURATE
-    );
+        const OverFlowFlag &over_flow = OverFlowFlag::SATURATE,
+        const Rectangle<int> &roi = Rectangle<int>{});
 }

@@ -1,19 +1,31 @@
 #include "Multiply.hpp"
+#include <cassert>
 
 namespace qlm
 {
     template<ImageFormat frmt, pixel_t T1, pixel_t T2, pixel_t TO>
-    Image<frmt, TO> Multiply(const Image<frmt, T1> &in1, const Image<frmt, T2> &in2, const float scale, const OverFlowFlag &over_flow)
+    void Multiply(const Image<frmt, T1> &in1, const Image<frmt, T2> &in2, Image<frmt, TO> &out, const float scale, const OverFlowFlag &over_flow, const Rectangle<int> &roi)
     {
         constexpr float min_val = std::numeric_limits<TO>::lowest();
         constexpr float max_val = std::numeric_limits<TO>::max();
 
-        Image<frmt, TO> out(in1.width, in1.height);
+        // validate that the input images have the same dimensions
+        assert(in1.width == in2.width && in1.height == in2.height);
+        assert(in1.width == out.width && in1.height == out.height);
+
+        const Rectangle<int> valid_roi = roi.ValidROI(in1.width, in1.height);
+
+        const int start_x = valid_roi.top_left.x;
+        const int start_y = valid_roi.top_left.y;
+
+        const int end_x = start_x + valid_roi.width;
+        const int end_y = start_y + valid_roi.height;
+
         Pixel<frmt, TO> pixel_out;
 
-        for (int y = 0; y < in1.height; y++)
+        for (int y = start_y; y < end_y; y++)
         {
-            for (int x = 0; x < in1.width; x++)
+            for (int x = start_x; x < end_x; x++)
             {
                 const auto pixel1 = in1.GetPixel(x, y);
                 const auto pixel2 = in2.GetPixel(x, y);
@@ -49,6 +61,13 @@ namespace qlm
                 out.SetPixel(x, y, pixel_out);
             }
         }
+    }
+
+    template<ImageFormat frmt, pixel_t T1, pixel_t T2, pixel_t TO>
+    Image<frmt, TO> Multiply(const Image<frmt, T1> &in1, const Image<frmt, T2> &in2, const float scale, const OverFlowFlag &over_flow, const Rectangle<int> &roi)
+    {
+        Image<frmt, TO> out(in1.width, in1.height);
+        Multiply(in1, in2, out, scale, over_flow, roi);
 
         return out;
     }
@@ -57,17 +76,44 @@ namespace qlm
         const Image<ImageFormat::GRAY, uint8_t> &,
         const Image<ImageFormat::GRAY, uint8_t> &,
         const float,
-        const OverFlowFlag &);
+        const OverFlowFlag &,
+        const Rectangle<int> &);
+
+    template void Multiply(
+        const Image<ImageFormat::GRAY, uint8_t> &,
+        const Image<ImageFormat::GRAY, uint8_t> &,
+        Image<ImageFormat::GRAY, uint8_t> &,
+        const float,
+        const OverFlowFlag &,
+        const Rectangle<int> &);
 
     template Image<ImageFormat::RGB, uint8_t> Multiply(
         const Image<ImageFormat::RGB, uint8_t> &,
         const Image<ImageFormat::RGB, uint8_t> &,
         const float,
-        const OverFlowFlag &);
+        const OverFlowFlag &,
+        const Rectangle<int> &);
+
+    template void Multiply(
+        const Image<ImageFormat::RGB, uint8_t> &,
+        const Image<ImageFormat::RGB, uint8_t> &,
+        Image<ImageFormat::RGB, uint8_t> &,
+        const float,
+        const OverFlowFlag &,
+        const Rectangle<int> &);
 
     template Image<ImageFormat::GRAY, float> Multiply(
         const Image<ImageFormat::GRAY, int16_t> &,
         const Image<ImageFormat::GRAY, int16_t> &,
         const float,
-        const OverFlowFlag &);
+        const OverFlowFlag &,
+        const Rectangle<int> &);
+
+    template void Multiply(
+        const Image<ImageFormat::GRAY, int16_t> &,
+        const Image<ImageFormat::GRAY, int16_t> &,
+        Image<ImageFormat::GRAY, float> &,
+        const float,
+        const OverFlowFlag &,
+        const Rectangle<int> &);
 }
