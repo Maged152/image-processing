@@ -58,6 +58,7 @@ namespace qlm
             // needed buffer for iterative Newton-Raphson
             Image<ImageFormat::GRAY, int16_t> I_t {img_prev_l.width, img_prev_l.height};
             Image<ImageFormat::GRAY, float> I_xt {img_prev_l.width, img_prev_l.height}, I_yt {img_prev_l.width, img_prev_l.height};
+            Image<ImageFormat::GRAY, T> img_nex_k {img_prev_l.width, img_prev_l.height};
 
             const float level_scale = static_cast<float>(1 << level);
 
@@ -103,11 +104,11 @@ namespace qlm
                 for(int k = 0; k < criteria.max_count; k++)
                 {
                     // displacement for the current iteration
-                    const Image<ImageFormat::GRAY, T> img_nex_k = Translate(img_next_l,  Point<float>{-flow[i].x, -flow[i].y});
-                    Subtract<ImageFormat::GRAY, T, int16_t>(img_nex_k, img_prev_l, I_t);
+                    qlm::Translate(img_next_l, img_nex_k, Point<float>{-flow[i].x, -flow[i].y});
+                    qlm::Subtract(img_nex_k, img_prev_l, I_t);
 
-                    qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_t, I_xt, 1.0f, OverFlowFlag::WRAP);
-                    qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_t, I_yt, 1.0f, OverFlowFlag::WRAP);
+                    qlm::Multiply(I_x, I_t, I_xt, 1.0f, OverFlowFlag::WRAP);
+                    qlm::Multiply(I_y, I_t, I_yt, 1.0f, OverFlowFlag::WRAP);
 
                     const Image<ImageFormat::GRAY, float> S_xt = BoxFilter<ImageFormat::GRAY, float, float>(I_xt, win_size.width, win_size.height, false);
                     const Image<ImageFormat::GRAY, float> S_yt = BoxFilter<ImageFormat::GRAY, float, float>(I_yt, win_size.width, win_size.height, false);

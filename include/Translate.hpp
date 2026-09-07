@@ -5,9 +5,18 @@
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T, typename S>
+	void Translate(
+		const Image<frmt, T>& in,
+		      Image<frmt, T>& out,
+		const Point<S>& displacement,
+		const Pixel<frmt, T>& pix = Pixel<frmt, T>{},
+		const Rectangle<int>& roi = Rectangle<int>{});
+
+	template<ImageFormat frmt, pixel_t T, typename S>
 	Image<frmt, T> Translate(
 		const Image<frmt, T>& in,
 		const Point<S>& displacement,
-		const Pixel<frmt, T>& pix = Pixel<frmt, T>{});
+		const Pixel<frmt, T>& pix = Pixel<frmt, T>{},
+		const Rectangle<int>& roi = Rectangle<int>{});
 
 }

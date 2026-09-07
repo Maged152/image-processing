@@ -1,24 +1,32 @@
 #include "Translate.hpp"
+#include <cassert>
 
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T, typename S>
-	Image<frmt, T> Translate(const Image<frmt, T>& in, const Point<S>& displacement, const Pixel<frmt, T>& pix)
+	void Translate(const Image<frmt, T>& in, Image<frmt, T>& out, const Point<S>& displacement, const Pixel<frmt, T>& pix, const Rectangle<int>& roi)
 	{
 		// Translate image by (dx, dy):
     	// out(x, y) = in(x + dx, y + dy)
 
+		// validate that the output has the same dimensions as the input
+		assert(in.width == out.width && in.height == out.height);
+
 		int img_width = in.width;
 		int img_height = in.height;
 
-		// output image
-		Image<frmt, T> out = Image<frmt, T>{};
-		out.Create(img_width, img_height, pix);
+		const Rectangle<int> valid_roi = roi.ValidROI(in.width, in.height);
 
-		// loop over the output image
-		for (int y = 0; y < img_height; y++)
+		const int start_w = valid_roi.top_left.x;
+		const int start_h = valid_roi.top_left.y;
+
+		const int end_w = start_w + valid_roi.width;
+		const int end_h = start_h + valid_roi.height;
+
+		// loop over the working area of the output image
+		for (int y = start_h; y < end_h; y++)
 		{
-			for (int x = 0; x < img_width; x++)
+			for (int x = start_w; x < end_w; x++)
 			{
 				// translate the pixel coordinates by the displacement vector
 				S in_x = x - displacement.x;
@@ -40,16 +48,36 @@ namespace qlm
 
 					out.SetPixel(x, y, out_pix);
 				}
+				else
+				{
+					out.SetPixel(x, y, pix);
+				}
 			}
 		}
-		
+	}
+
+	template<ImageFormat frmt, pixel_t T, typename S>
+	Image<frmt, T> Translate(const Image<frmt, T>& in, const Point<S>& displacement, const Pixel<frmt, T>& pix, const Rectangle<int>& roi)
+	{
+		// output image
+		Image<frmt, T> out = Image<frmt, T>{};
+		out.Create(in.width, in.height, pix);
+
+		Translate(in, out, displacement, pix, roi);
+
 		return out;
 	}
 
 
-	template Image<ImageFormat::RGB, uint8_t>  Translate(const Image<ImageFormat::RGB, uint8_t>&, const Point<int>&, const Pixel< ImageFormat::RGB, uint8_t >&);
-	template Image<ImageFormat::GRAY, uint8_t> Translate(const Image<ImageFormat::GRAY, uint8_t>&, const Point<int>&, const Pixel<ImageFormat::GRAY, uint8_t>&);
+	template Image<ImageFormat::RGB, uint8_t>  Translate(const Image<ImageFormat::RGB, uint8_t>&, const Point<int>&, const Pixel< ImageFormat::RGB, uint8_t >&, const Rectangle<int>&);
+	template Image<ImageFormat::GRAY, uint8_t> Translate(const Image<ImageFormat::GRAY, uint8_t>&, const Point<int>&, const Pixel<ImageFormat::GRAY, uint8_t>&, const Rectangle<int>&);
 
-	template Image<ImageFormat::RGB, uint8_t>  Translate(const Image<ImageFormat::RGB, uint8_t>&, const Point<float>&, const Pixel< ImageFormat::RGB, uint8_t >&);
-	template Image<ImageFormat::GRAY, uint8_t> Translate(const Image<ImageFormat::GRAY, uint8_t>&, const Point<float>&, const Pixel<ImageFormat::GRAY, uint8_t>&);
+	template Image<ImageFormat::RGB, uint8_t>  Translate(const Image<ImageFormat::RGB, uint8_t>&, const Point<float>&, const Pixel< ImageFormat::RGB, uint8_t >&, const Rectangle<int>&);
+	template Image<ImageFormat::GRAY, uint8_t> Translate(const Image<ImageFormat::GRAY, uint8_t>&, const Point<float>&, const Pixel<ImageFormat::GRAY, uint8_t>&, const Rectangle<int>&);
+
+	template void Translate(const Image<ImageFormat::RGB, uint8_t>&, Image<ImageFormat::RGB, uint8_t>&, const Point<int>&, const Pixel< ImageFormat::RGB, uint8_t >&, const Rectangle<int>&);
+	template void Translate(const Image<ImageFormat::GRAY, uint8_t>&, Image<ImageFormat::GRAY, uint8_t>&, const Point<int>&, const Pixel<ImageFormat::GRAY, uint8_t>&, const Rectangle<int>&);
+
+	template void Translate(const Image<ImageFormat::RGB, uint8_t>&, Image<ImageFormat::RGB, uint8_t>&, const Point<float>&, const Pixel< ImageFormat::RGB, uint8_t >&, const Rectangle<int>&);
+	template void Translate(const Image<ImageFormat::GRAY, uint8_t>&, Image<ImageFormat::GRAY, uint8_t>&, const Point<float>&, const Pixel<ImageFormat::GRAY, uint8_t>&, const Rectangle<int>&);
 }
