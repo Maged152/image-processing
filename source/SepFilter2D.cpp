@@ -16,13 +16,7 @@ namespace qlm
 		// validate that the output has the same dimensions as the input
 		assert(in.width == out.width && in.height == out.height);
 
-		const Rectangle<int> valid_roi = roi.ValidROI(img_width, img_height);
-
-		const int start_x = valid_roi.top_left.x;
-		const int start_y = valid_roi.top_left.y;
-
-		const int end_x = start_x + valid_roi.width;
-		const int end_y = start_y + valid_roi.height;
+		auto [start_x, start_y, end_x, end_y] = ROI(roi, img_width, img_height);
 
 		int x_padding_length = kernel.x_ker.Length() / 2;
 		int y_padding_length = kernel.y_ker.Length() / 2;

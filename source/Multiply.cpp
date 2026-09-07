@@ -13,13 +13,7 @@ namespace qlm
         assert(in1.width == in2.width && in1.height == in2.height);
         assert(in1.width == out.width && in1.height == out.height);
 
-        const Rectangle<int> valid_roi = roi.ValidROI(in1.width, in1.height);
-
-        const int start_x = valid_roi.top_left.x;
-        const int start_y = valid_roi.top_left.y;
-
-        const int end_x = start_x + valid_roi.width;
-        const int end_y = start_y + valid_roi.height;
+        auto [start_x, start_y, end_x, end_y] = ROI(roi, in1.width, in1.height);
 
         Pixel<frmt, TO> pixel_out;
 

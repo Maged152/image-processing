@@ -15,13 +15,7 @@ namespace qlm
 		int img_width = in.width;
 		int img_height = in.height;
 
-		const Rectangle<int> valid_roi = roi.ValidROI(in.width, in.height);
-
-		const int start_w = valid_roi.top_left.x;
-		const int start_h = valid_roi.top_left.y;
-
-		const int end_w = start_w + valid_roi.width;
-		const int end_h = start_h + valid_roi.height;
+		auto [start_w, start_h, end_w, end_h] = ROI(roi, img_width, img_height);
 
 		// loop over the working area of the output image
 		for (int y = start_h; y < end_h; y++)
