@@ -210,7 +210,7 @@ int main()
 ### The output
 ![Result](MiniCooper_result.png)
 
-Time =  186914 msec
+Time =  251 msec
 
 ### The parameters
 | Parameter           | Value                                              |
@@ -228,7 +228,7 @@ Time =  186914 msec
 ### The output
 ![Result](Walking_result.png)
 
-Time = 34469 msec
+Time = 100 msec
 
 ## Example 3
 ### The parameters
@@ -246,4 +246,4 @@ Time = 34469 msec
 ### The output
 ![Result](Urban2_result.png)
 
-Time = 273339 msec
+Time = 278 msec

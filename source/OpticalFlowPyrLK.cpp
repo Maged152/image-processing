@@ -101,18 +101,30 @@ namespace qlm
 
                 const float inv_denom = 1.0f / denominator;
 
+                // define ROI for the current point
+                const int x0 = std::floor(prev_pt_loc.x);
+                const int y0 = std::floor(prev_pt_loc.y);
+                const int hw_x = win_size.width  / 2;   // = pad
+                const int hw_y = win_size.height / 2;
+
+                // region the Translate/Subtract/Multiply chain writes (covers the box-filter reads)
+                const Rectangle<int> in_roi{ { x0 - hw_x, y0 - hw_y }, win_size.width + 1, win_size.height + 1 };
+
+                // 2x2 region the BoxFilter must actually produce (the bilinear taps)
+                const Rectangle<int> out_roi{ { x0, y0 }, 2, 2 };
+
                 // Iterative Newton-Raphson
                 for(int k = 0; k < criteria.max_count; k++)
                 {
                     // displacement for the current iteration
-                    qlm::Translate(img_next_l, img_nex_k, Point<float>{-flow[i].x, -flow[i].y});
-                    qlm::Subtract(img_nex_k, img_prev_l, I_t);
+                    qlm::Translate(img_next_l, img_nex_k, Point<float>{-flow[i].x, -flow[i].y}, Pixel<ImageFormat::GRAY, T>{}, in_roi);
+                    qlm::Subtract(img_nex_k, img_prev_l, I_t, in_roi);
 
-                    qlm::Multiply(I_x, I_t, I_xt, 1.0f, OverFlowFlag::WRAP);
-                    qlm::Multiply(I_y, I_t, I_yt, 1.0f, OverFlowFlag::WRAP);
+                    qlm::Multiply(I_x, I_t, I_xt, 1.0f, OverFlowFlag::WRAP, in_roi);
+                    qlm::Multiply(I_y, I_t, I_yt, 1.0f, OverFlowFlag::WRAP, in_roi);
 
-                    BoxFilter(I_xt, S_xt, win_size.width, win_size.height, false);
-                    BoxFilter(I_yt, S_yt, win_size.width, win_size.height, false);
+                    BoxFilter(I_xt, S_xt, win_size.width, win_size.height, false, BorderMode<ImageFormat::GRAY, float>{}, out_roi);
+                    BoxFilter(I_yt, S_yt, win_size.width, win_size.height, false, BorderMode<ImageFormat::GRAY, float>{}, out_roi);
 
                     /*
                         estimate the optical flow :-
