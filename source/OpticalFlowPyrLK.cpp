@@ -26,8 +26,8 @@ namespace qlm
 		const BorderMode<ImageFormat::GRAY, T>& border_mode {BorderType::BORDER_REFLECT, Pixel<ImageFormat::GRAY, T>{0}};
         const BorderMode<ImageFormat::GRAY, float>& border_mode_f {BorderType::BORDER_REFLECT, Pixel<ImageFormat::GRAY, float>{0}};
 
-        const Pyramid<ImageFormat::GRAY, T> pyr_prev_img = GaussianPyramid(prev_img, num_layers, scale, filter_size, sigma, border_mode);
-        const Pyramid<ImageFormat::GRAY, T> pyr_next_img = GaussianPyramid(next_img, num_layers, scale, filter_size, sigma, border_mode);
+        const Pyramid<ImageFormat::GRAY, T> pyr_prev_img = GaussianPyramid(prev_img, num_layers, scale, filter_size, sigma, InterpolationFlag::NEAREST_NEIGHBOR, border_mode);
+        const Pyramid<ImageFormat::GRAY, T> pyr_next_img = GaussianPyramid(next_img, num_layers, scale, filter_size, sigma, InterpolationFlag::NEAREST_NEIGHBOR, border_mode);
 
         constexpr int gradient_size = 3;
         

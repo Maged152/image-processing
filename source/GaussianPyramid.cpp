@@ -5,7 +5,7 @@
 namespace qlm
 {
     template <ImageFormat frmt, pixel_t T>
-    Pyramid<frmt, T> GaussianPyramid(const Image<frmt, T> &in, const int num_layers, const float scale, const int filter_size, const float sigma, const BorderMode<frmt, T> &border_mode)
+    Pyramid<frmt, T> GaussianPyramid(const Image<frmt, T> &in, const int num_layers, const float scale, const int filter_size, const float sigma, const InterpolationFlag inter, const BorderMode<frmt, T> &border_mode)
     {
         Pyramid<frmt, T> pyr {num_layers, scale, filter_size, sigma};
         pyr.layers[0] = in;
@@ -13,7 +13,7 @@ namespace qlm
         for (int layer = 1; layer < num_layers; layer++)
         {
             const auto gaussian_image = Gaussian(pyr.layers[layer - 1], filter_size, sigma, sigma, border_mode);
-            pyr.layers[layer] = Scale(gaussian_image, InterpolationFlag::NEAREST_NEIGHBOR, scale, scale, border_mode);
+            pyr.layers[layer] = Scale(gaussian_image, inter, scale, scale, border_mode);
         }
 
         return pyr;
@@ -25,6 +25,7 @@ namespace qlm
         const float,
         const int,
         const float,
+        const InterpolationFlag,
         const BorderMode<ImageFormat::RGB, uint8_t>&);
 
     template Pyramid<ImageFormat::GRAY, uint8_t>
@@ -33,5 +34,6 @@ namespace qlm
         const float,
         const int,
         const float,
+        const InterpolationFlag,
         const BorderMode<ImageFormat::GRAY, uint8_t>&);
 }

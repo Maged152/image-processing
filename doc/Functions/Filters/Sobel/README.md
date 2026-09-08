@@ -1,7 +1,7 @@
 # Sobel
 
 ## Description
-Apples sobel filter of size NxN on the input image.
+Applies sobel filter of size NxN on the input image.
 
 You can check the implementation [here](../../../../source/Sobel.cpp)
 
@@ -14,7 +14,7 @@ You can check the implementation [here](../../../../source/Sobel.cpp)
 	template<pixel_t in_t, pixel_t out_t = int16_t>
 	Image<ImageFormat::GRAY, out_t> SobelX(
 		const Image <ImageFormat::GRAY, in_t>& in,
-		const unsigned int kernel_size,
+		const int kernel_size,
 		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
 	);
 ```
@@ -25,7 +25,7 @@ You can check the implementation [here](../../../../source/Sobel.cpp)
 | `in_t`         | `pixel_t`      | The data type of the input image.                                                            |
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
-| `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
+| `kernel_size`  | `int` | The kernel size to be used on the input image.                                               |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 ### Return Value
@@ -38,7 +38,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, out_t>`.
 	template<pixel_t in_t, pixel_t out_t = int16_t>
 	Image<ImageFormat::GRAY, out_t> SobelY(
 		const Image<ImageFormat::GRAY, in_t>& in,
-		const unsigned int kernel_size,
+		const int kernel_size,
 		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
 	);
 ```
@@ -49,7 +49,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, out_t>`.
 | `in_t`         | `pixel_t`      | The data type of the input image.                                                            |
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
-| `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
+| `kernel_size`  | `int` | The kernel size to be used on the input image.                                               |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
 
 ### Return Value
@@ -63,7 +63,7 @@ The function returns an image of type `<ImageFormat::GRAY, out_t>`.
    template<pixel_t in_t, pixel_t out_t = int16_t>
 	SobelDerivatives<in_t, out_t> Sobel(
 		const Image<ImageFormat::GRAY, in_t>& in,
-		const unsigned int kernel_size,
+		const int kernel_size,
 		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
 	);
 ```
@@ -74,7 +74,7 @@ The function returns an image of type `<ImageFormat::GRAY, out_t>`.
 | `in_t`         | `pixel_t`      | The data type of the input image.                                                            |
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
-| `kernel_size`  | `unsigned int` | The kernel size to be used on the input image.                                               |
+| `kernel_size`  | `int` | The kernel size to be used on the input image.                                               |
 | `border_mode`  | `BorderMode`   | The pixel extrapolation method.                                                              |
 
 ### Return Value
@@ -86,14 +86,14 @@ The function returns an structure of type `SobelDerivatives<in_t, out_t>`.
 
 ```c++
   Image<ImageFormat::GRAY, uint8_t> ConvertSobelDepth(Image < ImageFormat::GRAY, int16_t>& in,
-														unsigned int filter_size);
+														int filter_size);
 ```
 ### Parameters
 
 | Name           | Type           | Description                                 |
 |----------------|----------------|---------------------------------------------| 
-| `in`           | `Image`        | The input image<GRAY, uint8_t>.             |
-| `filter_size`  | `unsigned int` | The filter size used for the image.         |
+| `in`           | `Image`        | The input image<GRAY, int16_t>.             |
+| `filter_size`  | `int` | The filter size used for the image.         |
 
 ### Return Value
 The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
@@ -116,7 +116,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 	if (in.NumerOfChannels() == 3)
 		alpha = false;
 
-	unsigned int filter_size = 3;
+	int filter_size = 3;
 	// RGB to GRAY
 	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
 	// do the operation

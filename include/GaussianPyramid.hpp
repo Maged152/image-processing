@@ -11,6 +11,7 @@ namespace qlm
 		const float scale = 0.5f,
 		const int filter_size = 5,
 		const float sigma = 1.0f,
+		const InterpolationFlag inter = InterpolationFlag::NEAREST_NEIGHBOR,
 		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{}
 	);
 

@@ -6,6 +6,22 @@ Applies a separable linear filter of size MxN to the input image
 You can check the implementation [here](../../../../source/SepFilter2D.cpp)
 
 ## C++ API
+
+### In-place overload
+```c++
+namespace qlm
+{
+	template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
+	void SepFilter2D(
+		const Image<frmt, src_t>& in,
+		      Image<frmt, dst_t>& out,
+		const SepKernel& kernel,
+		const BorderMode<frmt, src_t>& border_mode = BorderMode{},
+		const Rectangle<int>& roi = Rectangle<int>{}
+	);
+}
+```
+### Allocating overload
 ```c++
 namespace qlm
 {
@@ -13,18 +29,21 @@ namespace qlm
 	Image<frmt, dst_t> SepFilter2D(
 		const Image<frmt, src_t>& in,
 		const SepKernel& kernel,
-		const BorderMode<frmt, src_t>& border_mode = BorderMode{}
+		const BorderMode<frmt, src_t>& border_mode = BorderMode{},
+		const Rectangle<int>& roi = Rectangle<int>{}
 	);
 }
 ```
 
 ## Parameters
 
-| Name           | Type         | Description                                                                       |
-|----------------|--------------|-----------------------------------------------------------------------------------|
-| `in`           | `Image`      | The input image.                                                                  |
-| `kernel`       | `SepKernel`  | The kernel for filtering.                                                |
-| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
+| Name           | Type            | Description                                                                       |
+|----------------|-----------------|-----------------------------------------------------------------------------------|
+| `in`           | `Image`         | The input image.                                                                  |
+| `out`          | `Image`         | The output image (in-place overload only). Must have the same dimensions as `in`. |
+| `kernel`       | `SepKernel`     | The kernel for filtering.                                                         |
+| `border_mode`  | `BorderMode`    | The pixel extrapolation method.                                                   |
+| `roi`          | `Rectangle<int>`| Region of interest to filter. Default `{}` processes the whole image.             |
 
 ## Return Value
 The function returns an image of type `Image<frmt, dst_t>`.

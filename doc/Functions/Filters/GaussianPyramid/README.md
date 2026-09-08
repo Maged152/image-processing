@@ -16,19 +16,21 @@ You can check the implementation [here](../../../../source/GaussianPyramid.cpp)
 		const float scale = 0.5f,
 		const int filter_size = 5,
 		const float sigma = 1.0f,
+		const InterpolationFlag inter = InterpolationFlag::NEAREST_NEIGHBOR,
 		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{}
 	)
 ```
 ## Parameters
 
-| Name          | Type           | Description                                                                                              |
-|---------------|----------------|----------------------------------------------------------------------------------------------------------|
-| `in`          | `Image`        | The input image.                                                                                         |
-| `num_layers`  | `int`       | The number of layers to generate in the pyramid.                                                         |
-| `scale`       | `float`        | The down sampling scale factor between consecutive layers (default is 0.5).                              |
-| `filter_size` | `int`       | The kernel size for the Gaussian filter to be applied at each layer (default is 5)                       |
-| `sigma`       | `float`        | The standard deviation for the Gaussian filter (default is 1.0).                                         |
-| `border_mode` | `BorderMode`   | The pixel extrapolation method.                                                                          |
+| Name          | Type               | Description                                                                                              |
+|---------------|--------------------|----------------------------------------------------------------------------------------------------------|
+| `in`          | `Image`            | The input image.                                                                                         |
+| `num_layers`  | `int`              | The number of layers to generate in the pyramid.                                                         |
+| `scale`       | `float`            | The down sampling scale factor between consecutive layers (default is 0.5).                              |
+| `filter_size` | `int`              | The kernel size for the Gaussian filter to be applied at each layer (default is 5)                       |
+| `sigma`       | `float`            | The standard deviation for the Gaussian filter (default is 1.0).                                         |
+| `inter`       | `InterpolationFlag`| The interpolation method used for down sampling between layers (default is `NEAREST_NEIGHBOR`).          |
+| `border_mode` | `BorderMode`       | The pixel extrapolation method.                                                                          |
 
 ## Return Value
 The function returns a pyramid of type `Pyramid<frmt, T>`.

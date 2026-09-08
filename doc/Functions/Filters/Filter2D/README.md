@@ -1,7 +1,7 @@
 # Filter 2D
 
 ## Description
-Apples 2D filter of size MxN on the input image
+Applies 2D filter of size MxN on the input image
 
 You can check the implementation [here](../../../../source/Filter2D.cpp)
 

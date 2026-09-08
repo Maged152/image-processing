@@ -3,11 +3,12 @@
 TEST(Test_shakhbat_cv, SepFilter2D)
 {
 	qlm::Timer<qlm::usec> t{};
-	const std::string folder_path = test::example_folder + "filters/SepFilter2D/";
+	const std::string folder_path = test::example_folder + "Filters/SepFilter2D/";
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
 	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	EXPECT_EQ(load_in, true);
 
 	// do the operation
 	const int filter_size = 3;

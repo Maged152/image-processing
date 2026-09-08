@@ -18,29 +18,50 @@ where a is `1 / (filter_x_size * filter_y_size)` if `normalize` is `true` otherw
 You can check the implementation [here](../../../../source/BoxFilter.cpp)
 
 ## C++ API
+
+### In-place overload
+```c++
+namespace qlm
+{
+    template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
+    void BoxFilter(
+        const Image<frmt, src_t>& in,
+              Image<frmt, dst_t>& out,
+        const int filter_x_size,
+        const int filter_y_size,
+        const bool normalize,
+        const BorderMode<frmt, src_t>& border_mode = BorderMode{},
+        const Rectangle<int>& roi = Rectangle<int>{}
+    );
+}
+```
+### Allocating overload
 ```c++
 namespace qlm
 {
     template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
     Image<frmt, dst_t> BoxFilter(
         const Image<frmt, src_t>& in,
-        const unsigned int filter_x_size,
-        const unsigned int filter_y_size,
-        const bool normalize, 
-        const BorderMode<frmt, src_t>& border_mode = BorderMode{}
+        const int filter_x_size,
+        const int filter_y_size,
+        const bool normalize,
+        const BorderMode<frmt, src_t>& border_mode = BorderMode{},
+        const Rectangle<int>& roi = Rectangle<int>{}
     );
 }
 ```
 
 ## Parameters
 
-| Name           | Type           | Description                                                      |
-|----------------|----------------|------------------------------------------------------------------|
-| `in`           | `Image`        | The input image.                                                 |
-| `filter_x_size`| `unsigned int` | The filter size in x direction.                                  |
-| `filter_y_size`| `unsigned int` | The filter size in y direction.                                  |
-| `normalize`    | `bool`         | Specifies whether the kernel is normalized by its area or not.   |
-| `border_mode`  | `BorderMode` | The pixel extrapolation method.                                    |
+| Name             | Type             | Description                                                      |
+|------------------|------------------|------------------------------------------------------------------|
+| `in`             | `Image`          | The input image.                                                 |
+| `out`            | `Image`          | The output image (in-place overload only). Must have the same dimensions as `in`. |
+| `filter_x_size`  | `int`            | The filter size in x direction.                                  |
+| `filter_y_size`  | `int`            | The filter size in y direction.                                  |
+| `normalize`      | `bool`           | Specifies whether the kernel is normalized by its area or not.   |
+| `border_mode`    | `BorderMode`     | The pixel extrapolation method.                                  |
+| `roi`            | `Rectangle<int>` | Region of interest to filter. Default `{}` processes the whole image. |
 
 
 ## Return Value
