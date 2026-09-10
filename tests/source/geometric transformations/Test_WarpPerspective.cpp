@@ -49,3 +49,38 @@ TEST(Test_shakhbat_cv, WarpPerspective)
 
 	test::CompareImages(out, ref);
 }
+
+TEST(Test_shakhbat_cv, WarpPerspective_Identity)
+{
+	qlm::Timer<qlm::usec> t{};
+	const std::string folder_path = test::example_folder + "Geometric Transformations/WarpPerspective/";
+
+	// read input image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	EXPECT_EQ(load_in, true);
+
+	// identity transform: the source points are mapped onto themselves
+	const qlm::Point<int> src[4] =
+	{
+		{0, 0}, {in.width - 1, 0}, {0, in.height - 1}, {in.width - 1, in.height - 1}
+	};
+	const qlm::Point<int> dst[4] =
+	{
+		{0, 0}, {in.width - 1, 0}, {0, in.height - 1}, {in.width - 1, in.height - 1}
+	};
+
+	qlm::PerspectiveMatrix mat = qlm::GetPerspectiveTransform(src, dst);
+
+	auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
+
+	// do the operation
+	t.Start();
+	auto out = qlm::WarpPerspective(in, mat, in.width, in.height, qlm::InterpolationFlag::BILINEAR, border_mode);
+	t.End();
+
+	test::PrintTime(t);
+
+	// the output must be identical to the input
+	test::CompareImages(out, in);
+}
