@@ -69,8 +69,8 @@ namespace qlm
 		qlm::Matrix augmented_matrix_x{ (float*)aug_mat_x, 3, 4 };
 		qlm::Matrix solution_matrix_x{ (float*)sol_mat_x, 3, 1 };
 
-		qlm::Matrix augmented_matrix_y{ (float*)aug_mat_x, 3, 4 };
-		qlm::Matrix solution_matrix_y{ (float*)sol_mat_x, 3, 1 };
+		qlm::Matrix augmented_matrix_y{ (float*)aug_mat_y, 3, 4 };
+		qlm::Matrix solution_matrix_y{ (float*)sol_mat_y, 3, 1 };
 
 		Solve(augmented_matrix_x, solution_matrix_x);
 		Solve(augmented_matrix_y, solution_matrix_y);

@@ -61,4 +61,4 @@ The function returns an image of type `Image<frmt, T>`.
 ### The output
 ![Input Image](result.jpg)
 
-Time = 1 ms
+Time = 3 ms
