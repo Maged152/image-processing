@@ -334,6 +334,9 @@ namespace qlm
         auto temp_t = Transpose(temp);
         ReduceWidth(dy, energy, gray_t, energy_map, temp_t);
 
+        // NOTE: the void Transpose overload only writes pixels; the output must already
+        // be sized with the swapped dimensions. The working buffers are over-allocated
+        // as (max_d x max_d), so we only patch width/height before transposing in place.
         temp.height = temp_t.width;
         temp.width = temp_t.height;
         Transpose(temp_t, temp);
@@ -356,6 +359,9 @@ namespace qlm
         
         EnlargeWidth(dy, energy, gray_t, energy_map, temp_t); 
 
+        // NOTE: the void Transpose overload only writes pixels; the output must already
+        // be sized with the swapped dimensions. The working buffers are over-allocated
+        // as (max_d x max_d), so we only patch width/height before transposing in place.
         temp.height = temp_t.width;
         temp.width = temp_t.height;
         Transpose(temp_t, temp);

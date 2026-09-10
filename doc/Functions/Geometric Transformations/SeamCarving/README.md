@@ -3,6 +3,7 @@
 ## Description
 Seam carving is an algorithm for content-aware image 
 resizing [paper](https://dl.acm.org/doi/10.1145/1275808.1276390).
+Note: the current implementation finds seams greedily (the minimum-energy neighbor on each row), not with dynamic programming, so the seam quality is lower than DP-based implementations. Only `Image<RGB, uint8_t>` is instantiated.
 
 You can check the implementation [here](../../../../source/SeamCarving.cpp)
 

@@ -59,3 +59,47 @@ TEST(Test_shakhbat_cv, Scale)
 	test::CompareImages(out_bi, ref_bi);
 	test::CompareImages(out_ci, ref_ci);
 }
+TEST(Test_shakhbat_cv, Scale_Identity)
+{
+	qlm::Timer<qlm::usec> t_nn, t_bi,t_ci;
+	const std::string folder_path = test::example_folder + "Geometric Transformations/Scale/";
+
+	// read input image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	EXPECT_EQ(load_in, true);
+
+	// scaling by (1, 1) must reproduce the input
+	t_nn.Start();
+	auto out_nn = qlm::Scale(in, qlm::InterpolationFlag::NEAREST_NEIGHBOR, 1.0f, 1.0f);
+	t_nn.End();
+
+	test::PrintTime(t_nn);
+
+	t_bi.Start();
+	auto out_bi = qlm::Scale(in, qlm::InterpolationFlag::BILINEAR, 1.0f, 1.0f);
+	t_bi.End();
+
+	test::PrintTime(t_bi);
+
+	t_ci.Start();
+	auto out_ci = qlm::Scale(in, qlm::InterpolationFlag::BICUBIC, 1.0f, 1.0f);
+	t_ci.End();
+
+	test::PrintTime(t_ci);
+
+	// dimensions must match the input
+	EXPECT_EQ(out_nn.width, in.width);
+	EXPECT_EQ(out_nn.height, in.height);
+
+	EXPECT_EQ(out_bi.width, in.width);
+	EXPECT_EQ(out_bi.height, in.height);
+
+	EXPECT_EQ(out_ci.width, in.width);
+	EXPECT_EQ(out_ci.height, in.height);
+
+	// the output must be identical to the input
+	test::CompareImages(out_nn, in);
+	test::CompareImages(out_bi, in);
+	test::CompareImages(out_ci, in);
+}

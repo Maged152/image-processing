@@ -79,3 +79,26 @@ TEST(Test_shakhbat_cv, WarpAffine_Identity)
 	// the output must be identical to the input
 	test::CompareImages(out, in);
 }
+TEST(Test_shakhbat_cv, GetAffineTransform_Shear)
+{
+	// known shear: (x, y) -> (x + y, y)
+	const qlm::Point<int> src[3] =
+	{
+		{0, 0}, {10, 0}, {0, 10}
+	};
+	const qlm::Point<int> dst[3] =
+	{
+		{0, 0}, {10, 0}, {10, 10}
+	};
+
+	qlm::AffineMatrix mat = qlm::GetAffineTransform(src, dst);
+
+	// first row: m00 m01 m02
+	EXPECT_NEAR(mat.GetElement(0, 0), 1.0f, 1e-3f);
+	EXPECT_NEAR(mat.GetElement(0, 1), 1.0f, 1e-3f);
+	EXPECT_NEAR(mat.GetElement(0, 2), 0.0f, 1e-3f);
+	// second row: m10 m11 m12
+	EXPECT_NEAR(mat.GetElement(1, 0), 0.0f, 1e-3f);
+	EXPECT_NEAR(mat.GetElement(1, 1), 1.0f, 1e-3f);
+	EXPECT_NEAR(mat.GetElement(1, 2), 0.0f, 1e-3f);
+}
