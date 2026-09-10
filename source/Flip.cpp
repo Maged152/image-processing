@@ -12,10 +12,7 @@ namespace qlm
 		const int img_width = in.width;
 		const int img_height = in.height;
 		// output image
-		Image<frmt, T> out = Image<frmt, T>{};
-		out.Create(img_width, img_height);
-		// output location
-		int x_n{ 0 }, y_n{ 0 };
+		Image<frmt, T> out (img_width, img_height);
 		// Flip vertical 
 		std::function<void(int, int)> Flip_vertical_lambda = [img_width, img_height, &in, &out](int x, int y)
 		{

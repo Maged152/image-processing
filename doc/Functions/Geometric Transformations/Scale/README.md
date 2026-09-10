@@ -1,7 +1,9 @@
 # Scale
 
 ## Description
-The function scales an image up or down
+The function scales an image up or down.
+
+The output size is computed as `round(size * scale)`. If a scale factor produces a zero or negative output dimension, an empty image is returned. Source pixels outside the input image are filled with the `border_pixel` of `border_mode`.
 
 You can check the implementation [here](../../../../source/Scale.cpp)
 
@@ -25,7 +27,7 @@ namespace qlm
 | `in`           | `Image`            | The input image.                 |
 | `method`       | `InterpolationFlag`| The scale method.                |
 | `scale_x`      | `float`            | The scale factor in x direction. |
-| `scale_y`      | `float`            | The scale factor in x direction. |
+| `scale_y`      | `float`            | The scale factor in y direction. |
 | `border_mode`  | `BorderMode`       | The pixel extrapolation method.  |
 
 ## Return Value

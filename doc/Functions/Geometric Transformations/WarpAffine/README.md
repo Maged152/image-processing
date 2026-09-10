@@ -1,4 +1,4 @@
-# Wrap Affine
+# Warp Affine
 
 ## Description
 Applies an affine transformation to an image.
@@ -32,6 +32,9 @@ namespace qlm
 | `dst_height` | `int`                 | Output image height.             |
 | `inter`      | `InterpolationFlag`   | The interpolation method.        |
 | `border_mode`| `BorderMode`          | The pixel extrapolation method.  |
+
+
+If the transformation matrix is singular (or near-singular, ``|det| < 1e-6``), the function returns an image filled with the ``border_pixel`` of ``border_mode``.
 
 ## Return Value
 The function returns an image of type `Image<frmt, T>`.

@@ -1,19 +1,19 @@
 #include "WarpAffine.hpp"
+#include <cmath>
 #include <utility>
 #include <algorithm>
 
 namespace qlm
 {
-	AffineMatrix InverseAffineMatrix(const AffineMatrix& mat)
+	std::pair<bool, AffineMatrix> InverseAffineMatrix(const AffineMatrix& mat)
 	{
-		AffineMatrix mat_inv {};
+		AffineMatrix mat_inv = AffineMatrix{};
 
 		float det = mat.GetElement(0, 0) * mat.GetElement(1, 1) - mat.GetElement(0, 1) * mat.GetElement(1, 0);
-		// check determine
-		if (det == 0)
+		// check determinant (guards against singular and near-singular matrices)
+		if (std::abs(det) < 1e-6f)
 		{
-			// exit
-			return mat_inv;
+			return std::make_pair(false, AffineMatrix{});
 		}
 		mat_inv.SetElement(0, 0, mat.GetElement(1, 1) / det);
 		mat_inv.SetElement(1, 1, mat.GetElement(0, 0) / det);
@@ -27,7 +27,7 @@ namespace qlm
 		mat_inv.SetElement(0, 2, m02);
 		mat_inv.SetElement(1, 2, m12);
 
-		return mat_inv;
+		return std::make_pair(true, mat_inv);
 	}
 
 	template<ImageFormat frmt, pixel_t T>
@@ -36,9 +36,12 @@ namespace qlm
 		// create the output image
 		Image<frmt, T> out;
 		out.Create(dst_width, dst_height,border_mode.border_pixel);
-		
-		// transformation matrix inverse
-		AffineMatrix mat_inv = InverseAffineMatrix(mat);
+	
+		auto [is_invertible, mat_inv] = InverseAffineMatrix(mat);
+		if (!is_invertible)
+		{
+			return out;
+		}
 
 		// do transformation
 		auto transform_out_in = [&](int out_x, int out_y)

@@ -8,11 +8,18 @@ qlm::Image<frmt, T> qlm::Scale(const qlm::Image<frmt, T>& in,
 						       const qlm::InterpolationFlag inter, const float scale_x, const float scale_y,
 							   const BorderMode<frmt, T>& border_mode)
 {
-	int width = in.width;
-	int height = in.height;
+	const int width = in.width;
+	const int height = in.height;
+
 	// create image with the new size
-	int new_width = width * scale_x;
-	int new_height = height * scale_y;
+	const int new_width = std::round(width * scale_x);
+	const int new_height = std::round(height * scale_y);
+
+	// invalid scale (zero or negative output dimensions)
+	if (new_width <= 0 || new_height <= 0)
+	{
+		return qlm::Image<frmt, T>{};
+	}
 
 	qlm::Image<frmt, T> out;
 	out.Create(new_width, new_height, border_mode.border_pixel);

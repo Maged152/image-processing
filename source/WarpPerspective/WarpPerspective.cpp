@@ -1,11 +1,12 @@
 #include "WarpPerspective.hpp"
+#include <cmath>
 #include <utility>
 
 namespace qlm
 {
-	PerspectiveMatrix InversePerspectiveMatrix(const PerspectiveMatrix& mat)
+	std::pair<bool, PerspectiveMatrix> InversePerspectiveMatrix(const PerspectiveMatrix& mat)
 	{
-		PerspectiveMatrix mat_inv{};
+		PerspectiveMatrix mat_inv = PerspectiveMatrix{};
 
 		// adjoint 
 		for (int r = 0; r < 3; r++)
@@ -22,11 +23,10 @@ namespace qlm
 		float det = mat.GetElement(0, 0) * mat_inv.GetElement(0, 0) +
 			        mat.GetElement(0, 1) * mat_inv.GetElement(1, 0) +
 			        mat.GetElement(0, 2) * mat_inv.GetElement(2, 0);
-		// check determine
-		if (det == 0)
+		// check determinant (guards against singular and near-singular matrices)
+		if (std::abs(det) < 1e-6f)
 		{
-			// exit
-			return mat_inv;
+			return std::make_pair(false, PerspectiveMatrix{});
 		}
 	
 		// matrix inverse
@@ -35,7 +35,7 @@ namespace qlm
 			mat_inv.SetElement(i, mat_inv.GetElement(i) / det);
 		}
 
-		return mat_inv;
+		return std::make_pair(true, mat_inv);
 
 	}
 
@@ -49,7 +49,11 @@ namespace qlm
 		Image<frmt, T> out;
 		out.Create(dst_width, dst_height, border_mode.border_pixel);
 
-		PerspectiveMatrix mat_inv = InversePerspectiveMatrix(mat);
+		auto [is_invertible, mat_inv] = InversePerspectiveMatrix(mat);
+		if (!is_invertible)
+		{
+			return out;
+		}
 
 		// do transformation
 		auto transform_out_in = [&](int out_x, int out_y)
