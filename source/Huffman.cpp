@@ -94,9 +94,14 @@ namespace qlm
         // Create the encoded string for each channel
         for (int i = 0; i < num_codes; i++) 
         {
-            for (int e = 0; e < out.table[i].size(); e++) 
+            for (int e = 0; e < freq.tot_elements; e++) 
             {
-                out.code[i] += out.table[i][e];
+                const T value = static_cast<T>(e + std::numeric_limits<T>::lowest());
+                const auto it = out.table[i].find(value);
+                if (it != out.table[i].end())
+                {
+                    out.code[i] += it->second;
+                }
             }
         }
 

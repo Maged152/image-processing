@@ -8,6 +8,22 @@ the specified flag (saturation or wrapping).
 You can check the implementation [here](../../../../source/Multiply.cpp)
 
 ## C++ API
+### In-place overload
+```c++
+namespace qlm
+{
+	template<ImageFormat frmt, pixel_t T1, pixel_t T2, pixel_t TO>
+	void Multiply(
+		const Image<frmt, T1> &in1,
+		const Image<frmt, T2> &in2,
+              Image<frmt, TO> &out,
+		const float scale = 1.0f,
+		const OverFlowFlag &over_flow = OverFlowFlag::SATURATE
+	);
+}
+```
+
+### Allocating overload
 ```c++
 namespace qlm
 {

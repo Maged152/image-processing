@@ -42,7 +42,16 @@ Here you can find the implementation of :
     * [Histogram](Functions/Pixel-Wise/Histogram)
     * [Histogram Equalization](Functions/Pixel-Wise/EqualizeHist)
     * [Multiply](Functions/Pixel-Wise/Multiply)
+    * [Subtract](Functions/Pixel-Wise/Subtract)
+    * [Magnitude](Functions/Pixel-Wise/Magnitude)
 * Get Functions
     * [Get Kernel](Functions/Get%20functions/Get%20Kernel)
     * [Get Transformation Matrix](Functions/Get%20functions/Get%20Transformation%20Matrix)
-* Drawing
+* Drawing:
+    * [Draw Circle](Functions/Drawing/README)
+    * [Draw Line](Functions/Drawing/README)
+    * [Draw Arrowed Line](Functions/Drawing/README)
+    * [Draw Rectangle](Functions/Drawing/README)
+    * [Draw Cluster](Functions/Drawing/README)
+* Compression:
+    * [Huffman Encoding](Functions/Compression/Huffman)
