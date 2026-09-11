@@ -70,28 +70,36 @@ TEST(Test_shakhbat_cv, Magnitude_Identity)
 	qlm::Timer<qlm::usec> t_l1{}, t_l2{};
 	const std::string folder_path = test::example_folder + "Pixel-Wise/Magnitude/";
 
-	// read input image
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
-	EXPECT_EQ(load_in, true);
+	const int width = 640;
+	const int height = 480;
 
-	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	// read input image
+	qlm::Image<qlm::ImageFormat::GRAY, int16_t> in_s16(width, height);
+	qlm::Image<qlm::ImageFormat::GRAY, uint16_t> in_u16(width, height);
+
+	// randomly initialize the images
+	for (int i = 0; i < in_s16.width * in_s16.height; i++)
+	{
+		int16_t val = static_cast<int16_t>(std::rand() % 32767);
+		in_s16.SetPixel(i, val);
+		in_u16.SetPixel(i, val);
+	}
 
 	// zero image of the same size
-	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> zero(gray.width, gray.height);
+	qlm::Image<qlm::ImageFormat::GRAY, int16_t> zero(width, height);
 
 	// |in - 0| == in for both L1 and L2
 	t_l1.Start();
-	auto out_l1 = qlm::Magnitude(gray, zero, false);
+	auto out_l1 = qlm::Magnitude(in_s16, zero, false);
 	t_l1.End();
 
 	t_l2.Start();
-	auto out_l2 = qlm::Magnitude(gray, zero, true);
+	auto out_l2 = qlm::Magnitude(in_s16, zero, true);
 	t_l2.End();
 
 	test::PrintTime(t_l1);
 	test::PrintTime(t_l2);
 
-	test::CompareImages(out_l1, gray);
-	test::CompareImages(out_l2, gray);
+	test::CompareImages(out_l1, in_u16);
+	test::CompareImages(out_l2, in_u16);
 }
