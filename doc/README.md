@@ -48,10 +48,10 @@ Here you can find the implementation of :
     * [Get Kernel](Functions/Get%20functions/Get%20Kernel)
     * [Get Transformation Matrix](Functions/Get%20functions/Get%20Transformation%20Matrix)
 * Drawing:
-    * [Draw Circle](Functions/Drawing/README)
-    * [Draw Line](Functions/Drawing/README)
-    * [Draw Arrowed Line](Functions/Drawing/README)
-    * [Draw Rectangle](Functions/Drawing/README)
-    * [Draw Cluster](Functions/Drawing/README)
+    * [Draw Circle](Functions/Drawing)
+    * [Draw Line](Functions/Drawing)
+    * [Draw Arrowed Line](Functions/Drawing)
+    * [Draw Rectangle](Functions/Drawing)
+    * [Draw Cluster](Functions/Drawing)
 * Compression:
     * [Huffman Encoding](Functions/Compression/Huffman)
