@@ -4,6 +4,8 @@ The function applies Histogram Equalization on the input image.
 
 Histogram equalization enhances the contrast of the image by redistributing the pixel intensity values.
 
+Note: an all-zero (single-valued at bin 0) image is returned unchanged. Only `GRAY` images are instantiated.
+
 You can check the implementation [here](../../../../source/EqualizeHist.cpp)
 
 ## C++ API
@@ -11,7 +13,7 @@ You can check the implementation [here](../../../../source/EqualizeHist.cpp)
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> EqualizeHist(const Image<frmt, T>& in)
+	Image<frmt, T> EqualizeHist(const Image<frmt, T>& in);
 }
 ```
 
@@ -51,7 +53,8 @@ The function returns an `Image<frmt, T>`, which is the result of the equalizatio
 ### The input
 ![Input Image](input.png)
 
-### HISTOGRAM
-![Input Image](result_histogram.jpg)
+### The output
+![Output Image](result_histogram.jpg)
 
 Time = 2 ms
+

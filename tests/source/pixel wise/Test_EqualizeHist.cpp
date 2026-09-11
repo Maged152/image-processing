@@ -3,7 +3,7 @@
 TEST(Test_shakhbat_cv, EqualizeHist)
 {
 	qlm::Timer<qlm::usec> t{};
-	const std::string folder_path = test::example_folder + "pixel-wise/EqualizeHist/";
+	const std::string folder_path = test::example_folder + "Pixel-Wise/EqualizeHist/";
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in;
@@ -26,4 +26,16 @@ TEST(Test_shakhbat_cv, EqualizeHist)
 	EXPECT_EQ(load_ref, true);
 
 	test::CompareImages(out, ref);
+}
+
+TEST(Test_shakhbat_cv, EqualizeHist_ConstantImage)
+{
+	// all-zero image: denominator (N - cum[0]) is zero -> returned unchanged, no crash
+	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in(8, 8);
+	for (int i = 0; i < 64; i++)
+		in.SetPixel(i, qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t>(0));
+
+	auto out = qlm::EqualizeHist(in);
+
+	test::CompareImages(out, in);
 }

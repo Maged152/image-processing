@@ -18,7 +18,8 @@ namespace qlm
 		const Image<frmt, T2> &in2,
               Image<frmt, TO> &out,
 		const float scale = 1.0f,
-		const OverFlowFlag &over_flow = OverFlowFlag::SATURATE
+		const OverFlowFlag &over_flow = OverFlowFlag::SATURATE,
+		const Rectangle<int> &roi = Rectangle<int>{}
 	);
 }
 ```
@@ -32,19 +33,25 @@ namespace qlm
 		const Image<frmt, T1> &in1,
 		const Image<frmt, T2> &in2,
 		const float scale = 1.0f,
-		const OverFlowFlag &over_flow = OverFlowFlag::SATURATE
+		const OverFlowFlag &over_flow = OverFlowFlag::SATURATE,
+		const Rectangle<int> &roi = Rectangle<int>{}
 	);
 }
 ```
 
 ## Parameters
 
-| Name                  | Type          | Description                                                                                         |
-|-----------------------|---------------|-----------------------------------------------------------------------------------------------------|
-| `in1`                 | `Image`       | The first input image.                                                                              |
-| `in2`                 | `Image`       | The second input image.                                                                             |
-| `scale`               | `float`       | Optional scale factor to apply to the multiplication result. Default is 1.0f.                       |
-| `over_flow`           | `OverFlowFlag`| Specifies overflow handling: SATURATE (clamp values) or WRAP (allow wrapping). Default is SATURATE. |
+| Name                  | Type             | Description                                                                                         |
+|-----------------------|------------------|-----------------------------------------------------------------------------------------------------|
+| `in1`                 | `Image`          | The first input image.                                                                              |
+| `in2`                 | `Image`          | The second input image. Must have the same dimensions as `in1`.                                     |
+| `out`                 | `Image`          | The output image (in-place overload only). Same dimensions as the inputs.                           |
+| `scale`               | `float`          | Optional scale factor to apply to the multiplication result. Default is 1.0f.                       |
+| `over_flow`           | `OverFlowFlag`   | Specifies overflow handling: SATURATE (clamp values) or WRAP (modular wrap). Default is SATURATE.   |
+| `roi`                 | `Rectangle<int>` | Region of interest to process. Default `{}` processes the whole image.                              |
+
+Note: the alpha channel is not processed — only `.v` (GRAY) or `.r/.g/.b` (RGB) are written; `.a` keeps its default value.
+Pixels outside `roi` keep their default-constructed value in the allocating overload.
 
 
 ## Return Value
@@ -80,3 +87,5 @@ The output image has the same dimensions as the input images.
     // save the output image
     out.SaveToFile("output.jpg");
 ```
+
+Note: this example uses its own `input1.jpg`/`input2.jpg` files (not shipped in this folder).

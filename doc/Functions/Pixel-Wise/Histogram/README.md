@@ -22,7 +22,14 @@ namespace qlm
 
 
 ## Return Value
-The function returns a `Histogram_t<frmt, T>`, which represents the histogram of the input image. 
+The function returns a `Histogram_t<frmt, T>`, which represents the histogram of the input image.
+
+`Histogram_t` holds `num_channels` (`1` for GRAY, `3` for RGB) vectors of `tot_elements`
+bins each (`256` for `uint8_t`), where bin `e` counts pixels with value `e`.
+Use `CumulativeHistogram()` to get the cumulative sum and `Reset()` to zero all bins.
+
+Note: only `uint8_t` images are instantiated — other pixel types would misbehave
+(negative values index out of bounds, `float` would allocate huge tables).
 
 
 ## Example

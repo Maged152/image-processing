@@ -48,7 +48,7 @@ The function returns a `std::pair<std::vector<Point<int>>, std::vector<Point<int
     }
   
     t.Start();
-    auto [min_loc, max_loc] = qlm::MinMaxLoc(out);    
+    auto [min_loc, max_loc] = qlm::MinMaxLoc(in);    
     t.End();
 
     std::cout <<"Time = " << t.ElapsedString() << "\n";
