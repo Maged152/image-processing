@@ -58,3 +58,51 @@ TEST(Test_shakhbat_cv, ColorConvert)
 
 	test::CompareImages(out2, ref);
 }
+
+TEST(Test_shakhbat_cv, ColorConvert_RoundTrip)
+{
+	qlm::Timer<qlm::usec> t{};
+	const std::string folder_path = test::example_folder + "Color Manipulation/ColorConvert/";
+
+	// read input image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	EXPECT_EQ(load_in, true);
+
+	t.Start();
+
+	// RGB -> HSV -> RGB (tolerance 1: 8-bit rounding)
+	auto hsv = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::HSV, uint8_t>(in);
+	auto rgb_from_hsv = qlm::ColorConvert<qlm::ImageFormat::HSV, uint8_t, qlm::ImageFormat::RGB, uint8_t>(hsv);
+
+	// RGB -> HLS -> RGB
+	auto hls = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::HLS, uint8_t>(in);
+	auto rgb_from_hls = qlm::ColorConvert<qlm::ImageFormat::HLS, uint8_t, qlm::ImageFormat::RGB, uint8_t>(hls);
+
+	// RGB -> YCrCb -> RGB
+	auto ycrcb = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::YCrCb, uint8_t>(in);
+	auto rgb_from_ycrcb = qlm::ColorConvert<qlm::ImageFormat::YCrCb, uint8_t, qlm::ImageFormat::RGB, uint8_t>(ycrcb);
+
+	// GRAY -> RGB -> GRAY
+	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	auto rgb_from_gray = qlm::ColorConvert<qlm::ImageFormat::GRAY, uint8_t, qlm::ImageFormat::RGB, uint8_t>(gray);
+	auto gray_back = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(rgb_from_gray);
+
+	// 8-bit quantization tolerances (inherent to the u8 storage, same as OpenCV):
+	// HSV/HLS: H is stored as H/2 -> up to 2 degrees hue error -> up to ~9/255 RGB error;
+	// HLS additionally quantizes L and S independently (~+3) -> bound ~12
+	const qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> tol_hue{ 15, 15, 15 };
+	// YCrCb: each of Y/Cr/Cb quantized independently -> accumulated error up to ~4
+	const qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> tol_ycrcb{ 4, 4, 4 };
+	std::cout << "[round-trip] HSV\n";
+	test::CompareImages(rgb_from_hsv, in, tol_hue);
+	std::cout << "[round-trip] HLS\n";
+	test::CompareImages(rgb_from_hls, in, tol_hue);
+	std::cout << "[round-trip] YCrCb\n";
+	test::CompareImages(rgb_from_ycrcb, in, tol_ycrcb);
+
+	// gray->rgb->gray: luma weights sum to 1.0 but float rounding can shift by 1
+	std::cout << "[round-trip] GRAY\n";
+	const qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t> tol_gray{ 1 };
+	test::CompareImages(gray_back, gray, tol_gray);
+}
