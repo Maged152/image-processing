@@ -57,7 +57,7 @@ The function returns a single-channel grayscale image containing detected edges.
         alpha = false;
 
     // convert to grayscale
-    auto gray = qlm::ColorConvert< qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+    auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
     // apply gaussian blur
     const int filter_size = 5;

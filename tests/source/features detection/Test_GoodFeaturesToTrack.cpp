@@ -56,7 +56,7 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
     EXPECT_EQ(load_in, true);
 
     // Convert the input image to grayscale.
-    const auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+    const auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
     const int max_corners = 200;
     const double quality_level = 0.01;

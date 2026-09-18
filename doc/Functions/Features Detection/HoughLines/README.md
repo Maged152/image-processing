@@ -58,7 +58,7 @@ The function returns a vector of lines of type `std::vector<LinePolar>`.
 	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 	// out image to draw on
-	auto draw = qlm::ColorConvert< qlm::ImageFormat::GRAY, uint8_t, qlm::ImageFormat::RGB, uint8_t>(in);
+	auto draw = qlm::ColorConvert<qlm::ImageFormat::RGB>(in);
 
 	for (auto& line : lines)
 	{

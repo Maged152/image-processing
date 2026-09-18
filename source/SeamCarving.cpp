@@ -320,7 +320,7 @@ namespace qlm
         }
 
         // update the gray image
-        gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(temp);
+        gray = ColorConvert<ImageFormat::GRAY>(temp);
         energy_map.width = gray.width;
     }
 
@@ -378,7 +378,7 @@ namespace qlm
     {
         Image<frmt, T> out{ width , height };
         // buffer used in the algorithm
-        Image<ImageFormat::GRAY, T> gray = ColorConvert<frmt, T, ImageFormat::GRAY, T>(in);
+        Image<ImageFormat::GRAY, T> gray = ColorConvert<ImageFormat::GRAY>(in);
         energy_t energy_map;
 
         const int max_d = std::max(std::max(width, in.width), std::max(height, in.height));

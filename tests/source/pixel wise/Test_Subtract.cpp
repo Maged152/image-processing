@@ -45,7 +45,7 @@ TEST(Test_shakhbat_cv, Subtract_Roi)
 	const bool load_in = rgb.LoadFromFile(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
-	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(rgb);
+	auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(rgb);
 
 	// in - in == 0 inside the ROI; both overloads must agree
 	qlm::Rectangle<int> roi{ qlm::Point<int>{10, 10}, 40, 30 };

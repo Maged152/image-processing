@@ -21,7 +21,7 @@ TEST(Test_shakhbat_cv, HoughLines)
 	t.End();
 
 	// out image to draw on
-	auto draw = qlm::ColorConvert<qlm::ImageFormat::GRAY, uint8_t, qlm::ImageFormat::RGB, uint8_t>(in);
+	auto draw = qlm::ColorConvert<qlm::ImageFormat::RGB>(in);
 
 	for (auto& line : lines)
 	{

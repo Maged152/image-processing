@@ -13,7 +13,7 @@ TEST(Test_shakhbat_cv, Canny)
     if (in.NumerOfChannels() == 1)
         alpha = false;
 
-    auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+    auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
     const int gaussian_size = 5;
     const float sigma = 1.4f;

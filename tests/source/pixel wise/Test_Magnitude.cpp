@@ -10,7 +10,7 @@ TEST(Test_shakhbat_cv, Magnitude_Scharr)
 	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
-	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
 	auto gx = qlm::ScharrX<uint8_t, int16_t>(gray);
 	auto gy = qlm::ScharrY<uint8_t, int16_t>(gray);

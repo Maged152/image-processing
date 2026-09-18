@@ -17,7 +17,7 @@ TEST(Test_shakhbat_cv, Scharr)
 		alpha = false;
 
 	// RGB to GRAY
-	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
 	t.Start();
 	auto out_x = qlm::ScharrX<uint8_t, int16_t>(gray);

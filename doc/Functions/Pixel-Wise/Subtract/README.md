@@ -56,7 +56,7 @@ Note: currently only `Image<GRAY, uint8_t> -> Image<GRAY, int16_t>` is instantia
         std::cout << "Failed to read the image\n";
         return -1;
     }
-    auto in = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in_rgb);
+    auto in = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in_rgb);
 
     // subtract the image from itself -> zero image
     t.Start();

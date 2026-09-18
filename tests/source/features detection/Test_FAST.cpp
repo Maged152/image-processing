@@ -15,7 +15,7 @@ TEST(Test_shakhbat_cv, FAST)
 	if (in.NumerOfChannels() == 1)
 		alpha = false;
 
-	auto gray = qlm::ColorConvert< qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
 	const uint8_t threshold = 70;
 	const int arc_len = 9;

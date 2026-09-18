@@ -104,7 +104,7 @@ TEST(Test_shakhbat_cv, OpticalFlowPyrLK)
         qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
         qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> red{ 0, 0, 255 };
 
-        auto next_rgb = qlm::ColorConvert<qlm::ImageFormat::GRAY, uint8_t, qlm::ImageFormat::RGB, uint8_t>(next_img);
+        auto next_rgb = qlm::ColorConvert<qlm::ImageFormat::RGB>(next_img);
 
         for (int i = 0; i < next_corners.size(); i++)
         {

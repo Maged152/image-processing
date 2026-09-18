@@ -17,7 +17,7 @@ TEST(Test_shakhbat_cv, Sobel)
 		alpha = false;
 
 	// RGB to GRAY
-	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
 	int filter_size = 3;
 	t.Start();

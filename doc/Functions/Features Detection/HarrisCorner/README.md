@@ -52,7 +52,7 @@ The function returns a vector of key-points(corners) of type `std::vector<KeyPoi
     if (in.NumerOfChannels() == 3)
         alpha = false;
 
-    auto gray = qlm::ColorConvert< qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+    auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
     unsigned int filter_size = 3;
     unsigned int block_size = 3;

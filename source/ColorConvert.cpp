@@ -54,7 +54,7 @@ namespace qlm
         return Pixel<ImageFormat::RGB, T>(ClampTo<T>(r), ClampTo<T>(g), ClampTo<T>(b));
     }
 
-    template<pixel_t T, ImageFormat dst_frmt>
+    template<ImageFormat dst_frmt, pixel_t T>
     Pixel<dst_frmt, T> RGB2HSVOrHLS(const Pixel<ImageFormat::RGB, T>& in)
     {
         // normalize R,G,B channels to range 0 to 1
@@ -222,7 +222,7 @@ namespace qlm
         }
     }
 
-    template<ImageFormat src_frmt, pixel_t T, ImageFormat dst_frmt>
+    template<ImageFormat dst_frmt, ImageFormat src_frmt, pixel_t T>
     Image<dst_frmt, T> ColorConvert(const Image<src_frmt, T>& in)
     {
         // check if they are the same format
@@ -291,40 +291,40 @@ namespace qlm
 
 // Explicit instantiation for RGB2GRAY , uint8_t
 template qlm::Image<qlm::ImageFormat::GRAY, uint8_t>
-qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY>
+qlm::ColorConvert<qlm::ImageFormat::GRAY, qlm::ImageFormat::RGB, uint8_t>
     (const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&);
 
 // Explicit instantiation for GRAY2RGB , uint8_t
 template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
-qlm::ColorConvert<qlm::ImageFormat::GRAY, uint8_t, qlm::ImageFormat::RGB>
+qlm::ColorConvert<qlm::ImageFormat::RGB, qlm::ImageFormat::GRAY, uint8_t>
 (const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&);
 
 // Explicit instantiation for RGB2HSV , uint8_t
 template qlm::Image<qlm::ImageFormat::HSV, uint8_t>
-qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::HSV>
+qlm::ColorConvert<qlm::ImageFormat::HSV, qlm::ImageFormat::RGB, uint8_t>
 (const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&);
 
 // Explicit instantiation for RGB2HLS , uint8_t
 template qlm::Image<qlm::ImageFormat::HLS, uint8_t>
-qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::HLS	>
+qlm::ColorConvert<qlm::ImageFormat::HLS, qlm::ImageFormat::RGB, uint8_t>
 (const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&);
 
 // Explicit instantiation for HSV2RGB , uint8_t
 template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
-qlm::ColorConvert<qlm::ImageFormat::HSV, uint8_t, qlm::ImageFormat::RGB>
+qlm::ColorConvert<qlm::ImageFormat::RGB, qlm::ImageFormat::HSV, uint8_t>
 (const qlm::Image<qlm::ImageFormat::HSV, uint8_t>&);
 
 // Explicit instantiation for HLS2RGB , uint8_t
 template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
-qlm::ColorConvert<qlm::ImageFormat::HLS, uint8_t, qlm::ImageFormat::RGB>
+qlm::ColorConvert<qlm::ImageFormat::RGB, qlm::ImageFormat::HLS, uint8_t>
 (const qlm::Image<qlm::ImageFormat::HLS, uint8_t>&);
 
 // Explicit instantiation for RGB2HSV , uint8_t
 template qlm::Image<qlm::ImageFormat::YCrCb, uint8_t>
-qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::YCrCb>
+qlm::ColorConvert<qlm::ImageFormat::YCrCb, qlm::ImageFormat::RGB, uint8_t>
 (const qlm::Image<qlm::ImageFormat::RGB, uint8_t>&);
 
 // Explicit instantiation for YCrCb2RGB , uint8_t
 template qlm::Image<qlm::ImageFormat::RGB, uint8_t>
-qlm::ColorConvert<qlm::ImageFormat::YCrCb, uint8_t, qlm::ImageFormat::RGB>
+qlm::ColorConvert<qlm::ImageFormat::RGB, qlm::ImageFormat::YCrCb, uint8_t>
 (const qlm::Image<qlm::ImageFormat::YCrCb, uint8_t>&);

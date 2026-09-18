@@ -10,7 +10,7 @@ TEST(Test_shakhbat_cv, MinMaxLoc)
 	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
-    auto gray = qlm::ColorConvert< qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+    auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
     t.Start();
     auto [min_loc, max_loc] = qlm::MinMaxLoc(gray);    
