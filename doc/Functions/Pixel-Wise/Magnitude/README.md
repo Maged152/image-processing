@@ -6,34 +6,55 @@ Computes the per-pixel gradient magnitude of two derivative images:
 - `L2gradient = true`: `sqrt(gx^2 + gy^2)` (L2 norm)
 - `L2gradient = false`: `|gx| + |gy|` (L1 norm)
 
-The result saturates at the output range. The output pixel type is the unsigned counterpart of the input type (e.g., `int16_t -> uint16_t`).
+The result saturates at the output range. The output pixel type is a template parameter `TO`
+(e.g., `int16_t -> uint16_t`). The single-parameter overload defaults to the unsigned counterpart
+of the input type (e.g., `int16_t -> uint16_t`).
 
 You can check the implementation [here](../../../../source/Magnitude.cpp)
 
 ## C++ API
+### In-place overload
 ```c++
 namespace qlm
 {
-	template<pixel_t T>
-	Image<ImageFormat::GRAY, std::make_unsigned_t<T>> Magnitude(
+	template<pixel_t T, pixel_t TO = std::make_unsigned_t<T>>
+	void Magnitude(
 		const Image<ImageFormat::GRAY, T>& g_x,
 		const Image<ImageFormat::GRAY, T>& g_y,
-		const bool L2gradient = false);
+		Image<ImageFormat::GRAY, TO>& out,
+		const bool L2gradient = false,
+		const Rectangle<int>& roi = Rectangle<int>{}
+	);
+}
+```
+
+### Allocating overload
+```c++
+namespace qlm
+{
+	template<pixel_t T, pixel_t TO = std::make_unsigned_t<T>>
+	Image<ImageFormat::GRAY, TO> Magnitude(
+		const Image<ImageFormat::GRAY, T>& g_x,
+		const Image<ImageFormat::GRAY, T>& g_y,
+		const bool L2gradient = false,
+		const Rectangle<int>& roi = Rectangle<int>{});
 }
 ```
 
 ## Parameters
 
-| Name         | Type   | Description                                                       |
-|--------------|--------|-------------------------------------------------------------------|
-| `g_x`        | `Image`| The x derivative image (GRAY).                                    |
-| `g_y`        | `Image`| The y derivative image (GRAY).                                    |
-| `L2gradient` | `bool` | `true` for the L2 norm, `false` for the L1 norm. Default `false`. |
+| Name         | Type             | Description                                                        |
+|--------------|------------------|--------------------------------------------------------------------|
+| `g_x`        | `Image`          | The x derivative image (GRAY).                                     |
+| `g_y`        | `Image`          | The y derivative image (GRAY). Must have the same dimensions as `g_x`. |
+| `out`        | `Image`          | The output image (in-place overload only). Same dimensions as the inputs. |
+| `L2gradient` | `bool`           | `true` for the L2 norm, `false` for the L1 norm. Default `false`.  |
+| `roi`        | `Rectangle<int>` | Region of interest to process. Default `{}` processes the whole image. |
 
 ## Return Value
-The function returns an image of type `Image<GRAY, make_unsigned_t<T>>`.
+The allocating overload returns an image of type `Image<GRAY, TO>`.
 
-Note: currently only `int16_t -> uint16_t` is instantiated.
+Pixels outside `roi` keep their default-constructed value in the allocating overload.
 
 ## Example
 
@@ -42,7 +63,7 @@ Note: currently only `int16_t -> uint16_t` is instantiated.
     std::string file_name = "input.jpg";
     // load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;
@@ -58,7 +79,7 @@ Note: currently only `int16_t -> uint16_t` is instantiated.
 
     std::cout <<"Time = " << t.ElapsedString() << "\n";
 
-    mag.SaveToFile("result.jpg");
+    mag.Write("result.jpg");
 ```
 
 ### The input
