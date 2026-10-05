@@ -15,18 +15,20 @@ You can check the implementation [here](../../../../source/Sobel.cpp)
 	Image<ImageFormat::GRAY, out_t> SobelX(
 		const Image <ImageFormat::GRAY, in_t>& in,
 		const int kernel_size,
-		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
+		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{},
+		const Rectangle<int>& roi = Rectangle<int>{}
 	);
 ```
 ### Parameters
 
-| Name           | Type           | Description                                                                                  |
-|----------------|----------------|----------------------------------------------------------------------------------------------|
+| Name           | Type             | Description                                                                                  |
+|----------------|------------------|----------------------------------------------------------------------------------------------|
 | `in_t`         | `pixel_t`      | The data type of the input image.                                                            |
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
 | `kernel_size`  | `int` | The kernel size to be used on the input image.                                               |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
+| `roi`          | `Rectangle<int>` | Region of interest to process. Default `{}` processes the whole image. Pixels outside `roi` keep their default-constructed value. |
 
 ### Return Value
 The function returns an image of type `Image<ImageFormat::GRAY, out_t>`.
@@ -39,18 +41,20 @@ The function returns an image of type `Image<ImageFormat::GRAY, out_t>`.
 	Image<ImageFormat::GRAY, out_t> SobelY(
 		const Image<ImageFormat::GRAY, in_t>& in,
 		const int kernel_size,
-		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
+		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{},
+		const Rectangle<int>& roi = Rectangle<int>{}
 	);
 ```
 ### Parameters
 
-| Name           | Type           | Description                                                                                  |
-|----------------|----------------|----------------------------------------------------------------------------------------------|
+| Name           | Type             | Description                                                                                  |
+|----------------|------------------|----------------------------------------------------------------------------------------------|
 | `in_t`         | `pixel_t`      | The data type of the input image.                                                            |
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
 | `kernel_size`  | `int` | The kernel size to be used on the input image.                                               |
 | `border_mode`  | `BorderMode` | The pixel extrapolation method.                                                              |
+| `roi`          | `Rectangle<int>` | Region of interest to process. Default `{}` processes the whole image. Pixels outside `roi` keep their default-constructed value. |
 
 ### Return Value
 The function returns an image of type `<ImageFormat::GRAY, out_t>`.
@@ -64,18 +68,20 @@ The function returns an image of type `<ImageFormat::GRAY, out_t>`.
 	SobelDerivatives<in_t, out_t> Sobel(
 		const Image<ImageFormat::GRAY, in_t>& in,
 		const int kernel_size,
-		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
+		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{},
+		const Rectangle<int>& roi = Rectangle<int>{}
 	);
 ```
 ### Parameters
 
-| Name           | Type           | Description                                                                                  |
-|----------------|----------------|----------------------------------------------------------------------------------------------|
+| Name           | Type             | Description                                                                                  |
+|----------------|------------------|----------------------------------------------------------------------------------------------|
 | `in_t`         | `pixel_t`      | The data type of the input image.                                                            |
 | `out_t`        | `pixel_t`      | The data type of the output image.                                                           |
 | `in`           | `Image`        | The input image<GRAY, in_t>.                                                                 |
 | `kernel_size`  | `int` | The kernel size to be used on the input image.                                               |
 | `border_mode`  | `BorderMode`   | The pixel extrapolation method.                                                              |
+| `roi`          | `Rectangle<int>` | Region of interest to process. Default `{}` processes the whole image. `sobel_x`/`sobel_y`/`magnitude`/`angle` are written only inside `roi`. |
 
 ### Return Value
 The function returns an structure of type `SobelDerivatives<in_t, out_t>`.
@@ -106,7 +112,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 	std::string file_name = "input.jpg";
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	if (!in.LoadFromFile(file_name))
+	if (!in.Read(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
@@ -130,17 +136,17 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 	auto x = qlm::ConvertSobelDepth(out.sobel_x, filter_size);
 	auto y = qlm::ConvertSobelDepth(out.sobel_y, filter_size);
 
-	if (!x.SaveToFile("resultx.jpg", alpha))
+	if (!x.Write("resultx.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}
 
-	if (!y.SaveToFile("resulty.jpg", alpha))
+	if (!y.Write("resulty.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}
 
-	if (!out.magnitude.SaveToFile("result.jpg", alpha))
+	if (!out.magnitude.Write("result.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}

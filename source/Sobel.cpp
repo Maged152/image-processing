@@ -15,7 +15,7 @@ namespace qlm
 		constexpr uint8_t max_value = std::numeric_limits<uint8_t>::max();
 		constexpr uint8_t min_value = std::numeric_limits<uint8_t>::lowest();
 		// out
-		Image<ImageFormat::GRAY, uint8_t> out{in.width, in.height};
+		Image<ImageFormat::GRAY, uint8_t> out{in.Width(), in.Height()};
 		Pixel<ImageFormat::GRAY, uint8_t> out_pix;
 		// get filter 
 		auto ker = GetDerivYKernel(filter_size);
@@ -28,7 +28,7 @@ namespace qlm
 		
 		float v{ 0 }, a{ 0 };
 
-		for (int i = 0; i < out.height * out.width; i++)
+		for (int i = 0; i < out.Height() * out.Width(); i++)
 		{
 			// remove sign
 			v = std::abs(in.GetPixel(i).v);
@@ -116,33 +116,42 @@ namespace qlm
 	}
 	// Sobel X operation
 	template<pixel_t in_t, pixel_t out_t>
-	Image<ImageFormat::GRAY, out_t> SobelX(const Image<ImageFormat::GRAY, in_t>& in, const int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
+	Image<ImageFormat::GRAY, out_t> SobelX(const Image<ImageFormat::GRAY, in_t>& in, 
+		                                  const int kernel_size, 
+										  const BorderMode<ImageFormat::GRAY, in_t>& border_mode,
+										  const Rectangle<int>& roi)
 	{
 		auto ker = GetDerivXKernel(kernel_size);
 
-		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker, border_mode);
+		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker, border_mode, roi);
 	}
 	// Sobel Y operation
 	template<pixel_t in_t, pixel_t out_t>
-	Image<ImageFormat::GRAY, out_t> SobelY(const Image<ImageFormat::GRAY, in_t>& in, const int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
+	Image<ImageFormat::GRAY, out_t> SobelY(const Image<ImageFormat::GRAY, in_t>& in, 
+		                                   const int kernel_size, 
+										   const BorderMode<ImageFormat::GRAY, in_t>& border_mode, 
+										   const Rectangle<int>& roi)
 	{
 		auto ker = GetDerivYKernel(kernel_size);
-		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker, border_mode);
+		return SepFilter2D<ImageFormat::GRAY, in_t, out_t>(in, ker, border_mode, roi);
 	}
 	// Sobel operation
 	template<pixel_t in_t, pixel_t out_t>
-	SobelDerivatives<in_t, out_t> Sobel(const Image<ImageFormat::GRAY, in_t>& in, const int kernel_size, const BorderMode<ImageFormat::GRAY, in_t>& border_mode)
+	SobelDerivatives<in_t, out_t> Sobel(const Image<ImageFormat::GRAY, in_t>& in, 
+		                                const int kernel_size, 
+										const BorderMode<ImageFormat::GRAY, in_t>& border_mode, 
+										const Rectangle<int>& roi)
 	{
 		const in_t min_value = std::numeric_limits<in_t>::lowest();
 		const in_t max_value = std::numeric_limits<in_t>::max();
 
 		const wider_t<in_t> max_mag = std::sqrt(std::pow(max_value, 2) + std::pow(max_value, 2));
 
-		SobelDerivatives<in_t, out_t> out {in.width, in.height};
+		SobelDerivatives<in_t, out_t> out {in.Width(), in.Height()};
 		// x derivative
-		out.sobel_x = std::move(SobelX<in_t, out_t>(in, kernel_size, border_mode));
+		out.sobel_x = std::move(SobelX<in_t, out_t>(in, kernel_size, border_mode, roi));
 		// y derivative
-		out.sobel_y = std::move(SobelY<in_t, out_t>(in, kernel_size, border_mode));
+		out.sobel_y = std::move(SobelY<in_t, out_t>(in, kernel_size, border_mode, roi));
 		// sobel x y as in_t(uint8_t)
 		auto sobel_x = ConvertSobelDepth(out.sobel_x, kernel_size);
 		auto sobel_y = ConvertSobelDepth(out.sobel_y, kernel_size);
@@ -150,30 +159,34 @@ namespace qlm
 		Pixel<ImageFormat::GRAY, in_t> x_pix;
 		Pixel<ImageFormat::GRAY, in_t> y_pix;
 		Pixel<ImageFormat::GRAY, in_t> out_pix;
-		// magnitude
+		// magnitude + angle (ROI-limited; derivatives outside roi stay default-constructed)
+		auto [start_x, start_y, end_x, end_y] = ROI(roi, in.Width(), in.Height());
 		float v{0}, a{0}, angle{0};
-		for (int i = 0; i < in.height * in.width; i++)
+		for (int y = start_y; y < end_y; y++)
 		{
-			// input X, Y pixels
-			x_pix = sobel_x.GetPixel(i);
-			y_pix = sobel_y.GetPixel(i);
+			for (int x = start_x; x < end_x; x++)
+			{
+				// input X, Y pixels
+				x_pix = sobel_x.GetPixel(x, y);
+				y_pix = sobel_y.GetPixel(x, y);
 
-			// calculate the magnitude
-			v = std::sqrt(std::pow(x_pix.v, 2) + std::pow(y_pix.v, 2));
-			a = std::sqrt(std::pow(x_pix.a, 2) + std::pow(y_pix.a, 2));
+				// calculate the magnitude
+				v = std::sqrt(std::pow(x_pix.v, 2) + std::pow(y_pix.v, 2));
+				a = std::sqrt(std::pow(x_pix.a, 2) + std::pow(y_pix.a, 2));
 
-			// normalize value
-			v = (v - min_value) / (float)(max_mag - min_value);
-			a = (a - min_value) / (float)(max_mag - min_value);
+				// normalize value
+				v = (v - min_value) / (float)(max_mag - min_value);
+				a = (a - min_value) / (float)(max_mag - min_value);
 
-			// denormalize
-			out_pix.v = static_cast<in_t>(v * (max_value - min_value) + min_value);
-			out_pix.a = static_cast<in_t>(a * (max_value - min_value) + min_value);
-			out.magnitude.SetPixel(i, out_pix);
+				// denormalize
+				out_pix.v = static_cast<in_t>(v * (max_value - min_value) + min_value);
+				out_pix.a = static_cast<in_t>(a * (max_value - min_value) + min_value);
+				out.magnitude.SetPixel(x, y, out_pix);
 
-			// calculate the angle
-			angle = std::atan2(out.sobel_y.GetPixel(i).v, out.sobel_x.GetPixel(i).v) * 180.0f / M_PI;
-			out.angle.SetPixel(i, Pixel<ImageFormat::GRAY, float>(angle));
+				// calculate the angle
+				angle = std::atan2(out.sobel_y.GetPixel(x, y).v, out.sobel_x.GetPixel(x, y).v) * 180.0f / M_PI;
+				out.angle.SetPixel(x, y, Pixel<ImageFormat::GRAY, float>(angle));
+			}
 		}
 
 		return out;
@@ -184,18 +197,20 @@ namespace qlm
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::SobelX<uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	int,
-	const BorderMode<ImageFormat::GRAY, uint8_t>&);
+	const BorderMode<ImageFormat::GRAY, uint8_t>&,
+	const Rectangle<int>&);
 
 // Explicit instantiation for  uint8_t, int16_t
 template qlm::Image<qlm::ImageFormat::GRAY, int16_t>
 qlm::SobelY<uint8_t, int16_t>(const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	int,
-	const BorderMode<ImageFormat::GRAY, uint8_t>&);
-
+	const BorderMode<ImageFormat::GRAY, uint8_t>&,
+	const Rectangle<int>&);
 
 // Explicit instantiation for  uint8_t, int16_t
 template qlm::SobelDerivatives<uint8_t, int16_t>
    qlm::Sobel<uint8_t, int16_t>(
 	const qlm::Image<qlm::ImageFormat::GRAY, uint8_t>&,
 	const int,
-	const BorderMode<qlm::ImageFormat::GRAY, uint8_t>&);
+	const BorderMode<qlm::ImageFormat::GRAY, uint8_t>&,
+	const Rectangle<int>&);

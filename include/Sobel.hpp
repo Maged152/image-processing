@@ -33,7 +33,8 @@ namespace qlm
 	Image<ImageFormat::GRAY, out_t> SobelX(
 		const Image <ImageFormat::GRAY, in_t>& in,
 		const int kernel_size,
-		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
+		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{},
+		const Rectangle<int>& roi = Rectangle<int>{}
 	);
 
 	// Sobel Y operation
@@ -41,7 +42,8 @@ namespace qlm
 	Image<ImageFormat::GRAY, out_t> SobelY(
 		const Image<ImageFormat::GRAY, in_t>& in,
 		const int kernel_size,
-		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
+		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{},
+		const Rectangle<int>& roi = Rectangle<int>{}
 	);
 
 	// Sobel
@@ -49,7 +51,8 @@ namespace qlm
 	SobelDerivatives<in_t, out_t> Sobel(
 		const Image<ImageFormat::GRAY, in_t>& in,
 		const int kernel_size,
-		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{}
+		const BorderMode<ImageFormat::GRAY, in_t>& border_mode = BorderMode<ImageFormat::GRAY, in_t>{},
+		const Rectangle<int>& roi = Rectangle<int>{}
 	);
 	
 	// change Bit Depth to sobel from S16 to U8

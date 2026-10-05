@@ -5,7 +5,7 @@
 
 namespace qlm
 {
-	template<pixel_t T, pixel_t TO>
+	template<pixel_t T, pixel_t TO = std::make_unsigned_t<T>>
 	void Magnitude(const Image<ImageFormat::GRAY, T>& g_x,
 	               const Image<ImageFormat::GRAY, T>& g_y,
 	               Image<ImageFormat::GRAY, TO>& out,
