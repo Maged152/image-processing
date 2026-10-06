@@ -8,7 +8,7 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
      /*
     // Load the input image.
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;
@@ -16,7 +16,7 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
 
     // Check alpha component.
     bool alpha{ true };
-    if (in.NumerOfChannels() == 3)
+    if (in.NumberOfChannels() == 3)
         alpha = false;
 
     // Detect corners with GoodFeaturesToTrack.
@@ -43,7 +43,7 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
         in = qlm::DrawCircle(in, circle, color);
     }
 
-    if (!in.SaveToFile("result.jpg", alpha))
+    if (!in.Write("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }
@@ -52,7 +52,7 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
      */
     // read input image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+    const bool load_in = in.Read(folder_path + "input.jpg");
     EXPECT_EQ(load_in, true);
 
     // Convert the input image to grayscale.
@@ -88,7 +88,7 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
 
     // read reference image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-    const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+    const bool load_ref = ref.Read(folder_path + "result.jpg");
     EXPECT_EQ(load_ref, true);
 
     test::CompareImages(in, ref);

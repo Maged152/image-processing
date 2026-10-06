@@ -4,6 +4,7 @@
 #include <cmath>
 #include <limits>
 #include <cassert>
+#include <type_traits>
 #include <vector>
 
 template <qlm::pixel_t T>
@@ -12,21 +13,21 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
                                             const int filter_size, const bool l2_gradient, 
                                             const qlm::BorderMode<qlm::ImageFormat::GRAY, T> &border_mode)
 {
-    qlm::Image<qlm::ImageFormat::GRAY, T> out(in.width, in.height);
+    qlm::Image<qlm::ImageFormat::GRAY, T> out(in.Width(), in.Height());
     constexpr int strong_edge = std::numeric_limits<T>::max();
     constexpr int weak_edge = std::numeric_limits<T>::max() / 2;
 
     // helper to check coordinate bounds
     const auto IsValidCoord = [&](const qlm::Point<int>& p) 
     {
-        return p.x >= 0 && p.x < in.width && p.y >= 0 && p.y < in.height;
+        return p.x >= 0 && p.x < in.Width() && p.y >= 0 && p.y < in.Height();
     };
 
     // stage 1: Gradient calculation using Sobel operator
     const auto sobel_x = qlm::SobelX(in, filter_size, border_mode);
     const auto sobel_y = qlm::SobelY(in, filter_size, border_mode);
 
-    auto gradient = qlm::Magnitude(sobel_x, sobel_y, l2_gradient);
+    auto gradient = qlm::Magnitude<int16_t, std::make_unsigned_t<int16_t>>(sobel_x, sobel_y, l2_gradient);
 
     // stage 2: Non-maximum suppression
     const auto CalcQuantizedAngle = [&](const int x, const int y)
@@ -47,12 +48,12 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
     };
 
     std::vector<qlm::Point<int>> stack; // Pre-allocate stack with a reasonable reserve to avoid reallocations
-    stack.reserve(static_cast<size_t>(in.width) * in.height / 4);
+    stack.reserve(static_cast<size_t>(in.Width()) * in.Height() / 4);
 
 
-    for (int y = 0; y < in.height; y++)
+    for (int y = 0; y < in.Height(); y++)
     {
-        for (int x = 0; x < in.width; x++)
+        for (int x = 0; x < in.Width(); x++)
         {
             // get the current pixel's gradient magnitude and angle
             const int32_t mag = gradient.GetPixel(x, y).v;
@@ -129,9 +130,9 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
     }
 
     // Suppress remaining weak edges in one pass
-    for (int y = 0; y < out.height; y++)
+    for (int y = 0; y < out.Height(); y++)
     {
-        for (int x = 0; x < out.width; x++)
+        for (int x = 0; x < out.Width(); x++)
         {
             if (out.GetPixel(x, y).v == weak_edge)
                 out.SetPixel(x, y, 0);

@@ -7,13 +7,13 @@ TEST(Test_shakhbat_cv, Scharr)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(test::example_folder + "Filters/Scharr/input.jpg");
+	const bool load_in = in.Read(test::example_folder + "Filters/Scharr/input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// do the operation
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 3)
+	if (in.NumberOfChannels() == 3)
 		alpha = false;
 
 	// RGB to GRAY
@@ -41,15 +41,15 @@ TEST(Test_shakhbat_cv, Scharr)
 
 	// read reference image
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> ref;
-	const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+	const bool load_ref = ref.Read(folder_path + "result.jpg");
 	EXPECT_EQ(load_ref, true);
 
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> ref_x;
-	const bool load_ref_x = ref_x.LoadFromFile(folder_path + "resultx.jpg");
+	const bool load_ref_x = ref_x.Read(folder_path + "resultx.jpg");
 	EXPECT_EQ(load_ref_x, true);
 
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> ref_y;
-	const bool load_ref_y = ref_y.LoadFromFile(folder_path + "resulty.jpg");
+	const bool load_ref_y = ref_y.Read(folder_path + "resulty.jpg");
 	EXPECT_EQ(load_ref_y, true);
 
 	test::CompareImages(x, ref_x);

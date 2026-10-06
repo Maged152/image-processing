@@ -231,8 +231,8 @@ namespace qlm
             return in;
         }
 
-        const int width = in.width;
-        const int height = in.height;
+        const int width = in.Width();
+        const int height = in.Height();
 
         // create the output image
         Image<dst_frmt, T> out (width, height);

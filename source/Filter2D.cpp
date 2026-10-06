@@ -3,8 +3,8 @@
 template<qlm::ImageFormat frmt, qlm::pixel_t T>
 qlm::Image<frmt, T> qlm::Filter2D(const qlm::Image<frmt, T>& in, const qlm::Kernel& kernel, const  BorderMode<frmt, T>& border_mode)
 {
-	int img_width = in.width;
-	int img_height = in.height;
+	int img_width = in.Width();
+	int img_height = in.Height();
 
 	// create the output image
 	qlm::Image<frmt, T> out;

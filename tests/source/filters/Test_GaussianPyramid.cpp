@@ -7,7 +7,7 @@ TEST(Test_shakhbat_cv, GaussianPyramid)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// do the operation
@@ -27,7 +27,7 @@ TEST(Test_shakhbat_cv, GaussianPyramid)
         // read reference image
         const std::string out_name = "layer_" + std::to_string(layer) + ".jpg";
         qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-        const bool load_ref = ref.LoadFromFile(folder_path + out_name);
+        const bool load_ref = ref.Read(folder_path + out_name);
         EXPECT_EQ(load_ref, true);
 
         test::CompareImages(out, ref);	

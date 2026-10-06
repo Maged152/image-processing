@@ -42,7 +42,7 @@ TEST(Test_shakhbat_cv, Subtract_Roi)
 
 	const std::string folder_path = test::example_folder + "Filters/BoxFilter/";
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> rgb;
-	const bool load_in = rgb.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = rgb.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(rgb);
@@ -52,14 +52,14 @@ TEST(Test_shakhbat_cv, Subtract_Roi)
 
 	t.Start();
 	auto out = qlm::Subtract<qlm::ImageFormat::GRAY, uint8_t, int16_t>(gray, gray, roi);
-	qlm::Image<qlm::ImageFormat::GRAY, int16_t> out_void(gray.width, gray.height);
+	qlm::Image<qlm::ImageFormat::GRAY, int16_t> out_void(gray.Width(), gray.Height());
 	qlm::Subtract(gray, gray, out_void, roi);
 	t.End();
 	test::PrintTime(t);
 
-	for (int y = 0; y < gray.height; y++)
+	for (int y = 0; y < gray.Height(); y++)
 	{
-		for (int x = 0; x < gray.width; x++)
+		for (int x = 0; x < gray.Width(); x++)
 		{
 			EXPECT_EQ(out.GetPixel(x, y).v, out_void.GetPixel(x, y).v);
 		}

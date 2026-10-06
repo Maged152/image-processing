@@ -56,14 +56,14 @@ namespace qlm
     std::string file_name = "input.jpg"; 
     // load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;
     }
     // check alpha component
     bool alpha{ true };
-    if (in.NumerOfChannels() == 1)
+    if (in.NumberOfChannels() == 1)
         alpha = false;
 
     const unsigned int k = 4;
@@ -79,7 +79,7 @@ namespace qlm
     // draw clusters
     auto out = qlm::DrawCluster(in, clusters);
 
-    if (!out.SaveToFile("result.jpg", alpha))
+    if (!out.Write("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }

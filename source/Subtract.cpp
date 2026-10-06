@@ -7,10 +7,10 @@ namespace qlm
     void Subtract(const Image<frmt, T_in> &in1, const Image<frmt, T_in> &in2, Image<frmt, T_out> &out, const Rectangle<int> &roi)
     {
         // validate that the input images have the same dimensions
-        assert(in1.width == in2.width && in1.height == in2.height);
-        assert(in1.width == out.width && in1.height == out.height);
+        assert(in1.Width() == in2.Width() && in1.Height() == in2.Height());
+        assert(in1.Width() == out.Width() && in1.Height() == out.Height());
 
-        auto [start_x, start_y, end_x, end_y] = ROI(roi, in1.width, in1.height);
+        auto [start_x, start_y, end_x, end_y] = ROI(roi, in1.Width(), in1.Height());
 
         for (int h = start_y; h < end_y; h++)
         {
@@ -28,7 +28,7 @@ namespace qlm
     template <ImageFormat frmt, pixel_t T_in, pixel_t T_out>
     Image<frmt, T_out> Subtract(const Image<frmt, T_in> &in1, const Image<frmt, T_in> &in2, const Rectangle<int> &roi)
     {
-        Image<frmt, T_out> out (in1.width, in1.height);
+        Image<frmt, T_out> out (in1.Width(), in1.Height());
         Subtract(in1, in2, out, roi);
         
         return out;

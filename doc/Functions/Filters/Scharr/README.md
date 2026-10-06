@@ -94,7 +94,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	if (!in.LoadFromFile(file_name))
+	if (!in.Read(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
@@ -102,7 +102,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 3)
+	if (in.NumberOfChannels() == 3)
 		alpha = false;
 
 	// RGB to GRAY
@@ -124,17 +124,17 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 	auto y = qlm::ConvertScharrDepth(out_y);
     auto out = qlm::ConvertBitDepth<qlm::ImageFormat::GRAY, uint16_t, uint8_t>(mag);
 
-	if (!x.SaveToFile("resultx.jpg", alpha))
+	if (!x.Write("resultx.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}
 
-	if (!y.SaveToFile("resulty.jpg", alpha))
+	if (!y.Write("resulty.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}
 
-	if (!out.SaveToFile("result.jpg", alpha))
+	if (!out.Write("result.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}

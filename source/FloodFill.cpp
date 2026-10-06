@@ -7,8 +7,15 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> FloodFill(const Image<frmt, T>& in, const Point<int>& seed_point, const Pixel<frmt, T>& fill_color, const Pixel<frmt, T>& threshold)
 	{
-		const int img_width = in.width;
-		const int img_height = in.height;
+		const int img_width = in.Width();
+		const int img_height = in.Height();
+
+		// out-of-bounds seed: return an unchanged copy
+		if (seed_point.x < 0 || seed_point.x >= img_width ||
+			seed_point.y < 0 || seed_point.y >= img_height)
+		{
+			return in;
+		}
 
 		Image<frmt, T> out{ in };
 		std::queue<Point<int>> q;
@@ -76,4 +83,7 @@ namespace qlm
 
 
 	template Image<ImageFormat::RGB, uint8_t> FloodFill(const Image<ImageFormat::RGB, uint8_t>&, const Point<int>&, const Pixel<ImageFormat::RGB, uint8_t>&, const Pixel<ImageFormat::RGB, uint8_t>&);
+
+	template Image<ImageFormat::GRAY, uint8_t> FloodFill(const Image<ImageFormat::GRAY, uint8_t>&, const Point<int>&, const Pixel<ImageFormat::GRAY, uint8_t>&, const Pixel<ImageFormat::GRAY, uint8_t>&);
 }
+

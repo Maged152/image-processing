@@ -41,14 +41,14 @@ The function returns a vector of lines of type `std::vector<LinePolar>`.
 	std::string file_name = "input.png";
 	// load the image
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in;
-	if (!in.LoadFromFile(file_name))
+	if (!in.Read(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
 	}
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 1)
+	if (in.NumberOfChannels() == 1)
 		alpha = false;
 	// do the operation
 	t.Start();
@@ -65,7 +65,7 @@ The function returns a vector of lines of type `std::vector<LinePolar>`.
 		draw = qlm::DrawLine(draw, line, qlm::Pixel<qlm::ImageFormat::RGB, uint8_t>{ 0, 255, 0 });
 	}
 
-	if (!draw.SaveToFile("result.jpg", alpha))
+	if (!draw.Write("result.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}

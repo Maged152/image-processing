@@ -7,16 +7,16 @@ TEST(Test_shakhbat_cv, SeamCarving)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 1)
+	if (in.NumberOfChannels() == 1)
 		alpha = false;
 
-	const int target_width = in.width - 500;
-	const int target_height =  in.height + 200;
+	const int target_width = in.Width() - 500;
+	const int target_height =  in.Height() + 200;
 
 	const qlm::EnergyFlag energy = qlm::EnergyFlag::BACKWARD;
 	const qlm::OrderFlag order = qlm::OrderFlag::WIDTH_FIRST;
@@ -33,7 +33,7 @@ TEST(Test_shakhbat_cv, SeamCarving)
 
 	// read reference image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-	const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+	const bool load_ref = ref.Read(folder_path + "result.jpg");
 	EXPECT_EQ(load_ref, true);
 
 	test::CompareImages(out, ref);

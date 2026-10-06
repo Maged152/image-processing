@@ -7,12 +7,12 @@ TEST(Test_shakhbat_cv, ColorConvert)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 3)
+	if (in.NumberOfChannels() == 3)
 		alpha = false;
 	
 	// do the operation
@@ -22,7 +22,7 @@ TEST(Test_shakhbat_cv, ColorConvert)
 	t.End();
 
 	// red to green
-	for (int i = 0; i < out.height * out.width; i++)
+	for (int i = 0; i < out.Height() * out.Width(); i++)
 	{
 		auto pix = out.GetPixel(i);
 		// extract H value
@@ -53,7 +53,7 @@ TEST(Test_shakhbat_cv, ColorConvert)
 
 	// read reference image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-	const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+	const bool load_ref = ref.Read(folder_path + "result.jpg");
 	EXPECT_EQ(load_ref, true);
 
 	test::CompareImages(out2, ref);
@@ -66,7 +66,7 @@ TEST(Test_shakhbat_cv, ColorConvert_RoundTrip)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	t.Start();

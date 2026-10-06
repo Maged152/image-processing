@@ -26,7 +26,7 @@ namespace qlm
         assert(block_size % 2 == 1);
         assert(gradient_size % 2 == 1);
 
-        const int max_num_corners = max_corners <= 0 ? in.width * in.height : max_corners;
+        const int max_num_corners = max_corners <= 0 ? in.Width() * in.Height() : max_corners;
 
         std::vector<KeyPoint<float>> out;
         constexpr float neg_inf = std::numeric_limits<float>::lowest();
@@ -48,13 +48,13 @@ namespace qlm
 		Image<ImageFormat::GRAY, float> Ixy_sum = BoxFilter<ImageFormat::GRAY, float, float>(Ixy, block_size, block_size, false, border_mode_f);
 
         // stage 3: compute the corner response
-        Image<ImageFormat::GRAY, float> response (in.width, in.height);
+        Image<ImageFormat::GRAY, float> response (in.Width(), in.Height());
         Pixel<ImageFormat::GRAY, float> response_pixel;
         float max_response_pixel = neg_inf;
 
-        for (int y = valid_distance; y < in.height - valid_distance; y++)
+        for (int y = valid_distance; y < in.Height() - valid_distance; y++)
         {
-            for (int x = valid_distance; x < in.width - valid_distance; x++)
+            for (int x = valid_distance; x < in.Width() - valid_distance; x++)
             {
                 const float ixx = Ixx_sum.GetPixel(x, y).v;
                 const float ixy = Ixy_sum.GetPixel(x, y).v;
@@ -84,9 +84,9 @@ namespace qlm
         // stage 4: threshold the response and find corners
         const float threshold = max_response_pixel * quality_level;
 
-        for (int y = valid_distance; y < response.height - valid_distance; y++)
+        for (int y = valid_distance; y < response.Height() - valid_distance; y++)
         {
-            for (int x = valid_distance; x < response.width - valid_distance; x++)
+            for (int x = valid_distance; x < response.Width() - valid_distance; x++)
             {
                 const float response_value = response.GetPixel(x, y).v;
                 if (response_value < threshold)
@@ -101,9 +101,9 @@ namespace qlm
         constexpr int num_neighbors = 8;
         static constexpr qlm::Point<int> neighbor_idx[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
 
-        for (int y = valid_distance; y < response.height - valid_distance; y++)
+        for (int y = valid_distance; y < response.Height() - valid_distance; y++)
         {
-            for (int x = valid_distance; x < response.width - valid_distance; x++)
+            for (int x = valid_distance; x < response.Width() - valid_distance; x++)
             {
                 const float response_value = response.GetPixel(x, y).v;
                 if (response_value == neg_inf)
@@ -117,8 +117,8 @@ namespace qlm
                     const int neighbor_x = x + neighbor_idx[i].x;
                     const int neighbor_y = y + neighbor_idx[i].y;
 
-                    if (neighbor_x >= valid_distance && neighbor_x < response.width - valid_distance && 
-                        neighbor_y >= valid_distance && neighbor_y < response.height - valid_distance)
+                    if (neighbor_x >= valid_distance && neighbor_x < response.Width() - valid_distance && 
+                        neighbor_y >= valid_distance && neighbor_y < response.Height() - valid_distance)
                     {
                         const float neighbor_response_value = response.GetPixel(neighbor_x, neighbor_y).v;
                         if (neighbor_response_value > response_value)

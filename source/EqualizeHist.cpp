@@ -13,7 +13,7 @@ namespace qlm
         Histogram_t<frmt, T> cumsum = histogram.CumulativeHistogram();
 
         constexpr T max_val = std::numeric_limits<T>::max();
-        const int tot_pixels = in.width * in.height;
+        const int tot_pixels = in.Width() * in.Height();
 
         // constant image: denominator (tot_pixels - cumsum[0]) is zero -> return a copy
         if (tot_pixels == cumsum.hist[0][0])
@@ -22,12 +22,12 @@ namespace qlm
         }
 
         // output image
-		Image<frmt, T> out {in.width, in.height};
+		Image<frmt, T> out {in.Width(), in.Height()};
 
         // transfer the image
-        for (int y = 0; y < in.height; y++)
+        for (int y = 0; y < in.Height(); y++)
         {
-            for (int x = 0; x < in.width; x++)
+            for (int x = 0; x < in.Width(); x++)
             {
                 const auto in_pix = in.GetPixel(x, y);
                 const auto out_pix = static_cast<T>((static_cast<long long>(max_val) * (cumsum.hist[0][in_pix.v] - cumsum.hist[0][0])) / (tot_pixels - cumsum.hist[0][0]));

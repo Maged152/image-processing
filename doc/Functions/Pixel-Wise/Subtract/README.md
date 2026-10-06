@@ -51,7 +51,7 @@ Note: currently only `Image<GRAY, uint8_t> -> Image<GRAY, int16_t>` is instantia
     std::string file_name = "input.jpg";
     // load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in_rgb;
-    if (!in_rgb.LoadFromFile(file_name))
+    if (!in_rgb.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;

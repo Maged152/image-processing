@@ -56,10 +56,10 @@ namespace qlm
             const Image<ImageFormat::GRAY, float> S_xy = BoxFilter<ImageFormat::GRAY, float, float>(I_xy, win_size.width, win_size.height, false);
 
             // needed buffer for iterative Newton-Raphson
-            Image<ImageFormat::GRAY, int16_t> I_t {img_prev_l.width, img_prev_l.height};
-            Image<ImageFormat::GRAY, float> I_xt {img_prev_l.width, img_prev_l.height}, I_yt {img_prev_l.width, img_prev_l.height};
-            Image<ImageFormat::GRAY, T> img_nex_k {img_prev_l.width, img_prev_l.height};
-            Image<ImageFormat::GRAY, float> S_xt {img_prev_l.width, img_prev_l.height}, S_yt {img_prev_l.width, img_prev_l.height};
+            Image<ImageFormat::GRAY, int16_t> I_t {img_prev_l.Width(), img_prev_l.Height()};
+            Image<ImageFormat::GRAY, float> I_xt {img_prev_l.Width(), img_prev_l.Height()}, I_yt {img_prev_l.Width(), img_prev_l.Height()};
+            Image<ImageFormat::GRAY, T> img_nex_k {img_prev_l.Width(), img_prev_l.Height()};
+            Image<ImageFormat::GRAY, float> S_xt {img_prev_l.Width(), img_prev_l.Height()}, S_yt {img_prev_l.Width(), img_prev_l.Height()};
 
             const float level_scale = static_cast<float>(1 << level);
 
@@ -157,8 +157,8 @@ namespace qlm
                     next_pts[i].point.y = prev_pts[i].point.y + flow[i].y;
 
                     // bounds / status check
-                    if (next_pts[i].point.x < 0 || next_pts[i].point.x >= next_img.width ||
-                        next_pts[i].point.y < 0 || next_pts[i].point.y >= next_img.height)
+                    if (next_pts[i].point.x < 0 || next_pts[i].point.x >= next_img.Width() ||
+                        next_pts[i].point.y < 0 || next_pts[i].point.y >= next_img.Height())
                         next_pts[i].status = KPStatusFlag::UNTRACKED;
                 }
                 else 

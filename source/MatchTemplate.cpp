@@ -11,7 +11,7 @@ namespace qlm
 		const TemplateMatchFlag mode,
 		const Image<ImageFormat::GRAY, uint8_t>& mask)
 	{
-		Image<ImageFormat::GRAY, float> out{ in.width - templ.width + 1, in.height - templ.height + 1};
+		Image<ImageFormat::GRAY, float> out{ in.Width() - templ.Width() + 1, in.Height() - templ.Height() + 1};
 
 		std::function<float(Pixel<frmt, T>, Pixel<frmt, T>)> mt_metric;
 
@@ -76,26 +76,26 @@ namespace qlm
 		if (do_normlization)
 		{
 			float temple_deno{ 0.0f };
-			for (int j = 0; j < templ.height; j++)
+			for (int j = 0; j < templ.Height(); j++)
 			{
-				for (int i = 0; i < templ.width; i++)
+				for (int i = 0; i < templ.Width(); i++)
 				{
 					auto templ_pix = templ.GetPixel(i, j);
 					temple_deno += mt_ccorr(templ_pix, templ_pix);
 				}
 			}
 
-			for (int y = 0; y < out.height; y++)
+			for (int y = 0; y < out.Height(); y++)
 			{
-				for (int x = 0; x < out.width; x++)
+				for (int x = 0; x < out.Width(); x++)
 				{
 					// Reset the sum array for each pixel
 					float sum{ 0.0f };
 					float src_deno{ 0.0f };
 
-					for (int j = 0; j < templ.height; j++)
+					for (int j = 0; j < templ.Height(); j++)
 					{
-						for (int i = 0; i < templ.width; i++)
+						for (int i = 0; i < templ.Width(); i++)
 						{
 							if (mask.GetPixel(i, j).v)
 							{
@@ -115,16 +115,16 @@ namespace qlm
 		}
 		else
 		{
-			for (int y = 0; y < out.height; y++)
+			for (int y = 0; y < out.Height(); y++)
 			{
-				for (int x = 0; x < out.width; x++)
+				for (int x = 0; x < out.Width(); x++)
 				{
 					// Reset the sum array for each pixel
 					float sum{ 0.0f };
 
-					for (int j = 0; j < templ.height; j++)
+					for (int j = 0; j < templ.Height(); j++)
 					{
-						for (int i = 0; i < templ.width; i++)
+						for (int i = 0; i < templ.Width(); i++)
 						{
 							if (mask.GetPixel(i, j).v)
 							{

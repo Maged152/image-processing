@@ -10,93 +10,75 @@ namespace qlm
 	{
 		// output pixel
 		Pixel<frmt, dst_t> out;
+
 		// min-max input
 		const src_t src_min = std::numeric_limits<src_t>::lowest();
 		const src_t src_max = std::numeric_limits<src_t>::max();
+
 		// min-max output
 		const dst_t dst_min = std::numeric_limits<dst_t>::lowest();
 		const dst_t dst_max = std::numeric_limits<dst_t>::max();
+
+		// normalize helper with clamping (float rounding safety)
+		const auto normalize = [src_min, src_max](const src_t value)
+		{
+			const float v = (value - src_min) / (float)(src_max - src_min);
+			return std::clamp(v, 0.0f, 1.0f);
+		};
+
+		// denormalize helper
+		const auto denormalize = [dst_min, dst_max](const float v)
+		{
+			return static_cast<dst_t>(v * (dst_max - dst_min) + dst_min);
+		};
+
 		// check format
 		if constexpr (frmt == ImageFormat::GRAY)
 		{
-			float v{ 0 }, a{ 0 };
-			// normalize value
-			v = (in.v - src_min) / (float)(src_max - src_min);
-			a = (in.a - src_min) / (float)(src_max - src_min);
-			// denormalize
-			out.v = static_cast<dst_t>(v * (dst_max - dst_min) + dst_min);
-			out.a = static_cast<dst_t>(a * (dst_max - dst_min) + dst_min);
+			out.v = denormalize(normalize(in.v));
 		}
 		else if constexpr (frmt == ImageFormat::RGB)
 		{
-			float r{ 0 }, g{ 0 }, b{ 0 }, a{ 0 };
-			// normalize value
-			r = (in.r - src_min) / (float)(src_max - src_min);
-			g = (in.g - src_min) / (float)(src_max - src_min);
-			b = (in.b - src_min) / (float)(src_max - src_min);
-			a = (in.a - src_min) / (float)(src_max - src_min);
-			// denormalize
-			out.r = static_cast<dst_t>(r * (dst_max - dst_min) + dst_min);
-			out.g = static_cast<dst_t>(g * (dst_max - dst_min) + dst_min);
-			out.b = static_cast<dst_t>(b * (dst_max - dst_min) + dst_min);
-			out.a = static_cast<dst_t>(a * (dst_max - dst_min) + dst_min);
+			out.r = denormalize(normalize(in.r));
+			out.g = denormalize(normalize(in.g));
+			out.b = denormalize(normalize(in.b));
 		}
 		else if constexpr (frmt == ImageFormat::HLS)
 		{
-			float h{ 0 }, l{ 0 }, s{ 0 }, a{ 0 };
-			// normalize value
-			h = (in.h - src_min) / (float)(src_max - src_min);
-			l = (in.l - src_min) / (float)(src_max - src_min);
-			s = (in.s - src_min) / (float)(src_max - src_min);
-			a = (in.a - src_min) / (float)(src_max - src_min);
-			// denormalize
-			out.h = static_cast<dst_t>(h * (dst_max - dst_min) + dst_min);
-			out.l = static_cast<dst_t>(l * (dst_max - dst_min) + dst_min);
-			out.s = static_cast<dst_t>(s * (dst_max - dst_min) + dst_min);
-			out.a = static_cast<dst_t>(a * (dst_max - dst_min) + dst_min);
+			out.h = denormalize(normalize(in.h));
+			out.l = denormalize(normalize(in.l));
+			out.s = denormalize(normalize(in.s));
 		}
 		else if constexpr (frmt == ImageFormat::HSV)
 		{
-			float h{ 0 }, v{ 0 }, s{ 0 }, a{ 0 };
-			// normalize value
-			h = (in.h - src_min) / (float)(src_max - src_min);
-			v = (in.v - src_min) / (float)(src_max - src_min);
-			s = (in.s - src_min) / (float)(src_max - src_min);
-			a = (in.a - src_min) / (float)(src_max - src_min);
-			// denormalize
-			out.h = static_cast<dst_t>(h * (dst_max - dst_min) + dst_min);
-			out.v = static_cast<dst_t>(v * (dst_max - dst_min) + dst_min);
-			out.s = static_cast<dst_t>(s * (dst_max - dst_min) + dst_min);
-			out.a = static_cast<dst_t>(a * (dst_max - dst_min) + dst_min);
+			out.h = denormalize(normalize(in.h));
+			out.v = denormalize(normalize(in.v));
+			out.s = denormalize(normalize(in.s));
 		}
 		else if constexpr (frmt == ImageFormat::YCrCb)
 		{
-			float y{ 0 }, cr{ 0 }, cb{ 0 }, a{ 0 };
-			// normalize value
-			y = (in.y - src_min) / (float)(src_max - src_min);
-			cr = (in.cr - src_min) / (float)(src_max - src_min);
-			cb = (in.cb - src_min) / (float)(src_max - src_min);
-			a = (in.a - src_min) / (float)(src_max - src_min);
-			// denormalize
-			out.y = static_cast<dst_t>(y * (dst_max - dst_min) + dst_min);
-			out.cr = static_cast<dst_t>(cr * (dst_max - dst_min) + dst_min);
-			out.cb = static_cast<dst_t>(cb * (dst_max - dst_min) + dst_min);
-			out.a = static_cast<dst_t>(a * (dst_max - dst_min) + dst_min);
+			out.y = denormalize(normalize(in.y));
+			out.cr = denormalize(normalize(in.cr));
+			out.cb = denormalize(normalize(in.cb));
 		}
+
+		out.a = denormalize(normalize(in.a));
 		
 		return out;
 	}
-	// change bit depth for an image
+
 	template<ImageFormat frmt, pixel_t src_t, pixel_t dst_t>
 	Image<frmt, dst_t> ConvertBitDepth(const Image<frmt, src_t>& in)
 	{
-		Image<frmt, dst_t> out{ in.width , in.height };
+		Image<frmt, dst_t> out{ in.Width() , in.Height() };
 
-		for (int i = 0; i < in.height * in.width; i++)
+		for (int y = 0; y < in.Height(); y++)
 		{
-			auto out_pix = ConvertBitDepth<frmt, src_t, dst_t>(in.GetPixel(i));
-			out.SetPixel(i, out_pix);
-
+			for (int x = 0; x < in.Width(); x++)
+			{
+				auto out_pix = ConvertBitDepth<frmt, src_t, dst_t>(in.GetPixel(x, y));
+				out.SetPixel(x, y, out_pix);
+			}
 		}
 
 		return out;

@@ -38,14 +38,14 @@ Note: only `uint8_t` images are instantiated — other pixel types would misbeha
 	std::string file_name = "input.jpg";
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	if (!in.LoadFromFile(file_name))
+	if (!in.Read(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
 	}
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 3)
+	if (in.NumberOfChannels() == 3)
 		alpha = false;
 
 	t.Start();

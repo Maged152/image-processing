@@ -45,7 +45,7 @@ The function returns a single-channel grayscale image containing detected edges.
 
     // Load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;
@@ -53,7 +53,7 @@ The function returns a single-channel grayscale image containing detected edges.
 
     // Check alpha component
     bool alpha{ true };
-    if (in.NumerOfChannels() == 1)
+    if (in.NumberOfChannels() == 1)
         alpha = false;
 
     // convert to grayscale
@@ -76,7 +76,7 @@ The function returns a single-channel grayscale image containing detected edges.
 
     std::cout << "Time = " << t.ElapsedString() << "\n";
 
-    if (!result.SaveToFile("result.jpg", alpha))
+    if (!result.Write("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }

@@ -9,8 +9,8 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> Flip(const Image<frmt, T>& in, const FlipFlag Flip_code)
 	{
-		const int img_width = in.width;
-		const int img_height = in.height;
+		const int img_width = in.Width();
+		const int img_height = in.Height();
 		// output image
 		Image<frmt, T> out (img_width, img_height);
 		// Flip vertical 

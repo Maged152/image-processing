@@ -70,7 +70,7 @@ The output image has the same dimensions as the input images.
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in1;
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in2;
     
-    if (!in1.LoadFromFile(file_name1) || !in2.LoadFromFile(file_name2))
+    if (!in1.Read(file_name1) || !in2.Read(file_name2))
     {
         std::cout << "Failed to read the input images\n";
         return -1;
@@ -85,7 +85,7 @@ The output image has the same dimensions as the input images.
     std::cout << "Time = " << t.ElapsedString() << "\n";
     
     // save the output image
-    out.SaveToFile("output.jpg");
+    out.Write("output.jpg");
 ```
 
 Note: this example uses its own `input1.jpg`/`input2.jpg` files (not shipped in this folder).

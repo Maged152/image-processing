@@ -34,7 +34,7 @@ The function returns an `Image<frmt, T>`, which is the result of the equalizatio
     std::string file_name = "input.png"; 
     // load the input image
     qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the input image\n";
         return -1;
@@ -47,7 +47,7 @@ The function returns an `Image<frmt, T>`, which is the result of the equalizatio
 	std::cout << "Histogram Equalization time = " << t.ElapsedString() << "\n";
 
     // Save the output image
-    out.SaveToFile("result_histogram.jpg");
+    out.Write("result_histogram.jpg");
 ```
 
 ### The input

@@ -58,13 +58,13 @@ int main()
 
     // Load the input images.
     qlm::Image<qlm::ImageFormat::GRAY, uint8_t> prev_img, next_img;
-    if (!prev_img.LoadFromFile(frame0))
+    if (!prev_img.Read(frame0))
     {
         std::cout << "Failed to read frame0\n";
         return -1;
     }
 
-    if (!next_img.LoadFromFile(frame1))
+    if (!next_img.Read(frame1))
     {
         std::cout << "Failed to read frame1\n";
         return -1;
@@ -72,7 +72,7 @@ int main()
 
     // Check alpha component.
     bool alpha{ true };
-    if (prev_img.NumerOfChannels() == 3)
+    if (prev_img.NumberOfChannels() == 3)
         alpha = false;
 
     // ============================================================
@@ -183,7 +183,7 @@ int main()
     // Save result image
     // ============================================================
 
-    if (!next_rgb.SaveToFile("result.png", alpha))
+    if (!next_rgb.Write("result.png", alpha))
     {
         std::cout << "Failed to write result.png\n";
     }

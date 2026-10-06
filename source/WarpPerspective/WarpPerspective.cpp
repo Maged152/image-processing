@@ -78,9 +78,9 @@ namespace qlm
 
 		// Start/end index
 		const auto [tl_x, tl_y] = transform_in_out(0, 0);
-		const auto [tr_x, tr_y] = transform_in_out(in.width - 1, 0);
-		const auto [br_x, br_y] = transform_in_out(in.width - 1, in.height - 1);
-		const auto [bl_x, bl_y] = transform_in_out(0, in.height - 1);
+		const auto [tr_x, tr_y] = transform_in_out(in.Width() - 1, 0);
+		const auto [br_x, br_y] = transform_in_out(in.Width() - 1, in.Height() - 1);
+		const auto [bl_x, bl_y] = transform_in_out(0, in.Height() - 1);
 
 		const int start_x = std::floor(qlm::Min(tl_x, tr_x, br_x, bl_x, 0.0f));
 		const int end_x   = std::ceil(qlm::Max(tl_x, tr_x, br_x, bl_x, static_cast<float>(dst_width - 1)));
@@ -96,7 +96,7 @@ namespace qlm
 				const auto [in_x, in_y] = transform_out_in(x, y);
 
 				// check if inside the image
-				if (in_x < 0 || in_y < 0 || in_x >= in.width || in_y >= in.height)
+				if (in_x < 0 || in_y < 0 || in_x >= in.Width() || in_y >= in.Height())
 					continue;
 
 				const auto pix = Interpolation(in, in_x, in_y, inter, border_mode);

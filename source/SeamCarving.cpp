@@ -2,7 +2,6 @@
 #include "Sobel.hpp"
 #include "ColorConvert.hpp"
 #include "Transpose.hpp"
-#include "Magnitude.hpp"
 #include <cmath>
 #include <vector>
 
@@ -27,7 +26,7 @@ namespace qlm
     void RemovePixel(const int x, const int y, Image<frmt, T>& out)
     {	
         // shift left
-        for (int i = x; i < out.Width() - 1; i++)
+        for (int i = x; i < out.width - 1; i++)
         {
             out.SetPixel(i, y, out.GetPixel(i + 1, y));
         }
@@ -38,14 +37,14 @@ namespace qlm
     {
         // new pixel
         const int left_x = x;
-        const int right_x = std::min(x + 1, (int)out.Width() - 2);
+        const int right_x = std::min(x + 1, (int)out.width - 2);
 
         const Pixel<frmt, qlm::cast_t<T, T>> pix_l = out.GetPixel(left_x, y);
         const Pixel<frmt, qlm::cast_t<T, T>> pix_r = out.GetPixel(right_x, y);
         const Pixel<frmt, T> pix = (pix_l + pix_r) / 2;
 
         // shift pixels
-        for (int i = out.Width() - 2; i > x; i--)
+        for (int i = out.width - 2; i > x; i--)
         {
             out.SetPixel(i + 1, y, out.GetPixel(i, y));
         }
@@ -58,25 +57,25 @@ namespace qlm
     void GetAspectRatio(const int width, const int height, const Image<frmt, T>& in, 
                               int& dx, int& dy, bool& dec_x, bool& dec_y)
     {
-        if (width <= in.Width())
+        if (width <= in.width)
         {
-            dx = in.Width() - width;
+            dx = in.width - width;
             dec_x = true;
         }
         else
         {
-            dx = width - in.Width();
+            dx = width - in.width;
             dec_x = false;
         }
 
-        if (height <= in.Height())
+        if (height <= in.height)
         {
-            dy = in.Height() - height;
+            dy = in.height - height;
             dec_y = true;
         }
         else
         {
-            dy = height - in.Height();
+            dy = height - in.height;
             dec_y = false;
         }
     }
@@ -87,7 +86,7 @@ namespace qlm
 
         left.index = std::max(prev_x - 1, 0);
         mid.index = prev_x;
-        right.index = std::min(prev_x + 1, (int)energy_map.Width() - 1);
+        right.index = std::min(prev_x + 1, (int)energy_map.width - 1);
 
         left.value = energy_map.GetPixel(left.index, cur_y).v;
         mid.value = energy_map.GetPixel(mid.index, cur_y).v;
@@ -121,7 +120,7 @@ namespace qlm
         int x_idx{ 0 };
         int32_t min_val = energy_map.GetPixel(x_idx, y).v;
 
-        for (int x = 1; x < energy_map.Width(); x++)
+        for (int x = 1; x < energy_map.width; x++)
         {
             if (min_val > energy_map.GetPixel(x, y).v)
             {
@@ -138,14 +137,14 @@ namespace qlm
     {
         // find optimal seam
         // min in the last row
-        int x_idx = GetMinRowEnergy(energy_map, energy_map.Height() - 1);
+        int x_idx = GetMinRowEnergy(energy_map, energy_map.height - 1);
 
         // remove the pixel
-        RemovePixel(x_idx, energy_map.Height() - 1, out);
-        RemovePixel(x_idx, energy_map.Height() - 1, gray);
+        RemovePixel(x_idx, energy_map.height - 1, out);
+        RemovePixel(x_idx, energy_map.height - 1, gray);
 
         // process rest of the rows
-        for (int y = energy_map.Height() - 2; y >= 0; y--)
+        for (int y = energy_map.height - 2; y >= 0; y--)
         {
             x_idx = GetNextIndex(energy_map, x_idx, y);
 
@@ -160,17 +159,17 @@ namespace qlm
     {
         // find optimal seam
         // min in the last row
-        int x_idx = GetMinRowEnergy(energy_map, energy_map.Height() - 1);
-        int inc = GetIncrement(x_idx, base_line[energy_map.Height() - 1]);
-        base_line[energy_map.Height() - 1].push_back(x_idx);
+        int x_idx = GetMinRowEnergy(energy_map, energy_map.height - 1);
+        int inc = GetIncrement(x_idx, base_line[energy_map.height - 1]);
+        base_line[energy_map.height - 1].push_back(x_idx);
         // remove the pixel
-        RemovePixel(x_idx, energy_map.Height() - 1, gray);
+        RemovePixel(x_idx, energy_map.height - 1, gray);
 
         // insert the pixel
-        InsertPixel(x_idx + inc, energy_map.Height() - 1, out);
+        InsertPixel(x_idx + inc, energy_map.height - 1, out);
 
         // process rest of the rows
-        for (int y = energy_map.Height() - 2; y >= 0; y--)
+        for (int y = energy_map.height - 2; y >= 0; y--)
         {
             x_idx = GetNextIndex(energy_map, x_idx, y);
             inc = GetIncrement(x_idx, base_line[y]);
@@ -185,22 +184,30 @@ namespace qlm
 
     
     template<pixel_t T>
-    void EnergyFunction(const Image<ImageFormat::GRAY, T>& gray, energy_t& energy_map, const Rectangle<int> &roi)
+    void EnergyFunction(const Image<ImageFormat::GRAY, T>& gray, energy_t& energy_map)
     {
-        Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3, roi);
-        Image<ImageFormat::GRAY, int16_t> sobely = SobelY(gray, 3, roi);
-        Magnitude(sobelx, sobely, energy_map, false, roi);
+        Image<ImageFormat::GRAY, int16_t> sobelx = SobelX(gray, 3);
+        Image<ImageFormat::GRAY, int16_t> sobely = SobelY(gray, 3);
+
+        for (int y = 0; y < sobelx.height; y++)
+        {
+            for (int x = 0; x < sobelx.width; x++)
+            {
+                const int32_t grad_mag = std::abs(sobelx.GetPixel(x, y).v) + std::abs(sobely.GetPixel(x, y).v);
+                energy_map.SetPixel(x, y, grad_mag);
+            }
+        }
     }
 
-    void BackwardComulative(energy_t& energy_map, const int width)
+    void BackwardComulative(energy_t& energy_map)
     {
-        for (int y = 1; y < energy_map.Height(); y++)
+        for (int y = 1; y < energy_map.height; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < energy_map.width; x++)
             {
                 int32_t left = energy_map.GetPixel(std::max(x - 1, 0), y - 1).v;
                 int32_t mid = energy_map.GetPixel(x, y - 1).v;
-                int32_t right = energy_map.GetPixel(std::min(x + 1, width - 1), y - 1).v;
+                int32_t right = energy_map.GetPixel(std::min(x + 1, (int)energy_map.width - 1), y - 1).v;
 
                 int32_t min_energy = std::min(left, std::min(mid, right));
 
@@ -210,14 +217,14 @@ namespace qlm
     }
     
     template<pixel_t T>
-    void ForwardComulative(const Image<ImageFormat::GRAY, T>& gray, energy_t& energy_map, const int width)
+    void ForwardComulative(const Image<ImageFormat::GRAY, T>& gray, energy_t& energy_map)
     {
         // first row
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < gray.width; x++)
         {
             constexpr int y = 0;
             const int left_x = std::max(0, x - 1);
-            const int right_x = std::min(width - 1, x + 1);
+            const int right_x = std::min((int)gray.width - 1, x + 1);
 
             const int32_t pix_left = gray.GetPixel(left_x, y).v;
             const int32_t pix_right = gray.GetPixel(right_x, y).v;
@@ -232,7 +239,7 @@ namespace qlm
             for (int x = 0; x < gray.width; x++)
             {
                 const int left_x = std::max(0, x - 1);
-                const int right_x = std::min(width - 1, x + 1);
+                const int right_x = std::min((int)gray.width - 1, x + 1);
 
                 const int32_t pix_left = gray.GetPixel(left_x, y).v;
                 const int32_t pix_right = gray.GetPixel(right_x, y).v;
@@ -258,21 +265,19 @@ namespace qlm
     template<ImageFormat frmt, pixel_t T>
     void ReduceWidth(const int dx, const EnergyFlag energy, Image<ImageFormat::GRAY, T>& gray, energy_t& energy_map, Image<frmt, T>& temp)
     {
-        Rectangle<int> roi{ 0, 0, gray.Width(), gray.Height() };
-
         for (int iter = 0; iter < dx; iter++)
         {
             // compute the energy
-            EnergyFunction(gray, energy_map, roi);
+            EnergyFunction(gray, energy_map);
 
             // populate DP matrix
             if (energy == EnergyFlag::BACKWARD)
             {
-                BackwardComulative(energy_map, roi.width); 
+                BackwardComulative(energy_map); 
             }
             else
             {
-                ForwardComulative(gray, energy_map, roi.width);
+                ForwardComulative(gray, energy_map);
             }
 
 

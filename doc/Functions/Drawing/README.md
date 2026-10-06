@@ -130,7 +130,7 @@ Image<frmt, T> DrawCluster(const Image<frmt, T>& in, const std::vector<Cluster<f
     // arrowed line
     out = qlm::DrawArrowedLine(out, qlm::Line{106, 256, 406, 256}, magenta, 0.2);
 
-    out.SaveToFile("result.png");
+    out.Write("result.png");
 ```
 
 ### The output

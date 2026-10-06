@@ -49,7 +49,7 @@ The function returns a vector of key-points(corners) of type `std::vector<KeyPoi
 
     // Load the input image.
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;
@@ -57,7 +57,7 @@ The function returns a vector of key-points(corners) of type `std::vector<KeyPoi
 
     // Check alpha component.
     bool alpha{ true };
-    if (in.NumerOfChannels() == 3)
+    if (in.NumberOfChannels() == 3)
         alpha = false;
 
     // Convert the input image to grayscale.
@@ -89,7 +89,7 @@ The function returns a vector of key-points(corners) of type `std::vector<KeyPoi
         in = qlm::DrawCircle(in, circle, color);
     }
 
-    if (!in.SaveToFile("result.jpg", alpha))
+    if (!in.Write("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }

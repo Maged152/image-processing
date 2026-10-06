@@ -119,7 +119,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 	}
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 3)
+	if (in.NumberOfChannels() == 3)
 		alpha = false;
 
 	int filter_size = 3;

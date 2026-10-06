@@ -10,10 +10,10 @@ namespace qlm
         constexpr float max_val = std::numeric_limits<TO>::max();
 
         // validate that the input images have the same dimensions
-        assert(in1.width == in2.width && in1.height == in2.height);
-        assert(in1.width == out.width && in1.height == out.height);
+        assert(in1.Width() == in2.Width() && in1.Height() == in2.Height());
+        assert(in1.Width() == out.Width() && in1.Height() == out.Height());
 
-        auto [start_x, start_y, end_x, end_y] = ROI(roi, in1.width, in1.height);
+        auto [start_x, start_y, end_x, end_y] = ROI(roi, in1.Width(), in1.Height());
 
         Pixel<frmt, TO> pixel_out;
 
@@ -60,7 +60,7 @@ namespace qlm
     template<ImageFormat frmt, pixel_t T1, pixel_t T2, pixel_t TO>
     Image<frmt, TO> Multiply(const Image<frmt, T1> &in1, const Image<frmt, T2> &in2, const float scale, const OverFlowFlag &over_flow, const Rectangle<int> &roi)
     {
-        Image<frmt, TO> out(in1.width, in1.height);
+        Image<frmt, TO> out(in1.Width(), in1.Height());
         Multiply(in1, in2, out, scale, over_flow, roi);
 
         return out;

@@ -42,7 +42,7 @@ The function returns a pyramid of type `Pyramid<frmt, T>`.
     std::string file_name = "input.jpg"; 
     // load the input image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the input image\n";
         return -1;
@@ -60,7 +60,7 @@ The function returns a pyramid of type `Pyramid<frmt, T>`.
     for (int layer = 0; layer < num_layers; layer++)
     {
         const std::string out_name = "layer_" + std::to_string(layer) + ".jpg";
-        pyr.layers[layer].SaveToFile(out_name);
+        pyr.layers[layer].Write(out_name);
     }
 ```
 

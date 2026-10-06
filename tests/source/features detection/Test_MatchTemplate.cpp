@@ -7,21 +7,21 @@ TEST(Test_shakhbat_cv, MatchTemplate)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 1)
+	if (in.NumberOfChannels() == 1)
 		alpha = false;
 
 	// load the template image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> templ;
-	const bool load_temp = templ.LoadFromFile(folder_path + "template.jpg");
+	const bool load_temp = templ.Read(folder_path + "template.jpg");
 	EXPECT_EQ(load_temp, true);
 
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> mask{};
-	mask.Create(templ.width, templ.height, qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t> {1});
+	mask.Create(templ.Width(), templ.Height(), qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t> {1});
 
 	t.Start();
 	auto out = qlm::MatchTemplate(in, templ, qlm::TemplateMatchFlag::SQDIFF, mask);
@@ -32,7 +32,7 @@ TEST(Test_shakhbat_cv, MatchTemplate)
 	auto [min_loc, max_loc] = qlm::MinMaxLoc(out);
 
 	qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
-	qlm::Rectangle<int> rec{ {0, 0}, templ.width, templ.height };
+	qlm::Rectangle<int> rec{ {0, 0}, templ.Width(), templ.Height() };
 
 	for (auto& p : min_loc)
 	{
@@ -47,7 +47,7 @@ TEST(Test_shakhbat_cv, MatchTemplate)
 	
 	// read reference image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-	const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+	const bool load_ref = ref.Read(folder_path + "result.jpg");
 	EXPECT_EQ(load_ref, true);
 
 	test::CompareImages(in, ref);

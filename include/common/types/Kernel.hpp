@@ -19,12 +19,12 @@ namespace qlm
 			data = new float[height * width];
 		}
 		// Move Constructor
-		Kernel(Kernel&& other) noexcept : width(other.width), height(other.height), data(other.data)
+		Kernel(Kernel&& other) noexcept : width(other.Width()), height(other.Height()), data(other.data)
 		{
 			other.data = nullptr;
 		}
 		// Copy Constructor
-		Kernel(const Kernel& other) : width(other.width), height(other.height)
+		Kernel(const Kernel& other) : width(other.Width()), height(other.Height())
 		{
 			data = new float[height * width];
 			std::memcpy(data, other.data, height * width * sizeof(float));
@@ -34,8 +34,8 @@ namespace qlm
 		{
 			if (this != &other)
 			{
-				const_cast<int&>(width) = other.width;
-				const_cast<int&>(height) = other.height;
+				const_cast<int&>(width) = other.Width();
+				const_cast<int&>(height) = other.Height();
 				data = other.data;
 				other.data = nullptr;
 			}
@@ -46,8 +46,8 @@ namespace qlm
 		{
 			if (this != &other)
 			{
-				const_cast<int&>(width) = other.width;
-				const_cast<int&>(height) = other.height;
+				const_cast<int&>(width) = other.Width();
+				const_cast<int&>(height) = other.Height();
 				if (data != nullptr)
 					delete[] data;
 				data = new float[height * width];

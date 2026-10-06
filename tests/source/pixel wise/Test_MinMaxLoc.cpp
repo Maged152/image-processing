@@ -7,7 +7,7 @@ TEST(Test_shakhbat_cv, MinMaxLoc)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
     auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);

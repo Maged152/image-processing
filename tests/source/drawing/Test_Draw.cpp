@@ -64,7 +64,7 @@ TEST(Test_shakhbat_cv, Draw)
 
 	// read reference image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-	const bool load_ref = ref.LoadFromFile(folder_path + "result.png");
+	const bool load_ref = ref.Read(folder_path + "result.png");
 	EXPECT_EQ(load_ref, true);
 
 	test::CompareImages(out, ref);

@@ -26,8 +26,15 @@ namespace qlm
 | `in`       | `Image`        | The input image/pixel.           |
 
 ## Return Value
-The function returns an image of type `Image<dst_frmt, dst_t>`.
-The function returns an image of type `Pixel<dst_frmt, dst_t>`.
+- The Image overload returns an image of type `Image<frmt, dst_t>`.
+- The Pixel overload returns a pixel of type `Pixel<frmt, dst_t>`.
+
+## Notes
+
+- Conversion is a full-range remap: the source range `[lowest, max]` is normalized to `[0, 1]` and then scaled to the destination range.
+  Example: `uint8_t 0..255 -> int16_t -32768..32767`, so a u8→s16→u8 round trip is the identity.
+- Values are clamped to `[0, 1]` after normalization and before denormalization (float rounding safety).
+- Instantiated combos: GRAY/RGB `u8<->s16`, GRAY `u16->u8`, and the corresponding Pixel overloads.
 
 ## Example
 
@@ -36,7 +43,7 @@ The function returns an image of type `Pixel<dst_frmt, dst_t>`.
 	std::string file_name = "input.jpg";
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	if (!in.LoadFromFile(file_name))
+	if (!in.Read(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;

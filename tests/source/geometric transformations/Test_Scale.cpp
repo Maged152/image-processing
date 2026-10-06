@@ -7,12 +7,12 @@ TEST(Test_shakhbat_cv, Scale)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 1)
+	if (in.NumberOfChannels() == 1)
 		alpha = false;
 
 	float scale_x = 2.7f;
@@ -45,13 +45,13 @@ TEST(Test_shakhbat_cv, Scale)
 	// read reference image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref_nn, ref_bi, ref_ci;
 	
-	const bool load_ref_nn = ref_nn.LoadFromFile(folder_path + "nearest_neighbor.jpg");
+	const bool load_ref_nn = ref_nn.Read(folder_path + "nearest_neighbor.jpg");
 	EXPECT_EQ(load_ref_nn, true);
 
-	const bool load_ref_bi = ref_bi.LoadFromFile(folder_path + "bilinear.jpg");
+	const bool load_ref_bi = ref_bi.Read(folder_path + "bilinear.jpg");
 	EXPECT_EQ(load_ref_bi, true);
 
-	const bool load_ref_ci = ref_ci.LoadFromFile(folder_path + "bicubic.jpg");
+	const bool load_ref_ci = ref_ci.Read(folder_path + "bicubic.jpg");
 	EXPECT_EQ(load_ref_ci, true);
 
 	// compare results
@@ -66,7 +66,7 @@ TEST(Test_shakhbat_cv, Scale_Identity)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// scaling by (1, 1) must reproduce the input
@@ -89,14 +89,14 @@ TEST(Test_shakhbat_cv, Scale_Identity)
 	test::PrintTime(t_ci);
 
 	// dimensions must match the input
-	EXPECT_EQ(out_nn.width, in.width);
-	EXPECT_EQ(out_nn.height, in.height);
+	EXPECT_EQ(out_nn.Width(), in.Width());
+	EXPECT_EQ(out_nn.Height(), in.Height());
 
-	EXPECT_EQ(out_bi.width, in.width);
-	EXPECT_EQ(out_bi.height, in.height);
+	EXPECT_EQ(out_bi.Width(), in.Width());
+	EXPECT_EQ(out_bi.Height(), in.Height());
 
-	EXPECT_EQ(out_ci.width, in.width);
-	EXPECT_EQ(out_ci.height, in.height);
+	EXPECT_EQ(out_ci.Width(), in.Width());
+	EXPECT_EQ(out_ci.Height(), in.Height());
 
 	// the output must be identical to the input
 	test::CompareImages(out_nn, in);

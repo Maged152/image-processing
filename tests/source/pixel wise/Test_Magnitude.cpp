@@ -7,7 +7,7 @@ TEST(Test_shakhbat_cv, Magnitude_Scharr)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
@@ -27,7 +27,7 @@ TEST(Test_shakhbat_cv, Magnitude_Scharr)
 	test::PrintTime(t_l2);
 
 	// L2 result: cross-check every pixel against an independent computation
-	for (int i = 0; i < gx.width * gx.height; i++)
+	for (int i = 0; i < gx.Width() * gx.Height(); i++)
 	{
 		const double x = static_cast<double>(gx.GetPixel(i).v);
 		const double y = static_cast<double>(gy.GetPixel(i).v);
@@ -36,7 +36,7 @@ TEST(Test_shakhbat_cv, Magnitude_Scharr)
 	}
 
 	// L1 result: |gx| + |gy| (clamped to uint16_t)
-	for (int i = 0; i < gx.width * gx.height; i++)
+	for (int i = 0; i < gx.Width() * gx.Height(); i++)
 	{
 		const uint16_t expected = static_cast<uint16_t>(
 			std::min(std::abs(static_cast<int>(gx.GetPixel(i).v)) + std::abs(static_cast<int>(gy.GetPixel(i).v)),
@@ -54,11 +54,11 @@ TEST(Test_shakhbat_cv, Magnitude_Scharr)
 
 	// read reference images
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> ref_l2;
-	const bool load_ref_l2 = ref_l2.LoadFromFile(folder_path + "result_l2.jpg");
+	const bool load_ref_l2 = ref_l2.Read(folder_path + "result_l2.jpg");
 	EXPECT_EQ(load_ref_l2, true);
 
 	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> ref_l1;
-	const bool load_ref_l1 = ref_l1.LoadFromFile(folder_path + "result_l1.jpg");
+	const bool load_ref_l1 = ref_l1.Read(folder_path + "result_l1.jpg");
 	EXPECT_EQ(load_ref_l1, true);
 
 	test::CompareImages(view_l2, ref_l2);
@@ -78,7 +78,7 @@ TEST(Test_shakhbat_cv, Magnitude_Identity)
 	qlm::Image<qlm::ImageFormat::GRAY, uint16_t> in_u16(width, height);
 
 	// randomly initialize the images
-	for (int i = 0; i < in_s16.width * in_s16.height; i++)
+	for (int i = 0; i < in_s16.Width() * in_s16.Height(); i++)
 	{
 		int16_t val = static_cast<int16_t>(std::rand() % 32767);
 		in_s16.SetPixel(i, val);

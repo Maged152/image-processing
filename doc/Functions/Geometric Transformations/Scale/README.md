@@ -40,14 +40,14 @@ The function returns an image of type `Image<frmt, T>`.
 	std::string file_name = "input.jpg";
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	if (!in.LoadFromFile(file_name))
+	if (!in.Read(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
 	}
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 3)
+	if (in.NumberOfChannels() == 3)
 		alpha = false;
 
 	float scale_x = 2.7f;
@@ -60,7 +60,7 @@ The function returns an image of type `Image<frmt, T>`.
 
 	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
-	if (!out_nn.SaveToFile("nearest_neighbor.jpg", alpha))
+	if (!out_nn.Write("nearest_neighbor.jpg", alpha))
 	{
 		std::cout << "Failed to write nearest_neighbor\n";
 	}
@@ -72,7 +72,7 @@ The function returns an image of type `Image<frmt, T>`.
 
 	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
-	if (!out_bl.SaveToFile("bilinear.jpg", alpha))
+	if (!out_bl.Write("bilinear.jpg", alpha))
 	{
 		std::cout << "Failed to write bilinear\n";
 	}
@@ -84,7 +84,7 @@ The function returns an image of type `Image<frmt, T>`.
 
 	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
-	if (!out_bc.SaveToFile("bicubic.jpg", alpha))
+	if (!out_bc.Write("bicubic.jpg", alpha))
 	{
 		std::cout << "Failed to write bicubic\n";
 	}

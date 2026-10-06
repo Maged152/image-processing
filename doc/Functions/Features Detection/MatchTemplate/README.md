@@ -57,7 +57,7 @@ between the template and the corresponding region in the input image.
     std::string file_name = "input.jpg";
     // load the input image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the input image\n";
         return -1;
@@ -65,20 +65,20 @@ between the template and the corresponding region in the input image.
 
     // check alpha component
         bool alpha{ true };
-        if (in.NumerOfChannels() == 1)
+        if (in.NumberOfChannels() == 1)
             alpha = false;
 
     std::string template_name = "template.jpg";
     // load the template image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> templ;
-    if (!templ.LoadFromFile(template_name))
+    if (!templ.Read(template_name))
     {
         std::cout << "Failed to read the template image\n";
         return -1;
     }
 
     qlm::Image<qlm::ImageFormat::GRAY, uint8_t> mask{};
-    mask.Create(templ.width, templ.height, 1);
+    mask.Create(templ.Width(), templ.Height(), 1);
 
     t.Start();
     auto out = qlm::MatchTemplate(in, templ, qlm::TemplateMatchFlag::SQDIFF, mask);
@@ -90,7 +90,7 @@ between the template and the corresponding region in the input image.
     auto [min_loc, max_loc] = qlm::MinMaxLoc(out);
 
     qlm::Pixel <qlm::ImageFormat::RGB, uint8_t> green{ 0, 255, 0 };
-    qlm::Rectangle<int> rec{ {0, 0}, templ.width, templ.height };
+    qlm::Rectangle<int> rec{ {0, 0}, templ.Width(), templ.Height() };
 
     for (auto &p : min_loc)
     {
@@ -98,7 +98,7 @@ between the template and the corresponding region in the input image.
         in = qlm::DrawRectangle(in, rec, green);
     }
 
-    if (!in.SaveToFile("result.jpg", alpha))
+    if (!in.Write("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }

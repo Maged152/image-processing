@@ -10,11 +10,11 @@ namespace qlm
 		const BorderMode<frmt, src_t>& border_mode,
 		const Rectangle<int>& roi)
 	{
-		const int img_width = in.width;
-		const int img_height = in.height;
+		const int img_width = in.Width();
+		const int img_height = in.Height();
 
 		// validate that the output has the same dimensions as the input
-		assert(in.width == out.width && in.height == out.height);
+		assert(in.Width() == out.Width() && in.Height() == out.Height());
 
 		auto [start_x, start_y, end_x, end_y] = ROI(roi, img_width, img_height);
 
@@ -80,7 +80,7 @@ namespace qlm
 		const Rectangle<int>& roi)
 	{
 		// create the output image
-		Image<frmt, dst_t> out (in.width, in.height);
+		Image<frmt, dst_t> out (in.Width(), in.Height());
 
 		SepFilter2D(in, out, kernel, border_mode, roi);
 

@@ -50,7 +50,7 @@ namespace qlm
 
     // Load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;
@@ -58,7 +58,7 @@ namespace qlm
 
     // Check alpha component
     bool alpha{ true };
-    if (in.NumerOfChannels() == 1)
+    if (in.NumberOfChannels() == 1)
         alpha = false;
 
     const int eps = 10;
@@ -87,9 +87,9 @@ namespace qlm
     std::vector<qlm::Cluster<qlm::ImageFormat::RGB, uint8_t>> clusters(num_clusters);
     std::vector<qlm::Pixel<qlm::ImageFormat::RGB, float>> pix_avg (num_clusters);
 
-    for (int y = 0; y < in.height; ++y)
+    for (int y = 0; y < in.Height(); ++y)
     {
-        for (int x = 0; x < in.width; ++x)
+        for (int x = 0; x < in.Width(); ++x)
         {
             const int label = result.labels.GetPixel(x, y).v;
             clusters[label + 1].pixels.push_back({ x, y });
@@ -107,7 +107,7 @@ namespace qlm
     // draw clusters
     auto out = qlm::DrawCluster(in, clusters);
 
-    if (!out.SaveToFile("result.jpg", alpha))
+    if (!out.Write("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }

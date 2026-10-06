@@ -26,10 +26,10 @@ TEST(Test_shakhbat_cv, OpticalFlowPyrLK)
 
         // Load the input images.
         qlm::Image<qlm::ImageFormat::GRAY, uint8_t> prev_img, next_img;
-        const bool load_prev = prev_img.LoadFromFile(frame0);
+        const bool load_prev = prev_img.Read(frame0);
         EXPECT_EQ(load_prev, true);
 
-        const bool load_next = next_img.LoadFromFile(frame1);
+        const bool load_next = next_img.Read(frame1);
         EXPECT_EQ(load_next, true);
 
         // ============================================================
@@ -149,7 +149,7 @@ TEST(Test_shakhbat_cv, OpticalFlowPyrLK)
 
         // read reference image
         qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-        const bool load_ref = ref.LoadFromFile(folder_path + set + "_result.png");
+        const bool load_ref = ref.Read(folder_path + set + "_result.png");
         EXPECT_EQ(load_ref, true);
 
         test::CompareImages(next_rgb, ref);

@@ -44,7 +44,7 @@ Note: a channel that contains a single unique value produces a degenerate empty 
     std::string file_name = "input.jpg";
     // load the image
     qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;
@@ -58,5 +58,5 @@ Note: a channel that contains a single unique value produces a degenerate empty 
 
     // bits in the encoded stream vs the raw size
     std::cout << "encoded bits = " << huffman.code[0].size() << "\n";
-    std::cout << "raw bits     = " << 8 * in.width * in.height << "\n";
+    std::cout << "raw bits     = " << 8 * in.Width() * in.Height() << "\n";
 ```

@@ -41,7 +41,7 @@ The function returns a `std::pair<std::vector<Point<int>>, std::vector<Point<int
     std::string file_name = "input.jpg";
     // load the input image
     qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the input image\n";
         return -1;

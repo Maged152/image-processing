@@ -7,12 +7,12 @@ TEST(Test_shakhbat_cv, DBSCAN)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 1)
+	if (in.NumberOfChannels() == 1)
 		alpha = false;
 
 	const int eps = 10;
@@ -32,9 +32,9 @@ TEST(Test_shakhbat_cv, DBSCAN)
     std::vector<qlm::Cluster<qlm::ImageFormat::RGB, uint8_t>> clusters(num_clusters);
     std::vector<qlm::Pixel<qlm::ImageFormat::RGB, float>> pix_avg (num_clusters);
 
-    for (int y = 0; y < in.height; ++y)
+    for (int y = 0; y < in.Height(); ++y)
     {
-        for (int x = 0; x < in.width; ++x)
+        for (int x = 0; x < in.Width(); ++x)
         {
             const int label = result.labels.GetPixel(x, y).v;
             clusters[label + 1].pixels.push_back({ x, y });
@@ -59,7 +59,7 @@ TEST(Test_shakhbat_cv, DBSCAN)
 	
 	// read reference image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-	const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+	const bool load_ref = ref.Read(folder_path + "result.jpg");
 	EXPECT_EQ(load_ref, true);
 
 	test::CompareImages(out, ref);

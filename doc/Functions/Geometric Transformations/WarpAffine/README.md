@@ -46,23 +46,23 @@ The function returns an image of type `Image<frmt, T>`.
 	std::string file_name = "input.jpg";
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	if (!in.LoadFromFile(file_name))
+	if (!in.Read(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
 	}
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 3)
+	if (in.NumberOfChannels() == 3)
 		alpha = false;
 
 
 	float scale = 0.5f;
 	float angle = 30.0f;
-	const int dst_width = in.width;
-	const int dst_height = in.height;
+	const int dst_width = in.Width();
+	const int dst_height = in.Height();
 
-	const qlm::Point<int> center{ (int)in.width / 2, (int)in.height / 2 };
+	const qlm::Point<int> center{ (int)in.Width() / 2, (int)in.Height() / 2 };
 
 	qlm::AffineMatrix mat = qlm::GetRotationMatrix(center, angle, scale);
 
@@ -76,7 +76,7 @@ The function returns an image of type `Image<frmt, T>`.
 
 	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
-	if (!out.SaveToFile("result.jpg", alpha))
+	if (!out.Write("result.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}

@@ -44,12 +44,12 @@ namespace test
     {
         const std::string file_name = "out." + extension;
 
-        const bool save_out = out.SaveToFile(file_name);
+        const bool save_out = out.Write(file_name);
         EXPECT_EQ(save_out, true);
 
         // read output image
         qlm::Image<frmt, T> cur;
-        const bool reread_out = cur.LoadFromFile(file_name);
+        const bool reread_out = cur.Read(file_name);
         EXPECT_EQ(reread_out, true);
 
         // delete output image
@@ -114,15 +114,15 @@ namespace test
                        const qlm::Pixel<frmt, T>& threshold = qlm::Pixel<frmt, T>{})
     {
         // check the dimensions
-        EXPECT_EQ(in1.width, in2.width);
-        EXPECT_EQ(in1.height, in2.height);
+        EXPECT_EQ(in1.Width(), in2.Width());
+        EXPECT_EQ(in1.Height(), in2.Height());
 
         bool is_correct = true;
        
         // check the pixels
-        for (int y = 0; y < in1.height; y++)
+        for (int y = 0; y < in1.Height(); y++)
         {
-            for (int x = 0; x < in1.width; x++)
+            for (int x = 0; x < in1.Width(); x++)
             {
                 const bool res = ComparePixels(in1.GetPixel(x, y), in2.GetPixel(x, y), threshold);
                 if (!res)

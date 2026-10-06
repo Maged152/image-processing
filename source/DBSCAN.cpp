@@ -44,14 +44,14 @@ namespace qlm
         constexpr bool insert_row = true;
         constexpr bool insert_col = false;
 
-        std::vector<std::array<int, 5>> points (in.width * in.height);
+        std::vector<std::array<int, 5>> points (in.Width() * in.Height());
         
         int index = 1, c_index = 0;
 
-        InsertBalanced<insert_col>(in, points, 0, (int)in.height, index, c_index);
+        InsertBalanced<insert_col>(in, points, 0, (int)in.Height(), index, c_index);
 
         index = 0;
-        InsertBalanced<insert_row>(in, points, 0, (int)in.width, index, c_index);
+        InsertBalanced<insert_row>(in, points, 0, (int)in.Width(), index, c_index);
         
 
         // fix double insertion
@@ -68,9 +68,9 @@ namespace qlm
         int start_x = 8, start_y = 1;
 
         // fill difference in dimensions
-        const bool width_bigger = in.width > in.height;
-        const int abs_diff = std::abs((int)in.width - (int)in.height);
-        const int min_dim = std::min(in.width, in.height);
+        const bool width_bigger = in.Width() > in.Height();
+        const int abs_diff = std::abs((int)in.Width() - (int)in.Height());
+        const int min_dim = std::min(in.Width(), in.Height());
         const int remaining = width_bigger ? abs_diff * 4 : abs_diff;
         int start_idx = min_dim * 5;
         int inc = width_bigger ? 1 : 0;
@@ -82,7 +82,7 @@ namespace qlm
 
             start_x++;
 
-            if (start_x == in.width)
+            if (start_x == in.Width())
             {
                 start_x = 4;
                 start_y++;
@@ -105,8 +105,8 @@ namespace qlm
         }
 
         // fill remaining of the row
-        int insert_idx = std::max(in.width, in.height) * 5;
-        for (int x = start_x; x < in.width; ++x)
+        int insert_idx = std::max(in.Width(), in.Height()) * 5;
+        for (int x = start_x; x < in.Width(); ++x)
         {
             const auto pixel = in.GetPixel(x, start_y);
             points[insert_idx++] = {x, start_y, pixel.r, pixel.g, pixel.b};
@@ -114,9 +114,9 @@ namespace qlm
         start_y++;
 
         // insert rest of the image
-        for (int y = start_y; y < in.height; ++y)
+        for (int y = start_y; y < in.Height(); ++y)
         {
-            for (int x = 4; x < in.width; ++x)
+            for (int x = 4; x < in.Width(); ++x)
             {
                 const auto pixel = in.GetPixel(x, y);
                 points[insert_idx++] = {x, y, pixel.r, pixel.g, pixel.b};
@@ -129,11 +129,11 @@ namespace qlm
     template <ImageFormat frmt, pixel_t T>
     DBSCANResult DBSCAN(const Image<frmt, T>& in, const int eps, const int min_pts)
     {
-        const int num_points = in.width * in.height;
+        const int num_points = in.Width() * in.Height();
         const Pixel<ImageFormat::GRAY, int> unvisited{-2};
 
         DBSCANResult result{};
-        result.labels.Create(in.width, in.height, unvisited); // -2 means unvisited
+        result.labels.Create(in.Width(), in.Height(), unvisited); // -2 means unvisited
         result.num_clusters = -1;
 
         int num_noise_pixels = 0;
@@ -143,12 +143,12 @@ namespace qlm
         // std::vector<std::array<int, 5>> points(num_points);
 
         // Fill the points vector with pixels in linear order
-        // for (int x = 0; x < in.width; ++x)
+        // for (int x = 0; x < in.Width(); ++x)
         // {
-        //     for (int y = 0; y < in.height; ++y)
+        //     for (int y = 0; y < in.Height(); ++y)
         //     {
         //         const auto pixel = in.GetPixel(x, y);
-        //         points[y * in.width + x] = {x, y, pixel.r, pixel.g, pixel.b};
+        //         points[y * in.Width() + x] = {x, y, pixel.r, pixel.g, pixel.b};
         //     }
         // }
 
@@ -159,7 +159,7 @@ namespace qlm
 
         auto GetIndex = [&](const int i)
         {
-            return points[i][0] + points[i][1] * in.width;
+            return points[i][0] + points[i][1] * in.Width();
         };
 
         // DBSCAN algorithm

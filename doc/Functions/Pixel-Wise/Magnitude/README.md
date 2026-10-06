@@ -6,9 +6,9 @@ Computes the per-pixel gradient magnitude of two derivative images:
 - `L2gradient = true`: `sqrt(gx^2 + gy^2)` (L2 norm)
 - `L2gradient = false`: `|gx| + |gy|` (L1 norm)
 
-The result saturates at the output range. The output pixel type is a template parameter `TO`
-(e.g., `int16_t -> uint16_t`). The single-parameter overload defaults to the unsigned counterpart
-of the input type (e.g., `int16_t -> uint16_t`).
+The result saturates at the output range. The output pixel type is the template
+parameter `TO`, which defaults to the unsigned counterpart of the input type
+(e.g., `int16_t -> uint16_t`).
 
 You can check the implementation [here](../../../../source/Magnitude.cpp)
 
@@ -40,6 +40,8 @@ namespace qlm
 		const Rectangle<int>& roi = Rectangle<int>{});
 }
 ```
+
+The single-parameter form `Magnitude(gx, gy, ...)` deduces `TO = make_unsigned_t<T>` automatically.
 
 ## Parameters
 

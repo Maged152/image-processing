@@ -7,12 +7,12 @@ TEST(Test_shakhbat_cv, WarpPerspective)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 1)
+	if (in.NumberOfChannels() == 1)
 		alpha = false;
 	const int dst_width = 254;
 	const int dst_height = 356;
@@ -44,7 +44,7 @@ TEST(Test_shakhbat_cv, WarpPerspective)
 
 	// read reference image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-	const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+	const bool load_ref = ref.Read(folder_path + "result.jpg");
 	EXPECT_EQ(load_ref, true);
 
 	test::CompareImages(out, ref);
@@ -57,17 +57,17 @@ TEST(Test_shakhbat_cv, WarpPerspective_Identity)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// identity transform: the source points are mapped onto themselves
 	const qlm::Point<int> src[4] =
 	{
-		{0, 0}, {in.width - 1, 0}, {0, in.height - 1}, {in.width - 1, in.height - 1}
+		{0, 0}, {in.Width() - 1, 0}, {0, in.Height() - 1}, {in.Width() - 1, in.Height() - 1}
 	};
 	const qlm::Point<int> dst[4] =
 	{
-		{0, 0}, {in.width - 1, 0}, {0, in.height - 1}, {in.width - 1, in.height - 1}
+		{0, 0}, {in.Width() - 1, 0}, {0, in.Height() - 1}, {in.Width() - 1, in.Height() - 1}
 	};
 
 	qlm::PerspectiveMatrix mat = qlm::GetPerspectiveTransform(src, dst);
@@ -76,7 +76,7 @@ TEST(Test_shakhbat_cv, WarpPerspective_Identity)
 
 	// do the operation
 	t.Start();
-	auto out = qlm::WarpPerspective(in, mat, in.width, in.height, qlm::InterpolationFlag::BILINEAR, border_mode);
+	auto out = qlm::WarpPerspective(in, mat, in.Width(), in.Height(), qlm::InterpolationFlag::BILINEAR, border_mode);
 	t.End();
 
 	test::PrintTime(t);

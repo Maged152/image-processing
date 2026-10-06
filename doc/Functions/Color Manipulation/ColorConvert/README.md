@@ -75,14 +75,14 @@ The function returns an image of type `Image<dst_frmt, dst_t>`.
 	std::string file_name = "input.jpg";
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	if (!in.LoadFromFile(file_name))
+	if (!in.Read(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
 	}
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 3)
+	if (in.NumberOfChannels() == 3)
 		alpha = false;
 
 	// RGB to HSV
@@ -93,7 +93,7 @@ The function returns an image of type `Image<dst_frmt, dst_t>`.
 	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 	// red to green
-	for (int i = 0; i < out.height * out.width; i++)
+	for (int i = 0; i < out.Height() * out.Width(); i++)
 	{
 		auto pix = out.GetPixel(i);
 		// extract H value
@@ -116,7 +116,7 @@ The function returns an image of type `Image<dst_frmt, dst_t>`.
 	}
 	// HSV2RGB
 	auto out2 = qlm::ColorConvert<qlm::ImageFormat::RGB>(out);
-	if (!out2.SaveToFile("result.jpg", alpha))
+	if (!out2.Write("result.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}

@@ -5,9 +5,9 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	void Transpose(const Image<frmt, T>& in, Image<frmt, T>& out)
 	{
-		for (int y = 0; y < in.height; y++)
+		for (int y = 0; y < in.Height(); y++)
 		{
-			for (int x = 0; x < in.width; x++)
+			for (int x = 0; x < in.Width(); x++)
 			{
 				out.SetPixel(y, x, in.GetPixel(x, y));
 			}
@@ -18,7 +18,7 @@ namespace qlm
 	Image<frmt, T> Transpose(const Image<frmt, T>& in)
 	{
 		// output image
-		Image<frmt, T> out{ in.height, in.width };
+		Image<frmt, T> out{ in.Height(), in.Width() };
 
 		Transpose(in, out);
 

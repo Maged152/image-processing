@@ -10,10 +10,10 @@ namespace qlm
     	// out(x, y) = in(x + dx, y + dy)
 
 		// validate that the output has the same dimensions as the input
-		assert(in.width == out.width && in.height == out.height);
+		assert(in.Width() == out.Width() && in.Height() == out.Height());
 
-		int img_width = in.width;
-		int img_height = in.height;
+		int img_width = in.Width();
+		int img_height = in.Height();
 
 		auto [start_w, start_h, end_w, end_h] = ROI(roi, img_width, img_height);
 
@@ -55,7 +55,7 @@ namespace qlm
 	{
 		// output image
 		Image<frmt, T> out = Image<frmt, T>{};
-		out.Create(in.width, in.height, pix);
+		out.Create(in.Width(), in.Height(), pix);
 
 		Translate(in, out, displacement, pix, roi);
 

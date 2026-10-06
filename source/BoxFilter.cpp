@@ -15,7 +15,7 @@ namespace qlm
 		        const Rectangle<int>& roi)
 	{
 		// validate that the output has the same dimensions as the input
-		assert(in.width == out.width && in.height == out.height);
+		assert(in.Width() == out.Width() && in.Height() == out.Height());
 
 		SepKernel kernel{ filter_x_size , filter_y_size };
 
@@ -44,7 +44,7 @@ namespace qlm
 		        const  BorderMode<frmt, src_t>& border_mode,
 		        const Rectangle<int>& roi)
 	{
-		Image<frmt, dst_t> out(in.width, in.height);
+		Image<frmt, dst_t> out(in.Width(), in.Height());
 
 		BoxFilter(in, out, filter_x_size, filter_y_size, normalize, border_mode, roi);
 

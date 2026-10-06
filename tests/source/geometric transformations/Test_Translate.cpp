@@ -7,12 +7,12 @@ TEST(Test_shakhbat_cv, Translate)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 1)
+	if (in.NumberOfChannels() == 1)
 		alpha = false;
 
 
@@ -29,7 +29,7 @@ TEST(Test_shakhbat_cv, Translate)
 
 	// read reference image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> ref;
-	const bool load_ref = ref.LoadFromFile(folder_path + "result.jpg");
+	const bool load_ref = ref.Read(folder_path + "result.jpg");
 	EXPECT_EQ(load_ref, true);
 
 	test::CompareImages(out, ref);
@@ -41,7 +41,7 @@ TEST(Test_shakhbat_cv, Translate_Identity)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// a zero displacement must reproduce the input
@@ -64,7 +64,7 @@ TEST(Test_shakhbat_cv, Translate_SubPixel)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	const qlm::Point<int> int_disp{ 12, 7 };
@@ -78,8 +78,8 @@ TEST(Test_shakhbat_cv, Translate_SubPixel)
 
 	test::PrintTime(t);
 
-	EXPECT_EQ(out_f.width, in.width);
-	EXPECT_EQ(out_f.height, in.height);
+	EXPECT_EQ(out_f.Width(), in.Width());
+	EXPECT_EQ(out_f.Height(), in.Height());
 	test::CompareImages(out_f, out_i);
 
 	// true sub-pixel displacement: check one interior pixel against an

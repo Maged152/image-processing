@@ -13,7 +13,7 @@ namespace qlm
 		constexpr uint8_t max_value = std::numeric_limits<uint8_t>::max();
 		constexpr uint8_t min_value = std::numeric_limits<uint8_t>::lowest();
 
-		Image<ImageFormat::GRAY, uint8_t> out{ in.width, in.height };
+		Image<ImageFormat::GRAY, uint8_t> out{ in.Width(), in.Height() };
 		Pixel<ImageFormat::GRAY, uint8_t> out_pix;
 
 		// max-min values
@@ -23,7 +23,7 @@ namespace qlm
 
 		float v{ 0 }, a{ 0 };
 
-		for (int i = 0; i < out.height * out.width; i++)
+		for (int i = 0; i < out.Height() * out.Width(); i++)
 		{
 			// remove sign
 			v = std::abs(in.GetPixel(i).v);

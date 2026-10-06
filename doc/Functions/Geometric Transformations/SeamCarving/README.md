@@ -41,18 +41,18 @@ The function returns an image of type `Image<frmt, T>`.
     std::string file_name = "input.jpg"; 
     // load the input image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;
     }
     // check alpha component
     bool alpha{ true };
-    if (in.NumerOfChannels() == 3)
+    if (in.NumberOfChannels() == 3)
         alpha = false;
 
-    const int target_width = in.width - 500;
-    const int target_height =  in.height + 200;
+    const int target_width = in.Width() - 500;
+    const int target_height =  in.Height() + 200;
 
     const qlm::EnergyFlag energy = qlm::EnergyFlag::BACKWARD;
     const qlm::OrderFlag order = qlm::OrderFlag::WIDTH_FIRST;
@@ -63,7 +63,7 @@ The function returns an image of type `Image<frmt, T>`.
 
     std::cout <<"Time = " << t.ElapsedString() << "\n";
 
-    if (!out.SaveToFile("result.jpg", alpha))
+    if (!out.Write("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }

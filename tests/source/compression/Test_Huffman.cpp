@@ -8,7 +8,7 @@ TEST(Test_shakhbat_cv, Huffman)
 
 	// read input image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	const bool load_in = in.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in = in.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in, true);
 
 	// encode twice: the codes must be deterministic
@@ -56,7 +56,7 @@ TEST(Test_shakhbat_cv, Huffman)
 
 	// the encoding must actually compress a natural image
 	const long long encoded_bits = (long long)h1.code[0].size() + (long long)h1.code[1].size() + (long long)h1.code[2].size();
-	const long long raw_bits = 8LL * in.width * in.height * 3;
+	const long long raw_bits = 8LL * in.Width() * in.Height() * 3;
 	EXPECT_LT(encoded_bits, raw_bits);
 }
 

@@ -4,6 +4,7 @@ include(FetchContent)
 FetchContent_Declare(
   thread_pool
   GIT_REPOSITORY https://github.com/Maged152/ThreadPool.git
+  GIT_SHALLOW    TRUE
   GIT_TAG v1.1.0 
 )
 
@@ -16,7 +17,8 @@ FetchContent_MakeAvailable(thread_pool)
 FetchContent_Declare(
   pixel_image
   GIT_REPOSITORY https://github.com/Maged152/PixelImage.git
-  GIT_TAG 4dec8c926aa35a324ad7c4b31b3eb35713efe42c 
+  GIT_SHALLOW    TRUE
+  GIT_TAG v2.0.0
 
 )
 

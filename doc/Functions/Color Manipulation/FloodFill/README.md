@@ -3,6 +3,11 @@
 ## Description
 The function performs region filling starting from certain point with a given color.
 
+Filling uses 4-connectivity (up, down, left, right). A pixel belongs to the region if its
+difference from the *seed* pixel is within `threshold`. If the seed is outside the image,
+an unchanged copy is returned. If `fill_color` is within `threshold` of the seed pixel,
+the function returns an unchanged copy (no-op).
+
 You can check the implementation [here](../../../../source/FloodFill.cpp)
 
 ## C++ API
@@ -25,7 +30,7 @@ namespace qlm
 | `in`         | `Image`      | The input image.                                                          |
 | `seed_point` | `Point<int>` | seed point location.                                                      |
 | `fill_color` | `Pixel`      | the color to fill the area.                                               |
-| `threshold`  | `Pixel`      | the threshold which determines if the point brlongs to the region or not. |
+| `threshold`  | `Pixel`      | the threshold which determines if the point belongs to the region or not. |
 
 ## Return Value
 The function returns an image of type `Image<frmt, T>`.
@@ -37,17 +42,17 @@ The function returns an image of type `Image<frmt, T>`.
 	std::string file_name = "input.jpg";
 	// load the image
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-	if (!in.LoadFromFile(file_name))
+	if (!in.Read(file_name))
 	{
 		std::cout << "Failed to read the image\n";
 		return -1;
 	}
 	// check alpha component
 	bool alpha{ true };
-	if (in.NumerOfChannels() == 3)
+	if (in.NumberOfChannels() == 3)
 		alpha = false;
 
-	qlm::Point seed{ 300 ,300 };
+	qlm::Point<int> seed{ 300 ,300 };
 	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{0,0,0};
 	qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> threshold{ 20,20,20 };
 	// do the operation
@@ -58,7 +63,7 @@ The function returns an image of type `Image<frmt, T>`.
 	std::cout <<"Time = " << t.ElapsedString() << "\n";
 
 
-	if (!out.SaveToFile("result.jpg", alpha))
+	if (!out.Write("result.jpg", alpha))
 	{
 		std::cout << "Failed to write \n";
 	}

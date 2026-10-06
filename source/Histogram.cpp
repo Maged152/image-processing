@@ -9,9 +9,9 @@ namespace qlm
 	{
         Histogram_t<frmt, T> out;
 		
-        for (int y = 0; y < in.height; y++)
+        for (int y = 0; y < in.Height(); y++)
 		{
-			for (int x = 0; x < in.width; x++)
+			for (int x = 0; x < in.Width(); x++)
 			{
                 const auto pix = in.GetPixel(x, y);
                 if constexpr (frmt == ImageFormat::GRAY)

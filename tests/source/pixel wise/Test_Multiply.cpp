@@ -7,10 +7,10 @@ TEST(Test_shakhbat_cv, Multiply)
 
 	// read input images
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in1, in2;
-	const bool load_in1 = in1.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in1 = in1.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in1, true);
 
-    in2.Create(in1.width, in1.height, qlm::Pixel<qlm::ImageFormat::RGB, uint8_t>{255, 255, 255});
+    in2.Create(in1.Width(), in1.Height(), qlm::Pixel<qlm::ImageFormat::RGB, uint8_t>{255, 255, 255});
 
     const float scale = 1.0f / 255.0f;
 
@@ -50,8 +50,8 @@ TEST(Test_shakhbat_cv, Multiply_Roi)
 	const std::string folder_path = test::example_folder + "Filters/BoxFilter/";
 
 	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in1, in2;
-	const bool load_in1 = in1.LoadFromFile(folder_path + "input.jpg");
-	const bool load_in2 = in2.LoadFromFile(folder_path + "input.jpg");
+	const bool load_in1 = in1.Read(folder_path + "input.jpg");
+	const bool load_in2 = in2.Read(folder_path + "input.jpg");
 	EXPECT_EQ(load_in1, true);
 	EXPECT_EQ(load_in2, true);
 
@@ -60,10 +60,10 @@ TEST(Test_shakhbat_cv, Multiply_Roi)
 
 	// allocating + void overloads must agree inside the ROI
 	auto out = qlm::Multiply<qlm::ImageFormat::RGB, uint8_t, uint8_t, uint8_t>(in1, in2, scale, qlm::OverFlowFlag::SATURATE, roi);
-	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_void(in1.width, in1.height);
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out_void(in1.Width(), in1.Height());
 	qlm::Multiply(in1, in2, out_void, scale, qlm::OverFlowFlag::SATURATE, roi);
 
-	auto [x0, y0, x1, y1] = qlm::ROI(roi, in1.width, in1.height);
+	auto [x0, y0, x1, y1] = qlm::ROI(roi, in1.Width(), in1.Height());
 	for (int y = y0; y < y1; y++)
 	{
 		for (int x = x0; x < x1; x++)

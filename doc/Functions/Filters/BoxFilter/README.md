@@ -74,14 +74,14 @@ The function returns an image of type `Image<frmt, dst_t>`.
     std::string file_name = "input.jpg";
     // load the image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.LoadFromFile(file_name))
+    if (!in.Read(file_name))
     {
         std::cout << "Failed to read the image\n";
         return -1;
     }
     // check alpha component
     bool alpha{ true };
-    if (in.NumerOfChannels() == 3)
+    if (in.NumberOfChannels() == 3)
         alpha = false;
 
     const unsigned int filter_x_size = 5;
@@ -99,7 +99,7 @@ The function returns an image of type `Image<frmt, dst_t>`.
 
     std::cout <<"Time = " << t.ElapsedString() << "\n";
 
-    if (!out.SaveToFile("result.jpg", alpha))
+    if (!out.Write("result.jpg", alpha))
     {
         std::cout << "Failed to write \n";
     }
