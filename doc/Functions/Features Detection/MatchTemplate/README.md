@@ -25,10 +25,14 @@ namespace qlm
 
 | Name    | Type                | Description                                                                                        |
 |---------|---------------------|---------------------------------------------------------------------------------------------------|
-| `in`    | `Image`             | The input image.                                                                                   |
-| `templ` | `Image`             | The template image (patch) to be matched within the input image.                      |
-| `mode`  | `TemplateMatchFlag` | The method used for template matching.  |
-| `mask`  | `Image`             | mask image to restrict matching to certain regions.                           |
+| `in`    | `Image`             | The input image. Must be at least as large as `templ` in both dimensions.                |
+| `templ` | `Image`             | The template image (patch) to be matched within the input image.                         |
+| `mode`  | `TemplateMatchFlag` | The method used for template matching (see below).                                       |
+| `mask`  | `Image`             | Mask image, same size as `templ`; only pixels with nonzero mask values contribute.       |
+
+The normalized modes compute cosine similarity (no mean subtraction):
+`SQDIFF_NORMED` / `CCORR_NORMED` divide the raw response by `sqrt(src_deno * templ_deno)`.
+An all-zero template or image region yields 0 in normalized modes (instead of 0/0).
 
 
 ```c++

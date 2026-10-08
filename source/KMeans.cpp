@@ -1,4 +1,5 @@
 #include "KMeans.hpp"
+#include <cassert>
 #include <random>
 #include <numeric>
 #include <cmath>
@@ -10,7 +11,9 @@ namespace qlm
 	{
 		using dist_t = qlm::wider_t<qlm::signed_t<T>>;
 
-		std::vector<Cluster<frmt, T>> clusters{ k };
+		std::vector<Cluster<frmt, T>> clusters(static_cast<size_t>(k));
+
+		assert(k > 0 && k <= in.Width() * in.Height());
 
 		// choose first centroid random
 		std::mt19937 eng(seed);
@@ -36,7 +39,7 @@ namespace qlm
 			for (int i = 1; i < k; i++)
 			{
 				dist_t total_weight{ 0 };
-				// Update distances to nearest centroids
+				// Update distances to nearest centroids (as a cumulative distribution for sampling)
 				for (int j = 0; j < num_points; j++)
 				{
 					dist_t min_dist{ std::numeric_limits<dist_t>::max() };
@@ -45,8 +48,8 @@ namespace qlm
 						auto dist = L2Norm(in.GetPixel(j), clusters[c].color);
 						min_dist = std::min(min_dist, dist);
 					}
-					distances[j] = min_dist;
 					total_weight += min_dist;
+					distances[j] = total_weight;
 				}
 
 				// Sample a data point based on probability distribution
@@ -100,6 +103,9 @@ namespace qlm
 			// Recompute the centroids
 			for (int c = 0; c < k; c++)
 			{
+				if (num_pix_cluster[c] == 0)
+					continue; // empty cluster: keep the old centroid
+
 				Pixel<frmt, float> num_pix{ (float)num_pix_cluster[c] };
 				Pixel<frmt, T> new_centroid = pix_avg[c] / num_pix;
 

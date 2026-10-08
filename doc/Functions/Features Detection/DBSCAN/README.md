@@ -23,9 +23,9 @@ namespace qlm
 
 | Name           | Type    | Description                                                                                                            |
 |----------------|---------|------------------------------------------------------------------------------------------------------------------------|
-| `in`           | `Image` | The input image.                                                                                                       |
+| `in`           | `Image` | The input image (RGB).                                                                                               |
 | `eps`          | `int`   | The maximum distance between two samples for one to be considered as in the neighborhood of the other.                 |
-| `min_pts`      | `int`   | The number of samples in a neighborhood for a point to be considered as a core point. This includes the point itself.  |
+| `min_pts`      | `int`   | The number of samples in a neighborhood for a point to be considered as a core point. This includes the point itself. (default: 5) |
 
 
 ## Return Value

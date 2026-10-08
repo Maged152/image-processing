@@ -5,51 +5,6 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
     qlm::Timer<qlm::usec> t{};
     const std::string folder_path = test::example_folder + "Features Detection/GoodFeaturesToTrack/";
 
-     /*
-    // Load the input image.
-    qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
-    if (!in.Read(file_name))
-    {
-        std::cout << "Failed to read the image\n";
-        return -1;
-    }
-
-    // Check alpha component.
-    bool alpha{ true };
-    if (in.NumberOfChannels() == 3)
-        alpha = false;
-
-    // Detect corners with GoodFeaturesToTrack.
-    const int max_corners = 200;
-    const double quality_level = 0.01;
-    const double min_distance = 10.0;
-    const int blockSize = 3;
-    const int gradientSize = 3;
-    const bool useHarrisDetector = true;
-    const double k = 0.04;
-
-    t.Start();
-    auto corners = qlm::GoodFeaturesToTrack(gray, max_corners, quality_level, min_distance, blockSize, gradientSize, useHarrisDetector, k);
-    t.End();
-
-
-    // Draw the detected corners on the input image.
-    qlm::Circle<int> circle{ .radius = 3 };
-    qlm::Pixel<qlm::ImageFormat::RGB, uint8_t> color{255, 0, 255};
-
-    for (const auto& corner : corners)
-    {
-        circle.center = corner.point;
-        in = qlm::DrawCircle(in, circle, color);
-    }
-
-    if (!in.Write("result.jpg", alpha))
-    {
-        std::cout << "Failed to write \n";
-    }
-}
-     
-     */
     // read input image
     qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
     const bool load_in = in.Read(folder_path + "input.jpg");
@@ -93,3 +48,24 @@ TEST(Test_shakhbat_cv, GoodFeaturesToTrack)
 
     test::CompareImages(in, ref);
 }
+
+TEST(Test_shakhbat_cv, GoodFeaturesToTrack_MaxOne)
+{
+    const std::string folder_path = test::example_folder + "Features Detection/GoodFeaturesToTrack/";
+
+    qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+    ASSERT_TRUE(in.Read(folder_path + "input.jpg"));
+    const auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
+
+    // max_corners=1 returns exactly the single strongest corner
+    auto one = qlm::GoodFeaturesToTrack(gray, 1, 0.01, 10.0, 3, 3, true, 0.04);
+    ASSERT_EQ(one.size(), 1);
+
+    // it must agree with the top of the full deterministic ordering
+    auto many = qlm::GoodFeaturesToTrack(gray, 200, 0.01, 10.0, 3, 3, true, 0.04);
+    ASSERT_FALSE(many.empty());
+    EXPECT_EQ(one[0].point.x, many[0].point.x);
+    EXPECT_EQ(one[0].point.y, many[0].point.y);
+    EXPECT_FLOAT_EQ(one[0].response, many[0].response);
+}
+

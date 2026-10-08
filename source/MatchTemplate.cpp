@@ -1,4 +1,5 @@
 #include "MatchTemplate.hpp"
+#include <cassert>
 #include <functional>
 #include <cmath>
 
@@ -11,6 +12,9 @@ namespace qlm
 		const TemplateMatchFlag mode,
 		const Image<ImageFormat::GRAY, uint8_t>& mask)
 	{
+		assert(templ.Width() > 0 && templ.Height() > 0);
+		assert(templ.Width() <= in.Width() && templ.Height() <= in.Height());
+		assert(mask.Width() == templ.Width() && mask.Height() == templ.Height());
 		Image<ImageFormat::GRAY, float> out{ in.Width() - templ.Width() + 1, in.Height() - templ.Height() + 1};
 
 		std::function<float(Pixel<frmt, T>, Pixel<frmt, T>)> mt_metric;
@@ -108,8 +112,9 @@ namespace qlm
 							}
 						}
 					}
-					// store the output
-					out.SetPixel(x, y, sum / std::sqrt(src_deno * temple_deno));
+					// store the output (guard against all-zero patch/region: 0/0 -> 0)
+					const float denom = std::sqrt(src_deno * temple_deno);
+					out.SetPixel(x, y, denom > 0.0f ? sum / denom : 0.0f);
 				}
 			}
 		}

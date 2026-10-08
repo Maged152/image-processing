@@ -60,13 +60,12 @@ All channel results are clamped to the output type range (like OpenCV's `saturat
 | Name       | Type           | Description                      |
 |------------|----------------|----------------------------------|
 | `src_frmt` | `ImageFormat`  | The input image format.          |
-| `src_t`    | `pixel_t`      | The input image type.            |
+| `T`        | `pixel_t`      | The image type.                  |
 | `dst_frmt` | `ImageFormat`  | The output image format.         |
-| `dst_t`    | `pixel_t`      | The output image type.           |
 | `in`       | `Image`        | The input image.                 |
 
 ## Return Value
-The function returns an image of type `Image<dst_frmt, dst_t>`.
+The function returns an image of type `Image<dst_frmt, T>`.
 
 ## Example
 

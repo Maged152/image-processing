@@ -39,3 +39,25 @@ TEST(Test_shakhbat_cv, KMeans)
 
 	test::CompareImages(out, ref);
 }
+TEST(Test_shakhbat_cv, KMeans_Synthetic)
+{
+	// 10x10 image: left half black, right half white -> exact centers {0,0,0} and {255,255,255}
+		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in(10, 10);
+		for (int y = 0; y < 10; y++)
+			for (int x = 0; x < 10; x++)
+				 in.SetPixel(x, y, x < 5 ? qlm::Pixel<qlm::ImageFormat::RGB, uint8_t>(0,0,0) : qlm::Pixel<qlm::ImageFormat::RGB, uint8_t>(255,255,255));
+		for (const auto init : {qlm::KMeansInit::RANDOM, qlm::KMeansInit::KMEANS_PLUS_PLUS})
+		{
+			const auto clusters = qlm::KMeans(in, 2, init, 0, 50, static_cast<uint8_t>(0));
+			ASSERT_EQ(clusters.size(), 2);
+			int total = 0;
+			for (const auto &c : clusters)
+			{
+				 total += static_cast<int>(c.pixels.size());
+				const auto v = c.color.r;
+				EXPECT_TRUE(v == 0 || v == 255) << (int)v;
+			}
+			EXPECT_EQ(total, 100);
+		}
+	}
+

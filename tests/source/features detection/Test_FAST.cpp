@@ -48,3 +48,32 @@ TEST(Test_shakhbat_cv, FAST)
 
 	test::CompareImages(in, ref);
 }
+
+TEST(Test_shakhbat_cv, FAST_Variants)
+{
+	const std::string folder_path = test::example_folder + "Features Detection/FAST/";
+
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	ASSERT_TRUE(in.Read(folder_path + "input.jpg"));
+	const auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
+
+	const uint8_t threshold = 70;
+
+	// arc 12 is stricter than arc 9: subset of corners
+	const auto corners9 = qlm::FAST(gray, 9, threshold, true);
+	const auto corners12 = qlm::FAST(gray, 12, threshold, true);
+	EXPECT_LE(corners12.size(), corners9.size());
+
+	// without NMS we get at least as many corners as with NMS
+	const auto corners_no_nms = qlm::FAST(gray, 9, threshold, false);
+	EXPECT_GE(corners_no_nms.size(), corners9.size());
+
+	// all key-points respect the 3-pixel border margin
+	for (const auto& kp : corners9)
+	{
+		EXPECT_GE(kp.point.x, 3);
+		EXPECT_GE(kp.point.y, 3);
+		EXPECT_LT(kp.point.x, gray.Width() - 3);
+		EXPECT_LT(kp.point.y, gray.Height() - 3);
+	}
+}

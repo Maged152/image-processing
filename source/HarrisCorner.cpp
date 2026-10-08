@@ -4,6 +4,7 @@
 #include "SepFilter2D.hpp"
 #include "Sobel.hpp"
 #include "BoxFilter.hpp"
+#include "Multiply.hpp"
 
 namespace qlm
 {
@@ -12,43 +13,33 @@ namespace qlm
 	{
 		const int width = in.Width();
 		const int height = in.Height();
+
 		// normalization factor
 		float scale = (1 << (filter_size - 1)) * block_size * std::numeric_limits<T>::max();
 		scale = 1.0 / scale;
 		float normalization = scale * scale * scale * scale;
 
 		// call Gaussian kernel 
-		int constexpr sigma = 1;
+		constexpr int sigma = 1;
 		Image<ImageFormat::GRAY, uint8_t> gaussian = Gaussian(in, filter_size, sigma, sigma, border_mode);
+
 		// call sobel x and y
-		Image<ImageFormat::GRAY, int16_t> sobel_x = SobelX<uint8_t, int16_t>(gaussian, filter_size, border_mode);
-		Image<ImageFormat::GRAY, int16_t> sobel_y = SobelY<uint8_t, int16_t>(gaussian, filter_size, border_mode);
-		// compute Ixx, Iyy, Ixy
-		Image<ImageFormat::GRAY, int16_t> Ixx{ width , height};
-		Image<ImageFormat::GRAY, int16_t> Iyy{ width , height };
-		Image<ImageFormat::GRAY, int16_t> Ixy{ width , height };
-
-		for (int y = 0; y < height; y++)
-		{
-			for (int x = 0; x < width; x++)
-			{
-				auto Ix = sobel_x.GetPixel(x, y);
-				auto Iy = sobel_y.GetPixel(x, y);
-
-				Ixx.SetPixel(x, y, Ix * Ix);
-				Ixy.SetPixel(x, y, Iy * Ix);
-				Iyy.SetPixel(x, y, Iy * Iy);
-			}
-		}
+		Image<ImageFormat::GRAY, int16_t> I_x = SobelX<uint8_t, int16_t>(gaussian, filter_size, border_mode);
+		Image<ImageFormat::GRAY, int16_t> I_y = SobelY<uint8_t, int16_t>(gaussian, filter_size, border_mode);
+		
+		// compute I_xx, I_yy, I_xy
+		const Image<ImageFormat::GRAY, float> I_xx = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_x, 1.0f, OverFlowFlag::WRAP);
+		const Image<ImageFormat::GRAY, float> I_yy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_y, 1.0f, OverFlowFlag::WRAP);
+		const Image<ImageFormat::GRAY, float> I_xy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_y, 1.0f, OverFlowFlag::WRAP);
 
 		// sum on block size
-		BorderMode<ImageFormat::GRAY, int16_t> border_mode_16{};
-		border_mode_16.border_type = border_mode.border_type;
-		border_mode_16.border_pixel = border_mode.border_pixel;
+		BorderMode<ImageFormat::GRAY, float> border_mode_f{};
+		border_mode_f.border_type = border_mode.border_type;
+		border_mode_f.border_pixel = border_mode.border_pixel.v;
 
-		Image<ImageFormat::GRAY, int16_t> Ixx_sum = BoxFilter<ImageFormat::GRAY, int16_t, int16_t>(Ixx, block_size, block_size, false, border_mode_16);
-		Image<ImageFormat::GRAY, int16_t> Iyy_sum = BoxFilter<ImageFormat::GRAY, int16_t, int16_t>(Iyy, block_size, block_size, false, border_mode_16);
-		Image<ImageFormat::GRAY, int16_t> Ixy_sum = BoxFilter<ImageFormat::GRAY, int16_t, int16_t>(Ixy, block_size, block_size, false, border_mode_16);
+		Image<ImageFormat::GRAY, float> S_xx = BoxFilter<ImageFormat::GRAY, float, float>(I_xx, block_size, block_size, false, border_mode_f);
+		Image<ImageFormat::GRAY, float> S_yy = BoxFilter<ImageFormat::GRAY, float, float>(I_yy, block_size, block_size, false, border_mode_f);
+		Image<ImageFormat::GRAY, float> S_xy = BoxFilter<ImageFormat::GRAY, float, float>(I_xy, block_size, block_size, false, border_mode_f);
 
 		Image<ImageFormat::GRAY, float> corners_response{ width, height };
 		// compute R
@@ -56,12 +47,12 @@ namespace qlm
 		{
 			for (int x = 0; x < width; x++)
 			{
-				float Ixx = Ixx_sum.GetPixel(x, y).v;
-				float Iyy = Iyy_sum.GetPixel(x, y).v;
-				float Ixy = Ixy_sum.GetPixel(x, y).v;
+				float I_xx = S_xx.GetPixel(x, y).v;
+				float I_yy = S_yy.GetPixel(x, y).v;
+				float I_xy = S_xy.GetPixel(x, y).v;
 
-				float det = Ixx * Iyy - Ixy * Ixy;
-				float tr = Ixx + Iyy;
+				float det = I_xx * I_yy - I_xy * I_xy;
+				float tr = I_xx + I_yy;
 
 				float response = (det - k * tr * tr) * normalization;
 				// check if it is a corner
@@ -75,6 +66,7 @@ namespace qlm
 				}	
 			}
 		}
+		
 		std::vector<KeyPoint<int>> key_points;
 		// non-max suppression
 		for (int y = 0; y < height; y++)

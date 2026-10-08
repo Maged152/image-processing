@@ -1,9 +1,8 @@
-#define _USE_MATH_DEFINES
-
 #include "Sobel.hpp"
 #include "SepFilter2D.hpp"
 #include <iostream>
 #include <cmath>
+#include <numbers>
 #include <vector>
 
 
@@ -184,7 +183,7 @@ namespace qlm
 				out.magnitude.SetPixel(x, y, out_pix);
 
 				// calculate the angle
-				angle = std::atan2(out.sobel_y.GetPixel(x, y).v, out.sobel_x.GetPixel(x, y).v) * 180.0f / M_PI;
+				angle = std::atan2(out.sobel_y.GetPixel(x, y).v, out.sobel_x.GetPixel(x, y).v) * 180.0f / std::numbers::pi;
 				out.angle.SetPixel(x, y, Pixel<ImageFormat::GRAY, float>(angle));
 			}
 		}

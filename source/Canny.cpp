@@ -2,6 +2,7 @@
 #include "Sobel.hpp"
 #include "Magnitude.hpp"
 #include <cmath>
+#include <numbers>
 #include <limits>
 #include <cassert>
 #include <type_traits>
@@ -34,7 +35,7 @@ qlm::Image<qlm::ImageFormat::GRAY, T> qlm::Canny(const qlm::Image<qlm::ImageForm
     {
         // calculate the angle
         double angle = std::atan2(static_cast<double>(sobel_y.GetPixel(x, y).v), 
-                                  static_cast<double>(sobel_x.GetPixel(x, y).v)) * 180.0 / M_PI;
+                                  static_cast<double>(sobel_x.GetPixel(x, y).v)) * 180.0 / std::numbers::pi;
 
         // quantize the angle to one of four directions [0, 45, 90, 135] degrees
         angle = std::round(angle / 45) * 45;

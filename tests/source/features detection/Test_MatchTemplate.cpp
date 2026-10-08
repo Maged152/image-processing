@@ -52,3 +52,34 @@ TEST(Test_shakhbat_cv, MatchTemplate)
 
 	test::CompareImages(in, ref);
 }
+
+TEST(Test_shakhbat_cv, MatchTemplate_SelfMatch)
+{
+	// template cut out of the input itself: SQDIFF must be 0 at the cut location
+	const std::string folder_path = test::example_folder + "Features Detection/MatchTemplate/";
+
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> rgb;
+	ASSERT_TRUE(rgb.Read(folder_path + "input.jpg"));
+	const auto in = qlm::ColorConvert<qlm::ImageFormat::GRAY>(rgb);
+
+	const int tw = 32, th = 32, tx = 10, ty = 10;
+	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> templ(tw, th);
+	for (int y = 0; y < th; y++)
+		for (int x = 0; x < tw; x++)
+			templ.SetPixel(x, y, in.GetPixel(tx + x, ty + y));
+
+	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> mask(tw, th);
+	for (int i = 0; i < tw * th; i++)
+		mask.SetPixel(i, qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t>(1));
+
+	auto out = qlm::MatchTemplate(in, templ, qlm::TemplateMatchFlag::SQDIFF, mask);
+	EXPECT_EQ(out.GetPixel(tx, ty).v, 0.0f);
+
+	const auto [min_loc, max_loc] = qlm::MinMaxLoc(out);
+	EXPECT_FALSE(min_loc.empty());
+	if (!min_loc.empty())
+	{
+		EXPECT_EQ(min_loc[0].x, tx);
+		EXPECT_EQ(min_loc[0].y, ty);
+	}
+}
