@@ -30,10 +30,8 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const qlm::Image<qlm::ImageFormat::G
 
 	const int num_rho = std::floor((max_rho - min_rho) / rho);
 	
-	// pre-compute sin & cos table
-	float* sin_table = new float [num_angle]; //use std::vector
-	float* cos_table = new float [num_angle];
-
+	// trig tables, pre-scaled by 1/rho
+	std::vector<float> sin_table(num_angle), cos_table(num_angle);
 	for (int n = 0 ; n < num_angle; n++)
 	{
 		const float th = min_theta + n * theta_step;
@@ -42,8 +40,8 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const qlm::Image<qlm::ImageFormat::G
 	}
 
 	// Discrete accumulator array
-	qlm::Image<qlm::ImageFormat::GRAY, int32_t> acc; // x -> r, y -> theta
-	acc.Create(num_rho, num_angle, 0);
+	qlm::Image<qlm::ImageFormat::GRAY, int32_t> acc; // x -> theta r, y -> r
+	acc.Create(num_angle, num_rho, 0);
 
 	// voting
 	for (int y = 0; y < height; y++)
@@ -58,30 +56,31 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const qlm::Image<qlm::ImageFormat::G
 				for (int t = 0; t < num_angle; t++)
 				{
 					// calculate r
-					const int r = std::round(x * cos_table[t] + y * sin_table[t]);
+					const float r = x * cos_table[t] + y * sin_table[t];
+					const int idx_r = std::round((r - min_rho) / rho);
 					
-					auto val = acc.GetPixel(r, t);
-					acc.SetPixel(r, t, val.v + 1);
-					// acc[n * num_rho + r]++;
+					auto val = acc.GetPixel(t, idx_r);
+					acc.SetPixel(t, idx_r, val.v + 1);
 				}
 			}
 		}
 	}
 
+	struct Peak { int votes; float r; float t; };
+	std::vector<Peak> peaks;
 	
 	// find lines
-	double scale = 1. / (num_rho + 2);
-	for (int t = 0; t < acc.Height(); t++)
+	for (int r = 0; r < acc.Height(); r++)
 	{
-		for (int r = 0; r < acc.Width(); r++)
+		for (int t = 0; t < acc.Width(); t++)
 		{
-			const int c_pix = acc.GetPixel(r, t).v;
+			const int c_pix = acc.GetPixel(t, r).v;
 
 			// neighboring elements
-			const int l_pix = acc.GetPixel(r - 1, t).v;
-			const int r_pix = acc.GetPixel(r + 1, t).v;
-			const int t_pix = acc.GetPixel(r, t - 1).v;
-			const int b_pix = acc.GetPixel(r, t + 1).v;
+			const int l_pix = acc.GetPixel(t - 1, r).v;
+			const int r_pix = acc.GetPixel(t + 1, r).v;
+			const int t_pix = acc.GetPixel(t, r - 1).v;
+			const int b_pix = acc.GetPixel(t, r + 1).v;
 
 			if (c_pix > threshold && 
 				c_pix > l_pix && c_pix >= r_pix &&
@@ -90,15 +89,22 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const qlm::Image<qlm::ImageFormat::G
 				const float theta = min_theta + t * theta_step;
 				const float d  = min_rho + r * rho;
 
-				lines.push_back({d ,theta});
+				peaks.push_back({c_pix, d, theta});
 			}
 			
 		}
 	}
-	
-	// free the tables
-	delete[] sin_table;
-	delete[] cos_table;
+
+	// sort lines by voting
+	std::sort(peaks.begin(), peaks.end(), [](const Peak& a, const Peak& b) {
+		if (a.votes != b.votes) return a.votes > b.votes;
+		if (a.t != b.t)         return a.t < b.t;
+		return a.r < b.r;
+	});
+
+	lines.reserve(peaks.size());
+	for (const auto& p : peaks)
+		lines.push_back({ p.r, p.t });
 
 	return lines;
 }
