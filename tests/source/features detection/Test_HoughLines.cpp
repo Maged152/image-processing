@@ -1,4 +1,5 @@
 #include "test_common.hpp"
+#include <numbers>
 
 TEST(Test_shakhbat_cv, HoughLines)
 {
@@ -17,7 +18,7 @@ TEST(Test_shakhbat_cv, HoughLines)
 
 	// do the operation
 	t.Start();
-	std::vector<qlm::LinePolar> lines = qlm::HoughLines(in, 1, 3 * 3.14f / 180, 110);
+	std::vector<qlm::LinePolar> lines = qlm::HoughLines(in, 1, 3 * std::numbers::pi_v<float> / 180.0f, 110);
 	t.End();
 
 	// out image to draw on
@@ -40,3 +41,23 @@ TEST(Test_shakhbat_cv, HoughLines)
 
 	test::CompareImages(draw, ref);
 }
+TEST(Test_shakhbat_cv, HoughLines_Synthetic)
+{
+	// 100x100 canvas with a single horizontal white line at y=40
+	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in(100, 100);
+	for (int x = 0; x < 100; x++)
+		 in.SetPixel(x, 40, qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t>(255));
+		// a horizontal line y=40 has normal theta=pi/2, rho=40
+		// (x*cos(pi/2)+40*sin(pi/2) = 40 for every x)
+		const float theta_step = 3 * std::numbers::pi_v<float> / 180.0f;
+		const auto lines = qlm::HoughLines(in, 1.0f, theta_step, 50);
+		ASSERT_FALSE(lines.empty());
+		bool found = false;
+		for (const auto &l : lines)
+		{
+			if (std::abs(l.radius - 40.0f) <= 1.0f && std::abs(l.angle - std::numbers::pi / 2) <= theta_step)
+				 found = true;
+		}
+		EXPECT_TRUE(found);
+	}
+

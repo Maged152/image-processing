@@ -68,8 +68,8 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const qlm::Image<qlm::ImageFormat::G
 					const float r = x * cos_table[t] + y * sin_table[t];
 					const int idx_r = std::round(r) + half;
 					
-					auto val = acc.GetPixel(t, idx_r);
-					acc.SetPixel(t, idx_r, val.v + 1);
+					auto val = acc.GetPixel(t, idx_r).v;
+					acc.SetPixel(t, idx_r, val + 1);
 				}
 			}
 		}
@@ -112,7 +112,7 @@ std::vector<qlm::LinePolar> qlm::HoughLines(const qlm::Image<qlm::ImageFormat::G
 	for (const auto& p : peaks)
 	{
 		const float d     = (p.r - half) * rho;
-		const float theta = static_cast<float>(min_theta + p.t * theta_step);
+		const float theta = min_theta + p.t * theta_step;
 
 		lines.push_back({ d, theta });
 	}

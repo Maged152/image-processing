@@ -131,26 +131,24 @@ namespace qlm
     template<ImageFormat frmt, pixel_t T>
     Image<frmt, T> DrawLine(const Image<frmt, T>& in, const LinePolar& line, const  Pixel<frmt, T>& color)
     {
-        int width = in.Width();
-        int height = in.Height();
+        const float width  = static_cast<float>(in.Width());
+        const float height = static_cast<float>(in.Height());
 
-        auto theta = line.angle;
-        auto r = line.radius;
+        const float length = std::sqrt(width * width + height * height) + 1.0;
 
-        auto cos_angle = std::cos(theta); 
-        auto sin_angle = std::sin(theta);
+        const float cos_angle = std::cos(line.angle);
+        const float sin_angle = std::sin(line.angle);
 
-        int x0 = cos_angle * r; 
-        int y0 = sin_angle * r;
+        const float x0 = cos_angle * line.radius;
+        const float y0 = sin_angle * line.radius;
 
-        int x1 = int(x0 + 1000 * (-sin_angle));
-        int y1 = int(y0 + 1000 * (cos_angle));
+        // direction along the line is (-sin, cos)
+        const int x1 = static_cast<int>(std::round(x0 - length * sin_angle));
+        const int y1 = static_cast<int>(std::round(y0 + length * cos_angle));
+        const int x2 = static_cast<int>(std::round(x0 + length * sin_angle));
+        const int y2 = static_cast<int>(std::round(y0 - length * cos_angle));
 
-        int x2 = int(x0 - 1000 * (-sin_angle));
-        int y2 = int(y0 - 1000 * (cos_angle));
-
-        Line l{x1 ,y1 ,x2 ,y2};
-        return DrawLine(in, l, color);
+        return DrawLine(in, Line{x1, y1, x2, y2}, color);
     }
 
     template<ImageFormat frmt, pixel_t T>

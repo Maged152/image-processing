@@ -24,12 +24,14 @@ namespace qlm
 
 | Name        | Type         | Description                                                                                  |
 |-------------|--------------|----------------------------------------------------------------------------------------------|
-| `in`        | `Image`      | The input image.                                                                             |
-| `rho`       | `float`      | The Distance resolution of the accumulator in pixels.                                        |
-| `theta`     | `float`      | The angle resolution of the accumulator in radians.                                          |
-| `threshold` | `int`        | The threshold parameter. Only those lines are returned that get enough votes ( >threshold ). |
-| `min_theta` | `double`     | The minimum angle to check for lines. Must fall between 0 and max_theta.                     |
-| `max_theta` | `double`     | The upper bound for the angle. Must fall between min_theta and PI.                         |
+| `in`        | `Image`      | The input binary image (nonzero pixels vote).                                                    |
+| `rho`       | `float`      | The distance resolution of the accumulator in pixels.                                          |
+| `theta_step`| `float`      | The angle resolution of the accumulator in radians.                                            |
+| `threshold` | `int`        | The threshold parameter. Only those lines are returned that get enough votes ( >threshold ).   |
+| `min_theta` | `double`     | The minimum angle to check for lines. Must fall between 0 and max_theta.                       |
+| `max_theta` | `double`     | The upper bound for the angle. Must fall between min_theta and PI.                             |
+
+Votes with negative rho are shifted into the accumulator, so lines in any orientation are detected.
 
 ## Return Value
 The function returns a vector of lines of type `std::vector<LinePolar>`.
