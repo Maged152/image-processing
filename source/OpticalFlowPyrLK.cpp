@@ -1,7 +1,7 @@
 #include "OpticalFlowPyrLK.hpp"
 #include "common/solve.hpp"
 #include "GaussianPyramid.hpp"
-#include "Sobel.hpp"
+#include "common/StructureTensor.hpp"
 #include "BoxFilter.hpp"
 #include "Subtract.hpp"
 #include "Translate.hpp"
@@ -44,16 +44,11 @@ namespace qlm
             const Image<ImageFormat::GRAY, T> img_prev_l = pyr_prev_img.layers[level];
             const Image<ImageFormat::GRAY, T> img_next_l = pyr_next_img.layers[level];
 
-            const Image<ImageFormat::GRAY, int16_t> I_x = SobelX<T, int16_t>(img_prev_l, gradient_size);
-		    const Image<ImageFormat::GRAY, int16_t> I_y = SobelY<T, int16_t>(img_prev_l, gradient_size);
+            // gradients and the box-filtered structure tensor for this level
+            Image<ImageFormat::GRAY, int16_t> I_x, I_y;
+            Image<ImageFormat::GRAY, float> S_xx, S_yy, S_xy;
 
-            const Image<ImageFormat::GRAY, float> I_xx = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_x, 1.0f, OverFlowFlag::WRAP);
-            const Image<ImageFormat::GRAY, float> I_yy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_y, 1.0f, OverFlowFlag::WRAP);
-            const Image<ImageFormat::GRAY, float> I_xy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_y, 1.0f, OverFlowFlag::WRAP);
-
-            const Image<ImageFormat::GRAY, float> S_xx = BoxFilter<ImageFormat::GRAY, float, float>(I_xx, win_size.width, win_size.height, false);
-            const Image<ImageFormat::GRAY, float> S_yy = BoxFilter<ImageFormat::GRAY, float, float>(I_yy, win_size.width, win_size.height, false);
-            const Image<ImageFormat::GRAY, float> S_xy = BoxFilter<ImageFormat::GRAY, float, float>(I_xy, win_size.width, win_size.height, false);
+            StructureTensor(img_prev_l, gradient_size, win_size.width, win_size.height, I_x, I_y, S_xx, S_yy, S_xy);
 
             // needed buffer for iterative Newton-Raphson
             Image<ImageFormat::GRAY, int16_t> I_t {img_prev_l.Width(), img_prev_l.Height()};

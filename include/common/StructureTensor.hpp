@@ -7,7 +7,10 @@ namespace qlm
 	// Computes the data needed by corner detectors (Harris / Shi-Tomasi / Lucas-Kanade):
 	// Sobel gradients I_x, I_y and the box-filtered structure tensor components
 	// S_xx = sum(I_x^2), S_yy = sum(I_y^2), S_xy = sum(I_x * I_y)
-	// The outputs are full-size images; only the given roi is filled.
+	// The outputs are full-size images. The sums inside the requested roi are
+	// exact: the gradients/products are computed over the roi extended by half
+	// the block size (halo), so a box-filter window centered in the roi never
+	// reads uninitialized pixels.
 	void StructureTensor(
 		const Image<ImageFormat::GRAY, uint8_t>& in,
 		const int gradient_size,

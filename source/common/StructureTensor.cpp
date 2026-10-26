@@ -3,6 +3,7 @@
 #include "Multiply.hpp"
 #include "BoxFilter.hpp"
 #include <cassert>
+#include <algorithm>
 
 namespace qlm
 {
@@ -20,16 +21,30 @@ namespace qlm
 		const BorderMode<ImageFormat::GRAY, float>& box_border_mode,
 		const Rectangle<int>& roi)
 	{
-		// sobel derivatives (full-size images; only the roi region is filled)
-		I_x = SobelX<uint8_t, int16_t>(in, gradient_size, border_mode, roi);
-		I_y = SobelY<uint8_t, int16_t>(in, gradient_size, border_mode, roi);
+		auto [start_x, start_y, end_x, end_y] = ROI(roi, in.Width(), in.Height());
+
+		// halo: the gradients/products must exist for every pixel a box-filter
+		// window reads, so extend the computation region by half the block size
+		const int pad_x = block_x_size / 2;
+		const int pad_y = block_y_size / 2;
+
+		const int halo_start_x = std::max(start_x - pad_x, 0);
+		const int halo_start_y = std::max(start_y - pad_y, 0);
+		const int halo_end_x   = std::min(end_x + pad_x, in.Width());
+		const int halo_end_y   = std::min(end_y + pad_y, in.Height());
+
+		const Rectangle<int> halo_roi{ {halo_start_x, halo_start_y}, halo_end_x - halo_start_x, halo_end_y - halo_start_y };
+
+		// sobel derivatives (full-size images; only the halo region is filled)
+		I_x = SobelX<uint8_t, int16_t>(in, gradient_size, border_mode, halo_roi);
+		I_y = SobelY<uint8_t, int16_t>(in, gradient_size, border_mode, halo_roi);
 
 		// compute I_xx, I_yy, I_xy as temporaries
-		const Image<ImageFormat::GRAY, float> I_xx = Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_x, 1.0f, OverFlowFlag::WRAP, roi);
-		const Image<ImageFormat::GRAY, float> I_yy = Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_y, 1.0f, OverFlowFlag::WRAP, roi);
-		const Image<ImageFormat::GRAY, float> I_xy = Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_y, 1.0f, OverFlowFlag::WRAP, roi);
+		const Image<ImageFormat::GRAY, float> I_xx = Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_x, 1.0f, OverFlowFlag::WRAP, halo_roi);
+		const Image<ImageFormat::GRAY, float> I_yy = Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_y, 1.0f, OverFlowFlag::WRAP, halo_roi);
+		const Image<ImageFormat::GRAY, float> I_xy = Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_y, 1.0f, OverFlowFlag::WRAP, halo_roi);
 
-		// sum over the block window
+		// sum over the block window (output limited to the requested roi)
 		S_xx = BoxFilter<ImageFormat::GRAY, float, float>(I_xx, block_x_size, block_y_size, false, box_border_mode, roi);
 		S_yy = BoxFilter<ImageFormat::GRAY, float, float>(I_yy, block_x_size, block_y_size, false, box_border_mode, roi);
 		S_xy = BoxFilter<ImageFormat::GRAY, float, float>(I_xy, block_x_size, block_y_size, false, box_border_mode, roi);

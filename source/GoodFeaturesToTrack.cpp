@@ -31,7 +31,7 @@ namespace qlm
         constexpr float neg_inf = std::numeric_limits<float>::lowest();
         const double min_distance_squared = min_distance * min_distance;
         const int valid_distance = block_size / 2 + gradient_size / 2;
-        const qlm::Rectangle<int> roi{ qlm::Point<int>{valid_distance, valid_distance}, in.Width() - valid_distance, in.Height() - valid_distance };
+        const qlm::Rectangle<int> roi{ qlm::Point<int>{valid_distance, valid_distance}, in.Width() - 2 * valid_distance, in.Height() - 2 * valid_distance };
         const BorderMode<ImageFormat::GRAY, float> border_mode_f{border_mode.border_type, border_mode.border_pixel.v};
 
         // stage 1 & 2: compute the gradients and the sum of squared gradients
@@ -42,7 +42,7 @@ namespace qlm
 
         // stage 3: compute the corner response
         Image<ImageFormat::GRAY, float> response = CornerResponse(Ixx_sum, Iyy_sum, Ixy_sum, k, 1.0f, use_harris_detector, roi);
-        const Pixel<ImageFormat::GRAY, float> max_response_pixel = qlm::Max(response);
+        const Pixel<ImageFormat::GRAY, float> max_response_pixel = qlm::Max(response, roi);
 
         // stage 4: threshold the response and find corners
         const float threshold = max_response_pixel.v * quality_level;
