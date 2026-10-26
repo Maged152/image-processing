@@ -1,10 +1,6 @@
 #include "HarrisCorner.hpp"
-#include "ColorConvert.hpp"
 #include "Gaussian.hpp"
-#include "SepFilter2D.hpp"
-#include "Sobel.hpp"
-#include "BoxFilter.hpp"
-#include "Multiply.hpp"
+#include "common/StructureTensor.hpp"
 
 namespace qlm
 {
@@ -23,47 +19,28 @@ namespace qlm
 		constexpr int sigma = 1;
 		Image<ImageFormat::GRAY, uint8_t> gaussian = Gaussian(in, filter_size, sigma, sigma, border_mode);
 
-		// call sobel x and y
-		Image<ImageFormat::GRAY, int16_t> I_x = SobelX<uint8_t, int16_t>(gaussian, filter_size, border_mode);
-		Image<ImageFormat::GRAY, int16_t> I_y = SobelY<uint8_t, int16_t>(gaussian, filter_size, border_mode);
-		
-		// compute I_xx, I_yy, I_xy
-		const Image<ImageFormat::GRAY, float> I_xx = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_x, 1.0f, OverFlowFlag::WRAP);
-		const Image<ImageFormat::GRAY, float> I_yy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_y, I_y, 1.0f, OverFlowFlag::WRAP);
-		const Image<ImageFormat::GRAY, float> I_xy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(I_x, I_y, 1.0f, OverFlowFlag::WRAP);
+		// compute I_x, I_y and the box-filtered structure tensor sums
+		Image<ImageFormat::GRAY, int16_t> I_x, I_y;
+		Image<ImageFormat::GRAY, float> S_xx, S_yy, S_xy;
 
-		// sum on block size
 		BorderMode<ImageFormat::GRAY, float> border_mode_f{};
 		border_mode_f.border_type = border_mode.border_type;
 		border_mode_f.border_pixel = border_mode.border_pixel.v;
 
-		Image<ImageFormat::GRAY, float> S_xx = BoxFilter<ImageFormat::GRAY, float, float>(I_xx, block_size, block_size, false, border_mode_f);
-		Image<ImageFormat::GRAY, float> S_yy = BoxFilter<ImageFormat::GRAY, float, float>(I_yy, block_size, block_size, false, border_mode_f);
-		Image<ImageFormat::GRAY, float> S_xy = BoxFilter<ImageFormat::GRAY, float, float>(I_xy, block_size, block_size, false, border_mode_f);
+		StructureTensor(gaussian, filter_size, block_size, block_size, I_x, I_y, S_xx, S_yy, S_xy, border_mode, border_mode_f);
 
-		Image<ImageFormat::GRAY, float> corners_response{ width, height };
 		// compute R
+		Image<ImageFormat::GRAY, float> corners_response = CornerResponse(S_xx, S_yy, S_xy, k, normalization);
+		
+		// check if it is a corner
 		for (int y = 0; y < height; y++)
 		{
 			for (int x = 0; x < width; x++)
 			{
-				float I_xx = S_xx.GetPixel(x, y).v;
-				float I_yy = S_yy.GetPixel(x, y).v;
-				float I_xy = S_xy.GetPixel(x, y).v;
-
-				float det = I_xx * I_yy - I_xy * I_xy;
-				float tr = I_xx + I_yy;
-
-				float response = (det - k * tr * tr) * normalization;
-				// check if it is a corner
-				if (response > threshold)
-				{
-					corners_response.SetPixel(x, y, response);
-				}
-				else
+				if (corners_response.GetPixel(x, y).v <= threshold)
 				{
 					corners_response.SetPixel(x, y, std::numeric_limits<float>::min());
-				}	
+				}
 			}
 		}
 		

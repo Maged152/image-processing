@@ -1,8 +1,7 @@
 #include "GoodFeaturesToTrack.hpp"
+#include "Max.hpp"
 #include "common/solve.hpp"
-#include "Sobel.hpp"
-#include "BoxFilter.hpp"
-#include "Multiply.hpp"
+#include "common/StructureTensor.hpp"
 #include <cassert>
 
 namespace qlm
@@ -32,57 +31,21 @@ namespace qlm
         constexpr float neg_inf = std::numeric_limits<float>::lowest();
         const double min_distance_squared = min_distance * min_distance;
         const int valid_distance = block_size / 2 + gradient_size / 2;
+        const qlm::Rectangle<int> roi{ qlm::Point<int>{valid_distance, valid_distance}, in.Width() - valid_distance, in.Height() - valid_distance };
         const BorderMode<ImageFormat::GRAY, float> border_mode_f{border_mode.border_type, border_mode.border_pixel.v};
 
-        // stage 1: compute the gradient of the image
-        const Image<ImageFormat::GRAY, int16_t> sobel_x = qlm::SobelX(in, gradient_size, border_mode);
-        const Image<ImageFormat::GRAY, int16_t> sobel_y = qlm::SobelY(in, gradient_size, border_mode);
-
-        // stage 2: compute sum of squared gradients in a block_size x block_size window
-        const Image<ImageFormat::GRAY, float> Ixx = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(sobel_x, sobel_x, 1.0f, OverFlowFlag::WRAP);
-        const Image<ImageFormat::GRAY, float> Iyy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(sobel_y, sobel_y, 1.0f, OverFlowFlag::WRAP);
-        const Image<ImageFormat::GRAY, float> Ixy = qlm::Multiply<ImageFormat::GRAY, int16_t, int16_t, float>(sobel_x, sobel_y, 1.0f, OverFlowFlag::WRAP);
-
-        Image<ImageFormat::GRAY, float> Ixx_sum = BoxFilter<ImageFormat::GRAY, float, float>(Ixx, block_size, block_size, false, border_mode_f);
-		Image<ImageFormat::GRAY, float> Iyy_sum = BoxFilter<ImageFormat::GRAY, float, float>(Iyy, block_size, block_size, false, border_mode_f);
-		Image<ImageFormat::GRAY, float> Ixy_sum = BoxFilter<ImageFormat::GRAY, float, float>(Ixy, block_size, block_size, false, border_mode_f);
+        // stage 1 & 2: compute the gradients and the sum of squared gradients
+        // in a block_size x block_size window
+        Image<ImageFormat::GRAY, int16_t> sobel_x, sobel_y;
+        Image<ImageFormat::GRAY, float> Ixx_sum, Iyy_sum, Ixy_sum;
+        StructureTensor(in, gradient_size, block_size, block_size, sobel_x, sobel_y, Ixx_sum, Iyy_sum, Ixy_sum, border_mode, border_mode_f, roi);
 
         // stage 3: compute the corner response
-        Image<ImageFormat::GRAY, float> response (in.Width(), in.Height());
-        Pixel<ImageFormat::GRAY, float> response_pixel;
-        float max_response_pixel = neg_inf;
-
-        for (int y = valid_distance; y < in.Height() - valid_distance; y++)
-        {
-            for (int x = valid_distance; x < in.Width() - valid_distance; x++)
-            {
-                const float ixx = Ixx_sum.GetPixel(x, y).v;
-                const float ixy = Ixy_sum.GetPixel(x, y).v;
-                const float iyy = Iyy_sum.GetPixel(x, y).v;
-                
-                if (use_harris_detector)
-                {
-                    const float det = ixx * iyy - ixy * ixy;
-                    const float trace = ixx + iyy;
-                    response_pixel.v = det - k * trace * trace;
-                }
-                else
-                {
-                    response_pixel.v = MinEigenValue(ixx, ixy, iyy);
-                }
-
-                // Find maximum response value.
-                if (response_pixel.v > max_response_pixel)
-                {
-                    max_response_pixel = response_pixel.v;
-                }
-
-                response.SetPixel(x, y, response_pixel);
-            }
-        }
+        Image<ImageFormat::GRAY, float> response = CornerResponse(Ixx_sum, Iyy_sum, Ixy_sum, k, 1.0f, use_harris_detector, roi);
+        const Pixel<ImageFormat::GRAY, float> max_response_pixel = qlm::Max(response);
 
         // stage 4: threshold the response and find corners
-        const float threshold = max_response_pixel * quality_level;
+        const float threshold = max_response_pixel.v * quality_level;
 
         for (int y = valid_distance; y < response.Height() - valid_distance; y++)
         {

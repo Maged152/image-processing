@@ -12,6 +12,7 @@
 #include <array>
 #include <unordered_map>
 #include "helper_functions.hpp"
+#include "StructureTensor.hpp"
 
 namespace qlm
 {
