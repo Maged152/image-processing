@@ -39,3 +39,5 @@
 #include "Subtract.hpp"
 #include "Scharr.hpp"
 #include "OpticalFlowPyrLK.hpp"
+#include "Min.hpp"
+#include "Max.hpp"

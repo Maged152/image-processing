@@ -44,6 +44,8 @@ Here you can find the implementation of :
     * [Multiply](Functions/Pixel-Wise/Multiply)
     * [Subtract](Functions/Pixel-Wise/Subtract)
     * [Magnitude](Functions/Pixel-Wise/Magnitude)
+    * [Min](Functions/Pixel-Wise/Min)
+    * [Max](Functions/Pixel-Wise/Max)
 * Get Functions
     * [Get Kernel](Functions/Get%20functions/Get%20Kernel)
     * [Get Transformation Matrix](Functions/Get%20functions/Get%20Transformation%20Matrix)
