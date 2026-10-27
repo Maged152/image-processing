@@ -45,7 +45,7 @@ jobs:
       - name: Configure (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-O3 -DNDEBUG -Wno-attributes"
+        run: cmake -S . --preset gnu_release
 
       - name: Build (Linux)
         if: runner.os == 'Linux'
@@ -54,7 +54,7 @@ jobs:
       - name: Build (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: cmake --build build -j
+        run: cmake --build build/gnu_release -j
 
       - name: Run tests (Linux)
         if: runner.os == 'Linux'
@@ -65,4 +65,4 @@ jobs:
       - name: Run tests (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: ctest --test-dir build --output-on-failure --timeout 900
+        run: ctest --test-dir build/gnu_release --output-on-failure --timeout 900
