@@ -27,6 +27,7 @@ jobs:
       # GCC/Clang + mingw32-make + sh, so Windows CI must use the MinGW
       # toolchain. MSVC cannot build this project.
       - name: Setup MSYS2 (MinGW)
+        id: msys2
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
@@ -39,39 +40,45 @@ jobs:
             mingw-w64-x86_64-nasm
             make
 
+      # ---------------------------------------------------------------- Linux
       - name: Configure (Linux)
         if: runner.os == 'Linux'
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-
-      - name: Configure (Windows)
-        if: runner.os == 'Windows'
-        shell: msys2 {0}
-        run: cmake -S . --preset gnu_release
 
       - name: Build (Linux)
         if: runner.os == 'Linux'
         run: cmake --build build -j
 
-      - name: Build (Windows)
-        if: runner.os == 'Windows'
-        shell: powershell
-        run: |
-          # mingw32-make auto-runs CMake's cmd-style recipes (cd /d ...) through
-          # POSIX sh.exe when sh is on PATH (setup-msys2 adds usr/bin). Keep
-          # usr/bin off PATH, like the local gnu_release preset environment.
-          $env:Path = ((($env:Path -split ';') | Where-Object { $_ -notmatch '[\\/]msys64[\\/]usr[\\/]bin' }) -join ';')
-          $env:Path = "C:\msys64\mingw64\bin;$env:Path"
-          cmake --build build/gnu_release -j
-
       - name: Run tests (Linux)
         if: runner.os == 'Linux'
         run: ctest --test-dir build --output-on-failure --timeout 900
 
+      # -------------------------------------------------------------- Windows
+      - name: Configure (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: cmake -S . --preset gnu_release
+
+      # mingw32-make runs CMake's cmd-style recipes (cd /d ...) through POSIX
+      # sh.exe whenever any sh.exe is on PATH (MSYS2 usr/bin, Git for Windows,
+      # ...). Use a whitelisted PATH containing only mingw64/bin and the core
+      # Windows directories, mirroring the local gnu_release preset environment.
+      # The MSYS2 usr/bin paths needed by the inner OpenH264 make were already
+      # baked into the generated build at configure time.
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $mingw = "${{ steps.msys2.outputs.msys2-location }}\mingw64\bin"
+          $env:Path = "$mingw;$env:SystemRoot\System32;$env:SystemRoot;$env:SystemRoot\System32\Wbem"
+          where.exe sh   # expected: "Could not find files for the given pattern(s)."
+          cmake --build build/gnu_release --verbose -j1
+
       # MinGW-built exes need libstdc++-6.dll etc. from mingw64/bin.
       - name: Run tests (Windows)
         if: runner.os == 'Windows'
-        shell: powershell
+        shell: pwsh
         run: |
-          $env:Path = ((($env:Path -split ';') | Where-Object { $_ -notmatch '[\\/]msys64[\\/]usr[\\/]bin' }) -join ';')
-          $env:Path = "C:\msys64\mingw64\bin;$env:Path"
+          $mingw = "${{ steps.msys2.outputs.msys2-location }}\mingw64\bin"
+          $env:Path = "$mingw;$env:SystemRoot\System32;$env:SystemRoot;$env:SystemRoot\System32\Wbem"
           ctest --test-dir build/gnu_release --output-on-failure --timeout 900
