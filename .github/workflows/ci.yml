@@ -55,7 +55,7 @@ jobs:
       - name: Build (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: cmake --build build/gnu_release -j
+        run: cmake --build build/gnu_release --verbose -j1
 
       - name: Run tests (Linux)
         if: runner.os == 'Linux'
