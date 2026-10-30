@@ -57,3 +57,31 @@ Here you can find the implementation of :
     * [Draw Cluster](Functions/Drawing)
 * Compression:
     * [Huffman Encoding](Functions/Compression/Huffman)
+
+# Data types
+
+The core data types of the `qlm` namespace. Some of the basic types (`Image`, `Pixel`,
+`BorderMode`, `Timer`, `ThreadPool`) come from separate libraries that this project
+fetches and links at build time; their documentation lives in the linked repositories.
+
+## From other libraries
+
+* [PixelImage]([github.com/Maged152/PixelImage](https://github.com/Maged152/PixelImage)) - provides the low-level image storage:
+    * [`Image<frmt, T>`](https://github.com/Maged152/PixelImage/blob/main/doc/image.md) - 2D array of pixels, pixel access, I/O, borders.
+    * [`Pixel<frmt, T>`](https://github.com/Maged152/PixelImage/blob/main/doc/pixel.md) - strongly typed pixel value.
+    * [`ImageFormat` / supported `pixel_t` types](https://github.com/Maged152/PixelImage/blob/main/doc/pixel_formats.md) - format definitions and the supported pixel data types.
+    * `BorderMode<frmt, T>` / `BorderType` - out-of-bounds pixel policy (headers `include/image.hpp`, `include/pixel/pixel_common.hpp` of that repository).
+* [ThreadPool]([github.com/Maged152/ThreadPool](https://github.com/Maged152/ThreadPool)) - header-only utilities:
+    * `qlm::Timer<duration_t>` - execution time measurement, see [Timer](./Timer.md).
+    * `qlm::ThreadPool` + `thread_safe_queue.hpp` - background parallel execution, tasks submitted with `pool.Submit(...)` (header `include/thread_pool.hpp`).
+
+## Data types defined in this project
+
+* [Enumerations](Data%20types/Enumerations.md)
+* Classes:
+    * [Basic Containers (Point, Rectangle, KeyPoint, ...)](Data%20types/Classes/Basic%20Containers/README.md)
+    * [Image Statistics (Histogram_t, Huffman_t, SobelDerivatives, DBSCANResult)](Data%20types/Classes/Image%20Statistics/README.md)
+    * [Function Configuration (TermCriteria)](Data%20types/Classes/Function%20Configuration/README.md)
+    * [Kernels (Kernel, Kernel1D, SepKernel)](Data%20types/Classes/Kernels/README.md)
+    * [Matrices (Matrix, AffineMatrix, PerspectiveMatrix)](Data%20types/Classes/Matrices/README.md)
+    * [Spatial Index (KDNode, KDTree)](Data%20types/Classes/Spatial%20Index/README.md)
