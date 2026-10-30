@@ -1,7 +1,7 @@
 # Image processing
-Implementation of some image processing algorithms in c++.
-
 [![CI](https://github.com/Maged152/image-processing/actions/workflows/ci.yml/badge.svg)](https://github.com/Maged152/image-processing/actions/workflows/ci.yml)
+
+Implementation of some image processing algorithms in c++.
 
 For more details about the supported functions and examples read the [documentation](./doc).
 

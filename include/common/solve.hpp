@@ -11,9 +11,8 @@ namespace qlm
 	inline void Solve(Matrix& aug_mat, Matrix& sol)
 	{
 		// check the dimensions
-		if ((aug_mat.Rows() + 1) != aug_mat.Columns() &&
-			sol.Rows() != sol.Columns() &&
-			sol.Rows() != aug_mat.Rows() &&
+		if ((aug_mat.Rows() + 1) != aug_mat.Columns() ||
+			sol.Rows() != aug_mat.Rows() ||
 			sol.Columns() != 1)
 		{
 			return;
@@ -34,7 +33,7 @@ namespace qlm
 		auto Pivot = [](const Matrix& aug_mat, int start_row)
 		{
 			int pivot_row = start_row;
-			int max_val = aug_mat.Get(start_row, start_row);
+			float max_val = aug_mat.Get(start_row, start_row);
 
 			for (int r = start_row + 1; r < aug_mat.Rows(); r++)
 			{
