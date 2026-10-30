@@ -59,6 +59,29 @@ jobs:
         shell: msys2 {0}
         run: cmake -S . --preset gnu_release
 
+      # Build OpenH264 manually inside the POSIX MSYS2 shell, reproducing the
+      # output of PixelImage's OpenH264.cmake custom command. The custom
+      # command's Windows-style spawn chain
+      # (`cd /d ... && cmake -E env PATH=... mingw32-make.exe ...`)
+      # fails silently on CI runners but works locally; with the output file
+      # pre-created (and the settings stamp unchanged), CMake's cmake --build
+      # never runs it at all. This is the officially documented MSYS2 way to
+      # build OpenH264.
+      - name: Pre-build OpenH264 (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: |
+          set -x
+          make --version 2>&1 | head -1
+          /mingw64/bin/cc.exe --version 2>&1 | head -1
+          /mingw64/bin/nasm.exe --version 2>&1 | head -1
+          cd build/gnu_release/_deps/openh264-src
+          rm -f libopenh264.a
+          make -j"$(nproc)" OS=mingw_nt ARCH=x86_64 BUILDTYPE=Release USE_ASM=Yes \
+            CC=/mingw64/bin/cc.exe CXX=/mingw64/bin/c++.exe AR=/mingw64/bin/ar.exe \
+            libopenh264.a
+          cp -f libopenh264.a ../openh264-build/openh264-install/lib/libopenh264.a
+
       # mingw32-make runs CMake's cmd-style recipes (cd /d ...) through POSIX
       # sh.exe whenever any sh.exe is on PATH (MSYS2 usr/bin, Git for Windows,
       # ...). Use a whitelisted PATH containing only mingw64/bin and the core
@@ -72,7 +95,7 @@ jobs:
           $mingw = "${{ steps.msys2.outputs.msys2-location }}\mingw64\bin"
           $env:Path = "$mingw;$env:SystemRoot\System32;$env:SystemRoot;$env:SystemRoot\System32\Wbem"
           where.exe sh   # expected: "Could not find files for the given pattern(s)."
-          cmake --build build/gnu_release --verbose -j1
+          cmake --build build/gnu_release -j
 
       # MinGW-built exes need libstdc++-6.dll etc. from mingw64/bin.
       - name: Run tests (Windows)
