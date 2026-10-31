@@ -72,7 +72,7 @@ fetches and links at build time; their documentation lives in the linked reposit
     * [`ImageFormat` / supported `pixel_t` types](https://github.com/Maged152/PixelImage/blob/main/doc/pixel_formats.md) - format definitions and the supported pixel data types.
     * `BorderMode<frmt, T>` / `BorderType` - out-of-bounds pixel policy (headers `include/image.hpp`, `include/pixel/pixel_common.hpp` of that repository).
 * [ThreadPool]([github.com/Maged152/ThreadPool](https://github.com/Maged152/ThreadPool)) - header-only utilities:
-    * `qlm::Timer<duration_t>` - execution time measurement, see [Timer](./Timer.md).
+    * [`qlm::Timer<duration_t>`](https://github.com/Maged152/ThreadPool/blob/main/include/timer.hpp) - execution time measurement (`Start()`, `End()`, `ElapsedString()`), from that repository's `include/timer.hpp`.
     * `qlm::ThreadPool` + `thread_safe_queue.hpp` - background parallel execution, tasks submitted with `pool.Submit(...)` (header `include/thread_pool.hpp`).
 
 ## Data types defined in this project

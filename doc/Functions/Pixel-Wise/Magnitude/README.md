@@ -70,7 +70,7 @@ Pixels outside `roi` keep their default-constructed value in the allocating over
         std::cout << "Failed to read the image\n";
         return -1;
     }
-    auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+    auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
     auto gx = qlm::ScharrX<uint8_t, int16_t>(gray);
     auto gy = qlm::ScharrY<uint8_t, int16_t>(gray);

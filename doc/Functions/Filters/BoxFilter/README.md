@@ -29,7 +29,7 @@ namespace qlm
               Image<frmt, dst_t>& out,
         const int filter_x_size,
         const int filter_y_size,
-        const bool normalize,
+        const bool normalize = true,
         const BorderMode<frmt, src_t>& border_mode = BorderMode{},
         const Rectangle<int>& roi = Rectangle<int>{}
     );
@@ -44,7 +44,7 @@ namespace qlm
         const Image<frmt, src_t>& in,
         const int filter_x_size,
         const int filter_y_size,
-        const bool normalize,
+        const bool normalize = true,
         const BorderMode<frmt, src_t>& border_mode = BorderMode{},
         const Rectangle<int>& roi = Rectangle<int>{}
     );
@@ -84,8 +84,8 @@ The function returns an image of type `Image<frmt, dst_t>`.
     if (in.NumberOfChannels() == 3)
         alpha = false;
 
-    const unsigned int filter_x_size = 5;
-    const unsigned int filter_y_size = 5;
+    const int filter_x_size = 5;
+    const int filter_y_size = 5;
 
     const bool normalize = true;
 

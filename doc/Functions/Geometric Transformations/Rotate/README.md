@@ -53,7 +53,7 @@ The function returns an image of type `Image<frmt, T>`.
 
 	if (!out.Write("result.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 ```
 ### The input

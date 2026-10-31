@@ -6,12 +6,21 @@ The function transposes the input image.
 You can check the implementation [here](../../../../source/Transpose.cpp)
 
 ## C++ API
+
+### Allocating overload
 ```c++
 namespace qlm
 {
 	template<ImageFormat frmt, pixel_t T>
-	Image<frmt, T> Transpose(
-		const Image<frmt, T>& in);
+	Image<frmt, T> Transpose(const Image<frmt, T>& in);
+}
+```
+### In-place overload
+```c++
+namespace qlm
+{
+	template<ImageFormat frmt, pixel_t T>
+	void Transpose(const Image<frmt, T>& in, Image<frmt, T>& out);
 }
 ```
 
@@ -21,9 +30,10 @@ namespace qlm
 | Name        | Type       | Description                                                       |
 |-------------|------------|-------------------------------------------------------------------|
 | `in`        | `Image`    | The input image.                                                  |
+| `out`       | `Image`    | The output image (in-place overload only). Must have dimensions `h x w` when `in` is `w x h`. |
 
 ## Return Value
-The function returns an image of type `Image<frmt, T>`.
+The function returns an image of type `Image<frmt, T>` (allocating overload).
 
 ## Example
 
@@ -52,7 +62,7 @@ The function returns an image of type `Image<frmt, T>`.
 
 	if (!out.Write("result.jpg", alpha))
 	{
-		std::cout << "Falied to write \n";
+		std::cout << "Failed to write \n";
 	}
 ```
 ### The input

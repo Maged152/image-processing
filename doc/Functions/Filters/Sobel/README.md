@@ -57,7 +57,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, out_t>`.
 | `roi`          | `Rectangle<int>` | Region of interest to process. Default `{}` processes the whole image. Pixels outside `roi` keep their default-constructed value. |
 
 ### Return Value
-The function returns an image of type `<ImageFormat::GRAY, out_t>`.
+The function returns an image of type `Image<ImageFormat::GRAY, out_t>`.
 
 ### `Sobel` Function
  Performs Sobel derivative on the input image. input image must be in GRAY format
@@ -124,7 +124,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 
 	int filter_size = 3;
 	// RGB to GRAY
-	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 	// do the operation
 	t.Start();
 	auto out = qlm::Sobel<uint8_t, int16_t>(gray, filter_size);

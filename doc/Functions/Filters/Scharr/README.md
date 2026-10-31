@@ -106,7 +106,7 @@ The function returns an image of type `Image<ImageFormat::GRAY, uint8_t>`.
 		alpha = false;
 
 	// RGB to GRAY
-	auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+	auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
 	// do the operation
 	t.Start();

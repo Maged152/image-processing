@@ -54,8 +54,8 @@ The function returns a vector of key-points(corners) of type `std::vector<KeyPoi
 
     auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
-    unsigned int filter_size = 3;
-    unsigned int block_size = 3;
+    const int filter_size = 3;
+    const int block_size = 3;
     float k = 0.22;
     float threshold = 0.0000001;
 

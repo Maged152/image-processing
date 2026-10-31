@@ -66,7 +66,7 @@ namespace qlm
     if (in.NumberOfChannels() == 1)
         alpha = false;
 
-    const unsigned int k = 4;
+    const int k = 4;
     const qlm::KMeansInit init = qlm::KMeansInit::KMEANS_PLUS_PLUS;
 
     // do the operation

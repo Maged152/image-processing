@@ -12,8 +12,8 @@ namespace qlm
 	template<ImageFormat frmt, pixel_t T>
 	Image<frmt, T> Resize(
 		const Image<frmt, T>& in,
-		const unsigned int width,
-		const unsigned int height,
+		const int width,
+		const int height,
 		const InterpolationFlag method = InterpolationFlag::BILINEAR,
 		const BorderMode<frmt, T>& border_mode = BorderMode<frmt, T>{});
 }
@@ -24,9 +24,9 @@ namespace qlm
 | Name           | Type           | Description                      |
 |----------------|----------------|----------------------------------|
 | `in`           | `Image`        | The input image.                 |
-| `width`        | `unsigned int` | The new width.                   |
-| `height`       | `unsigned int` | The new height.                  |
-| `method`       | `ScaleMethod`  | The scale method.                |
+| `width`        | `int`          | The new width.                   |
+| `height`       | `int`          | The new height.                  |
+| `method`       | `InterpolationFlag` | The interpolation method.       |
 | `border_mode`  | `BorderMode`   | The pixel extrapolation method.  |
 
 ## Return Value
@@ -49,8 +49,8 @@ The function returns an image of type `Image<frmt, T>`.
 	if (in.NumberOfChannels() == 3)
 		alpha = false;
 	
-	unsigned int width = 960u;
-	unsigned int height = 540u;
+	const int width = 960;
+	const int height = 540;
 
 	// do the operation
 	t.Start();

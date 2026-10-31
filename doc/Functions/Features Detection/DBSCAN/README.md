@@ -14,7 +14,7 @@ namespace qlm
     DBSCANResult DBSCAN(
         const Image<frmt, T>& in,
         const int eps,
-        const int min_pts);
+        const int min_pts = 5);
 }
 
 

@@ -61,7 +61,7 @@ The function returns a vector of key-points(corners) of type `std::vector<KeyPoi
         alpha = false;
 
     // Convert the input image to grayscale.
-    const auto gray = qlm::ColorConvert<qlm::ImageFormat::RGB, uint8_t, qlm::ImageFormat::GRAY, uint8_t>(in);
+    const auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in);
 
     // Detect corners with GoodFeaturesToTrack.
     const int max_corners = 200;
