@@ -102,3 +102,80 @@ TEST(Test_shakhbat_cv, GetAffineTransform_Shear)
 	EXPECT_NEAR(mat.GetElement(1, 1), 1.0f, 1e-3f);
 	EXPECT_NEAR(mat.GetElement(1, 2), 0.0f, 1e-3f);
 }
+
+// Direct tests for the Gaussian-elimination kernel qlm::Solve (common helper
+// used by GetAffineTransform/GetHomography; it had a dimension-check bug).
+TEST(Test_shakhbat_cv, Solve_WellConditioned)
+{
+	// 3x3 system A*x = b with solution x = (1, 2, 3)
+	// A = [[2,1,1],[1,3,2],[1,0,0]], b = (7, 13, 1)
+	qlm::Matrix aug(3, 4);
+	const float aug_data[12] =
+	{
+		2.0f, 1.0f, 1.0f, 7.0f,
+		1.0f, 3.0f, 2.0f, 13.0f,
+		1.0f, 0.0f, 0.0f, 1.0f
+	};
+	for (int i = 0; i < 12; i++)
+	{
+		aug.Set(i, aug_data[i]);
+	}
+
+	qlm::Matrix sol(3, 1);
+	qlm::Solve(aug, sol);
+
+	EXPECT_NEAR(sol.Get(0, 0), 1.0f, 1e-4f);
+	EXPECT_NEAR(sol.Get(1, 0), 2.0f, 1e-4f);
+	EXPECT_NEAR(sol.Get(2, 0), 3.0f, 1e-4f);
+}
+
+TEST(Test_shakhbat_cv, Solve_NeedsRowSwap)
+{
+	// the first row cannot be the pivot row; Solve must swap rows internally
+	// A = [[0,1],[1,0]], x = (2, 3), b = (3, 2)
+	qlm::Matrix aug(2, 3);
+	const float aug_data[6] =
+	{
+		0.0f, 1.0f, 3.0f,
+		1.0f, 0.0f, 2.0f
+	};
+	for (int i = 0; i < 6; i++)
+	{
+		aug.Set(i, aug_data[i]);
+	}
+
+	qlm::Matrix sol(2, 1);
+	qlm::Solve(aug, sol);
+
+	EXPECT_NEAR(sol.Get(0, 0), 2.0f, 1e-4f);
+	EXPECT_NEAR(sol.Get(1, 0), 3.0f, 1e-4f);
+}
+
+TEST(Test_shakhbat_cv, Solve_BadDimensions)
+{
+	// an augmented matrix must be rows x (rows + 1); sol must be rows x 1.
+	// Solve must reject the input and leave the solution untouched.
+	qlm::Matrix aug(3, 3);  // wrong: columns != rows + 1
+	const float aug_data[9] =
+	{
+		1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.0f
+	};
+	for (int i = 0; i < 9; i++)
+	{
+		aug.Set(i, aug_data[i]);
+	}
+
+	const float sentinel = 42.0f;
+	qlm::Matrix sol(3, 1);
+	sol.Set(0, 0, sentinel);
+	sol.Set(1, 0, sentinel);
+	sol.Set(2, 0, sentinel);
+
+	qlm::Solve(aug, sol);
+
+	EXPECT_EQ(sol.Get(0, 0), sentinel);
+	EXPECT_EQ(sol.Get(1, 0), sentinel);
+	EXPECT_EQ(sol.Get(2, 0), sentinel);
+}

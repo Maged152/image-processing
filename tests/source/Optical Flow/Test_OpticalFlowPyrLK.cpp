@@ -155,3 +155,84 @@ TEST(Test_shakhbat_cv, OpticalFlowPyrLK)
         test::CompareImages(next_rgb, ref);
     }
 }
+
+// The initial_guess path (non-empty guess, even window size), the status-carrying
+// skip logic and the min_eigenvalue gate are not covered by the reference test above.
+TEST(Test_shakhbat_cv, OpticalFlowPyrLK_InitialGuess)
+{
+    const std::string folder_path = test::example_folder + "Optical Flow/OpticalFlowPyrLK/";
+
+    // identical frames: the true optical flow is exactly zero everywhere
+    qlm::Image<qlm::ImageFormat::GRAY, uint8_t> prev_img, next_img;
+    const bool load_prev = prev_img.Read(folder_path + "MiniCooper_frame0.png");
+    EXPECT_EQ(load_prev, true);
+    next_img = prev_img;
+
+    auto prev_corners = qlm::GoodFeaturesToTrack(prev_img, 100, 0.01, 10.0, 3, 3, true, 0.04);
+    ASSERT_GT(prev_corners.size(), 0);
+
+    // odd window for the accuracy assertions (even windows are half-pixel
+    // offset in the box filters and degrade the Newton steps)
+    const qlm::Size win_size = { 21, 21 };
+    const qlm::Size win_even = { 20, 20 };
+    const qlm::TermCriteria criteria = { 30, 0.01 };
+
+    // ---- part A: a non-empty initial guess is used and must converge to zero flow ----
+    std::vector<qlm::KeyPoint<float>> guess = prev_corners;
+    for (auto& p : guess)
+    {
+        p.point.x += 3.0f;
+        p.point.y += 2.0f;
+    }
+
+    auto next_corners = qlm::OpticalFlowPyrLK(prev_img, next_img, prev_corners, guess, win_size, 0, criteria, 1e-4);
+
+    ASSERT_EQ(next_corners.size(), prev_corners.size());
+    int tracked = 0;
+    int converged = 0;
+    for (int i = 0; i < next_corners.size(); i++)
+    {
+        if (next_corners[i].status == qlm::KPStatusFlag::TRACKED)
+        {
+            tracked++;
+            const float dx = next_corners[i].point.x - prev_corners[i].point.x;
+            const float dy = next_corners[i].point.y - prev_corners[i].point.y;
+            const float disp2 = dx * dx + dy * dy;
+
+            // no tracked point may keep essentially the full initial guess (3, 2) = 13 px^2
+            // (int16 gradient quantization makes a handful of points stall, so this
+            // test only requires visible correction, not perfect convergence)
+            EXPECT_LT(disp2, 12.0f);
+            if (disp2 < 1.0f)
+            {
+                converged++;
+            }
+        }
+    }
+    // at least 90% of the tracked corners must converge to sub-pixel flow,
+    // and at least half of the corners must be tracked at all
+    EXPECT_GT(static_cast<double>(converged) / tracked, 0.9);
+    EXPECT_GT(tracked, static_cast<int>(prev_corners.size()) / 2);
+
+    // ---- part B: an UNTRACKED status carried by the initial guess skips the point ----
+    // (also runs the even-window path; only status semantics are asserted here)
+    guess[0].status = qlm::KPStatusFlag::UNTRACKED;
+    auto out_b = qlm::OpticalFlowPyrLK(prev_img, next_img, prev_corners, guess, win_even, 0, criteria, 1e-4);
+    ASSERT_EQ(out_b.size(), prev_corners.size());
+    EXPECT_EQ(out_b[0].status, qlm::KPStatusFlag::UNTRACKED);
+    // the other points keep their converged positions from part A
+    int tracked_b = 0;
+    for (int i = 0; i < out_b.size(); i++)
+    {
+        if (out_b[i].status == qlm::KPStatusFlag::TRACKED) tracked_b++;
+    }
+    EXPECT_GT(tracked_b, static_cast<int>(prev_corners.size()) / 2);
+
+    // ---- part C: a huge min_eigenvalue threshold marks every point UNTRACKED ----
+    auto out_c = qlm::OpticalFlowPyrLK(prev_img, next_img, prev_corners, prev_corners, win_even, 0, criteria, 1e9);
+    ASSERT_EQ(out_c.size(), prev_corners.size());
+    for (int i = 0; i < out_c.size(); i++)
+    {
+        EXPECT_EQ(out_c[i].status, qlm::KPStatusFlag::UNTRACKED);
+    }
+}

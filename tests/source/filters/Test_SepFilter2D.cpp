@@ -40,3 +40,38 @@ TEST(Test_shakhbat_cv, SepFilter2D)
 
 	test::CompareImages(out, ref);
 }
+
+// The in-place overload is never exercised by the reference-based test above;
+// lock it in by requiring byte-identical results with the allocating overload.
+TEST(Test_shakhbat_cv, SepFilter2D_InPlace)
+{
+	const std::string folder_path = test::example_folder + "Filters/SepFilter2D/";
+
+	// read input image
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> in;
+	const bool load_in = in.Read(folder_path + "input.jpg");
+	EXPECT_EQ(load_in, true);
+
+	// separable box kernel
+	const int filter_size = 3;
+	qlm::SepKernel box{ filter_size, filter_size };
+	for (int i = 0; i < filter_size; i++)
+	{
+		box.x_ker.Set(i, 1.0f / filter_size);
+		box.y_ker.Set(i, 1.0f / filter_size);
+	}
+
+	auto border_mode = qlm::BorderMode<qlm::ImageFormat::RGB, uint8_t>{};
+	border_mode.border_type = qlm::BorderType::BORDER_REFLECT;
+
+	// allocating result
+	auto ref_out = qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, uint8_t>(in, box, border_mode);
+
+	// in-place on a buffer seeded with different content
+	qlm::Image<qlm::ImageFormat::RGB, uint8_t> out(ref_out.Width(), ref_out.Height());
+	out = in;
+
+	qlm::SepFilter2D<qlm::ImageFormat::RGB, uint8_t, uint8_t>(in, out, box, border_mode);
+
+	test::CompareImages(out, ref_out);
+}

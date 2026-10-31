@@ -107,3 +107,139 @@ TEST(Test_shakhbat_cv, ColorConvert_RoundTrip)
 	const qlm::Pixel<qlm::ImageFormat::GRAY, uint8_t> tol_gray{ 1 };
 	test::CompareImages(gray_back, gray, tol_gray);
 }
+
+// Direct known-value validation of each color space conversion with 1x1 probes.
+// Expected values below are derived from the implementation formulas
+// (truncating cast on 8-bit output; hue stored as H/2).
+TEST(Test_shakhbat_cv, ColorConvert_KnownValues)
+{
+	using RGB8 = qlm::Pixel<qlm::ImageFormat::RGB, uint8_t>;
+
+	// ---------- pure red (255, 0, 0) ----------
+	{
+		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in(1, 1);
+		in.SetPixel(0, RGB8(255, 0, 0));
+
+		auto hsv = qlm::ColorConvert<qlm::ImageFormat::HSV>(in).GetPixel(0);
+		EXPECT_EQ(hsv.h, 0);
+		EXPECT_EQ(hsv.s, 255);
+		EXPECT_EQ(hsv.v, 255);
+
+		auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in).GetPixel(0);
+		EXPECT_EQ(gray.v, 76);
+	}
+
+	// ---------- pure green (0, 255, 0) ----------
+	{
+		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in(1, 1);
+		in.SetPixel(0, RGB8(0, 255, 0));
+
+		auto hsv = qlm::ColorConvert<qlm::ImageFormat::HSV>(in).GetPixel(0);
+		EXPECT_EQ(hsv.h, 60);
+		EXPECT_EQ(hsv.s, 255);
+		EXPECT_EQ(hsv.v, 255);
+
+		auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in).GetPixel(0);
+		EXPECT_EQ(gray.v, 149);
+	}
+
+	// ---------- pure blue (0, 0, 255) ----------
+	{
+		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in(1, 1);
+		in.SetPixel(0, RGB8(0, 0, 255));
+
+		auto hsv = qlm::ColorConvert<qlm::ImageFormat::HSV>(in).GetPixel(0);
+		EXPECT_EQ(hsv.h, 120);
+		EXPECT_EQ(hsv.s, 255);
+		EXPECT_EQ(hsv.v, 255);
+
+		auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in).GetPixel(0);
+		EXPECT_EQ(gray.v, 29);
+	}
+
+	// ---------- white (255, 255, 255) ----------
+	{
+		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in(1, 1);
+		in.SetPixel(0, RGB8(255, 255, 255));
+
+		auto hsv = qlm::ColorConvert<qlm::ImageFormat::HSV>(in).GetPixel(0);
+		EXPECT_EQ(hsv.h, 0);
+		EXPECT_EQ(hsv.s, 0);
+		EXPECT_EQ(hsv.v, 255);
+
+		auto hls = qlm::ColorConvert<qlm::ImageFormat::HLS>(in).GetPixel(0);
+		EXPECT_EQ(hls.h, 0);
+		EXPECT_EQ(hls.l, 255);
+		EXPECT_EQ(hls.s, 0);
+
+		auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in).GetPixel(0);
+		EXPECT_EQ(gray.v, 255);
+	}
+
+	// ---------- black (0, 0, 0) ----------
+	{
+		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in(1, 1);
+		in.SetPixel(0, RGB8(0, 0, 0));
+
+		auto hsv = qlm::ColorConvert<qlm::ImageFormat::HSV>(in).GetPixel(0);
+		EXPECT_EQ(hsv.h, 0);
+		EXPECT_EQ(hsv.s, 0);
+		EXPECT_EQ(hsv.v, 0);
+
+		auto hls = qlm::ColorConvert<qlm::ImageFormat::HLS>(in).GetPixel(0);
+		EXPECT_EQ(hls.h, 0);
+		EXPECT_EQ(hls.l, 0);
+		EXPECT_EQ(hls.s, 0);
+
+		// (0, delta, delta) encodes black exactly: YCrCb->RGB of it is exact too
+		auto ycc = qlm::ColorConvert<qlm::ImageFormat::YCrCb>(in).GetPixel(0);
+		EXPECT_EQ(ycc.y, 0);
+		EXPECT_EQ(ycc.cr, 128);
+		EXPECT_EQ(ycc.cb, 128);
+
+		auto ycc_img = qlm::ColorConvert<qlm::ImageFormat::YCrCb>(in);
+		auto rgb = qlm::ColorConvert<qlm::ImageFormat::RGB>(ycc_img).GetPixel(0);
+		EXPECT_EQ(rgb.r, 0);
+		EXPECT_EQ(rgb.g, 0);
+		EXPECT_EQ(rgb.b, 0);
+
+		auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in).GetPixel(0);
+		EXPECT_EQ(gray.v, 0);
+	}
+
+	// ---------- medium gray (128, 128, 128) ----------
+	{
+		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in(1, 1);
+		in.SetPixel(0, RGB8(128, 128, 128));
+
+		auto hsv = qlm::ColorConvert<qlm::ImageFormat::HSV>(in).GetPixel(0);
+		EXPECT_EQ(hsv.h, 0);
+		EXPECT_EQ(hsv.s, 0);
+		EXPECT_TRUE(hsv.v >= 127 && hsv.v <= 128);
+
+		auto hls = qlm::ColorConvert<qlm::ImageFormat::HLS>(in).GetPixel(0);
+		EXPECT_EQ(hls.h, 0);
+		EXPECT_EQ(hls.s, 0);
+		EXPECT_TRUE(hls.l >= 127 && hls.l <= 128);
+
+		// (128-delta,...) float rounding can land one below 128 for Y/Cr/Cb
+		auto ycc = qlm::ColorConvert<qlm::ImageFormat::YCrCb>(in).GetPixel(0);
+		EXPECT_TRUE(ycc.y >= 127 && ycc.y <= 129);
+		EXPECT_TRUE(ycc.cr >= 127 && ycc.cr <= 129);
+		EXPECT_TRUE(ycc.cb >= 127 && ycc.cb <= 129);
+
+		auto gray = qlm::ColorConvert<qlm::ImageFormat::GRAY>(in).GetPixel(0);
+		EXPECT_TRUE(gray.v >= 127 && gray.v <= 128);
+	}
+
+	// ---------- pure red in HLS (L rounding is implementation-specific) ----------
+	{
+		qlm::Image<qlm::ImageFormat::RGB, uint8_t> in(1, 1);
+		in.SetPixel(0, RGB8(255, 0, 0));
+
+		auto hls = qlm::ColorConvert<qlm::ImageFormat::HLS>(in).GetPixel(0);
+		EXPECT_EQ(hls.h, 0);
+		EXPECT_EQ(hls.s, 255);
+		EXPECT_TRUE(hls.l >= 127 && hls.l <= 128);
+	}
+}
