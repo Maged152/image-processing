@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <type_traits>
 
 namespace qlm
 {
@@ -51,7 +52,10 @@ namespace qlm
             int occupied = 0;
             int capacity = 0;
 
-            using dist_t = qlm::wider_t<qlm::signed_t<T>>;
+            // squared distances: diff*diff per channel can reach 3 * (max(T)-min(T))^2,
+            // so 16-bit pixel types need a 64-bit accumulator (int16 wraps -> UB);
+            // float types promote to double
+            using dist_t = std::conditional_t<std::is_integral_v<T>, int64_t, double>;
 
         public:
             KDTree(const int size) : capacity(size), nodes(size)

@@ -38,20 +38,23 @@ namespace qlm
 		std::function<void(int, int)> Flip_fun;
 		int width{ img_width }, height{ img_height };
 
+		// loop bounds: cover half the flipped axis, including the middle
+		// pixel/column/row when the dimension is odd (self-mapped pixels must
+		// still be copied from `in` to `out`); writes read from `in`, so the
+		// extra iterations in the both-axes case are idempotent
 		if (Flip_code == FlipFlag::FLIP_VERTICAL_AXIS)
 		{
-			width /= 2;
+			width = (width + 1) / 2;
 			Flip_fun = Flip_vertical_lambda;
 		}
 		else if (Flip_code == FlipFlag::FLIP_HORIZONTAL_AXIS)
 		{
-			height /= 2;
+			height = (height + 1) / 2;
 			Flip_fun = Flip_horizontal_lambda;
 		}
 		else
 		{
-			height /= 2;
-			width /= 2;
+			width = (width + 1) / 2;
 			Flip_fun = Flip_both_lambda;
 		}
 

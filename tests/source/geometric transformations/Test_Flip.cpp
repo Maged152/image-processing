@@ -61,3 +61,51 @@ TEST(Test_shakhbat_cv, Flip_RoundTrip)
 	test::CompareImages(out_h, in);
 	test::CompareImages(out_bh, in);
 }
+
+// Odd dimensions: with FLIP_VERTICAL_HORIZONTAL_AXIS an odd-height image's
+// middle row must still be flipped horizontally (previously left as default
+// pixels), and every flip must not disturb the untouched middle column/row.
+TEST(Test_shakhbat_cv, Flip_OddSizes)
+{
+	// 7x5 GRAY image with distinct values
+	const int width = 7;
+	const int height = 5;
+	qlm::Image<qlm::ImageFormat::GRAY, uint8_t> in(width, height);
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			in.SetPixel(x, y, static_cast<uint8_t>(y * width + x + 1));
+		}
+	}
+
+	// vertical axis flip: compare against a manual mirror
+	auto vert = qlm::Flip(in, qlm::FlipFlag::FLIP_VERTICAL_AXIS);
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			EXPECT_EQ(vert.GetPixel(x, y).v, in.GetPixel(width - 1 - x, y).v);
+		}
+	}
+
+	// horizontal axis flip
+	auto horz = qlm::Flip(in, qlm::FlipFlag::FLIP_HORIZONTAL_AXIS);
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			EXPECT_EQ(horz.GetPixel(x, y).v, in.GetPixel(x, height - 1 - y).v);
+		}
+	}
+
+	// both axes: known top-left/bottom-right swap plus a flipped middle row
+	auto both = qlm::Flip(in, qlm::FlipFlag::FLIP_VERTICAL_HORIZONTAL_AXIS);
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			EXPECT_EQ(both.GetPixel(x, y).v, in.GetPixel(width - 1 - x, height - 1 - y).v);
+		}
+	}
+}
