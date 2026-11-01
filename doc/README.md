@@ -66,12 +66,12 @@ fetches and links at build time; their documentation lives in the linked reposit
 
 ## From other libraries
 
-* [PixelImage]([github.com/Maged152/PixelImage](https://github.com/Maged152/PixelImage)) - provides the low-level image storage:
+* [PixelImage](https://github.com/Maged152/PixelImage) - provides the low-level image storage:
     * [`Image<frmt, T>`](https://github.com/Maged152/PixelImage/blob/main/doc/image.md) - 2D array of pixels, pixel access, I/O, borders.
     * [`Pixel<frmt, T>`](https://github.com/Maged152/PixelImage/blob/main/doc/pixel.md) - strongly typed pixel value.
     * [`ImageFormat` / supported `pixel_t` types](https://github.com/Maged152/PixelImage/blob/main/doc/pixel_formats.md) - format definitions and the supported pixel data types.
     * `BorderMode<frmt, T>` / `BorderType` - out-of-bounds pixel policy (headers `include/image.hpp`, `include/pixel/pixel_common.hpp` of that repository).
-* [ThreadPool]([github.com/Maged152/ThreadPool](https://github.com/Maged152/ThreadPool)) - header-only utilities:
+* [ThreadPool](https://github.com/Maged152/ThreadPool) - header-only utilities:
     * [`qlm::Timer<duration_t>`](https://github.com/Maged152/ThreadPool/blob/main/include/timer.hpp) - execution time measurement (`Start()`, `End()`, `ElapsedString()`), from that repository's `include/timer.hpp`.
     * `qlm::ThreadPool` + `thread_safe_queue.hpp` - background parallel execution, tasks submitted with `pool.Submit(...)` (header `include/thread_pool.hpp`).
 
